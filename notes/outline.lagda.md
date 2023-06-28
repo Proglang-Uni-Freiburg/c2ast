@@ -7,7 +7,7 @@
 T ::= S | Unit | T ⊗ T | T → T
 S ::= end! | end? | !T.S | ?T.S | ⊕{ l: S_l } | &{ l: S_l } | μX. S | X
 
-μX. S is guarded
+μX. S is guarded / contractive
 
 define: dual S
 
@@ -132,3 +132,42 @@ g : S₁ ≈ S₂
 * at Send/Receive reduction, inversion yields c : !T.S and d : ?T'.S' where !T.S and !T'.S' are dual modulo roll/unroll
 * but discrepancies between T and T' need to be resolved by applying a coercion.
 * (maybe we were too optimistic?)
+
+## isorecursive → algebraic session types
+
+This is a monadic function that returns a list of protocol types serving as argument list for a protocol constructor and
+works over a writer monad that outputs a list of protocol definitions.
+`new` generates a new name for a protocol; so there has to be a name generation monad, too.
+(we could get away with a reader over [Label], where `local f` applies f to the environment)
+
+collect⟦_⟧ : (ReaderMonad [Label] m, WriterMonad [ProtocolDef] m) ⇒ IST → Map Var Name → m [ProtocolArg]
+
+collect⟦ μX. S ⟧ ρ  = n ← new; output( protocol n = {n-roll: local (n-roll ∷) (collect⟦ S ⟧ ρ[X ↦ n])} ); return [+n]
+collect⟦ X ⟧ ρ = return [+ ρ X]
+collect⟦ !T.S ⟧ ρ = s ← collect⟦ S ⟧; return (+ T) ∷ s
+collect⟦ ?T.S ⟧ ρ = s ← collect⟦ S ⟧; return (- T) ∷ s
+collect⟦ !end ⟧ ρ = return [+ Unit]             ???
+collect⟦ ?end ⟧ ρ = return [- Unit]             ???
+collect⟦ ⊕{ l: S_l } ⟧ ρ = n ← new; output( protocol n = {l: local (l ∷) (collect⟦ S_l ⟧ ρ)} ); return [+ n]
+collect⟦ &{ l: S_l } ⟧ ρ = n ← new; output( protocol n = {l: local (l ∷) (collect⟦ S_l ⟧ ρ)} ); return [- n]
+
+### Translation of terms (sketch)
+
+* unroll → select n-roll (requires the context of the type translation or protocols with overloaded constructors)
+* roll → ???
+* terminate → send ()
+* wait → receive
+
+### Wire compatibility
+
+(in isorecursive setting)
+
+Define a relation ≈ between S and n where
+[+ n] ← collect⟦ S ⟧ ∅
+using the definitions stuffed in the writer.
+
+TODO: lift this notion to the equirecursive setting (using optimized tagging: no tag transmission for single constructor protocols unless they are directly recursive; maybe further refinement needed)
+TODO: characterize the image of collect and define a backtranslation for such regular protocols
+TODO: define notion of wire compatibility / bisimulation for regular protocols
+  (so we have a notion of compatibility of algebraic session types different from equality)
+  (so we can claim that a traditional session type and its translation to AlgSt are wire compatible)
