@@ -100,11 +100,13 @@ The structural congruence relation on processes is defined as the smallest
 congruence relation that includes the commutative monoidal rules with the
 binary operator being parallel process composition $\PPar \_ \_$ and
 value~$\EUnit$ as the neutral element, and scope extrusion:
-\[
+\begin{align*}
   \PPar{\PScope p}{q} \equiv \PScope (\PPar p q)
-  \quad
+  &
   \text{if $a,b$ not free in $q$}
-\]
+  \\
+  \PScope p \equiv \PScope[b,a] p
+\end{align*}
 
 \declrel{Evaluation contexts}
 \begin{align*}
@@ -122,3 +124,8 @@ value~$\EUnit$ as the neutral element, and scope extrusion:
 \end{align*}
 
 \input{fig-equi-reduction}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

@@ -1,0 +1,30 @@
+
+\section{Properties}
+\label{sec:properties}
+
+TODO (PJT): what do we mean with $\equiv$?
+\begin{itemize}
+\item for ``normal'' types, it should be contextual equivalence(?)
+\item for channels, it might be bisimilarity(?)
+\end{itemize}
+
+\begin{lemma}[Conversions]~\\[-\baselineskip]
+  \begin{enumerate}
+  \item If $f : T \eqt T' : f'$,
+  then $\typingE[\CNil]{f}{\TFun T{T'}}$
+  and  $\typingE[\CNil]{f'}{\TFun {T'}T}$
+  and  $f \circ f' \equiv \ELam x x$
+  and  $f' \circ f \equiv \ELam x x$.
+\item If $g : S \eqs S' : g'$,
+  then $\typingE[\CNil]{g}{\TFun {\TPair {S} {\TDual{S'}}} \TUnit}$
+  and $\typingE[\CNil]{g'}{\TFun {\TPair {S'} {\TDual{S}}} \TUnit}$
+  and,\\
+  for all channels $c : S$,  $c \equiv \ELet{c'}{\EFork{( \ELam {\bar c'} g \; (c, \bar c')) }}{\EFork{( \ELam {\bar c} g \; (c', \bar c)) }} $. 
+\end{enumerate}
+\end{lemma}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

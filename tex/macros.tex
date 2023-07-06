@@ -29,13 +29,13 @@
 \newcommand\ELam[1]{\lambda #1.\;}
 \newcommand\ERec[1]{\Ekw{rec}\; #1.\;}
 \newcommand\ELet[2]{\Ekw{let}\; #1 = #2 \;\Ekw{in}\;}
-\newcommand\ELetU[1]{\ELet{\EUnit}{#1}}
+\newcommand\ELetU[1]{#1;\;}%{\ELet{\EUnit}{#1}}
 \newcommand\ELetP[3]{\ELet{(#1,#2)}{#3}}
 \newcommand\EkwWait{\Econst{wait}}
-\newcommand\EkwTerm{\Econst{terminate}}
+\newcommand\EkwTerm{\Econst{term}}
 \newcommand\EkwSend{\Econst{send}}
-\newcommand\EkwRecv{\Econst{recieve}}
-\newcommand\EkwSelect{\Econst{select}}
+\newcommand\EkwRecv{\Econst{recv}}
+\newcommand\EkwSelect{\Econst{sel}}
 \newcommand\EkwCase{\Ekw{case}}
 \newcommand\EkwRoll{\Econst{roll}}
 \newcommand\EkwUnroll{\Econst{unroll}}
@@ -45,7 +45,7 @@
 \newcommand\ESend[2]{\EkwSend\; #1 \; #2}
 \newcommand\ERecv[1]{\EkwRecv\; #1}
 \newcommand\ESelect[2]{\EkwSelect\; #1 \; #2}
-\newcommand\ECase[2]{\EkwCase\; #1 \; \Ekw{of} \; \{\, #2 \,\}}
+\newcommand\ECase[2]{\EkwCase\; #1 \; \{\, #2 \,\}}
 \newcommand\ERoll[1]{\EkwRoll\; #1}
 \newcommand\EUnroll[1]{\EkwUnroll\; #1}
 \newcommand\EFork[1]{\EkwFork\; #1}
@@ -135,4 +135,9 @@
   { \IfBooleanTF{#1}
     { \PParImpl {E_1[{#2}]} {E_2[{#3}]} }
     { \PParImpl {#2} {#3} } }
-\newcommand\PParImpl[2]{#1 \;|\; #2}
+\newcommand\PParImpl[2]{#1 \| #2}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

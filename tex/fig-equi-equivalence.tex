@@ -1,103 +1,134 @@
 %\begin{figure}
-  \declrel{Type equivalence}[$f : T \eqt T$]
+  \declrel{Type equivalence}[$f : T \eqt T' : f'$]
   \begin{mathpar}
     \inferrule[\EqUnit]{
     }{
       \ELam x x :
-      \TUnit \eqt \TUnit
+      \TUnit \eqt \TUnit :
+      \ELam x x
     }
 
     \inferrule[\EqPair]{
-      f_1 : T_1 \eqt T_1^\prime \\
-      f_2 : T_2 \eqt T_2^\prime
+      f_1 : T_1 \eqt T_1' : f'_1 \\
+      f_2 : T_2 \eqt T_2' : f'_2
     }{
       \ELam {(x_1,x_2)} (f_1 \; x_1, f_2 \; x_2) :
-      \TPair {T_1} {T_2} \eqt \TPair {T_1^\prime} {T_2^\prime}
+      \TPair {T_1} {T_2} \eqt \TPair {T_1^\prime} {T_2^\prime} :
+      \ELam {(x_1,x_2)} (f'_1 \; x_1, f'_2 \; x_2)
     }
 
     \inferrule[\EqFun]{
-      f_1 : T_1 \eqt T_1^\prime \\
-      f_2 : T_2 \eqt T_2^\prime
+      f_1 : T_1 \eqt T_1' : f'_1 \\
+      f_2 : T_2 \eqt T_2' : f'_2
     }{
-      \ELam x f_2 \circ x \circ f_1^{-1} :
-      \TFun {T_1} {T_2} \eqt \TFun {T_1^\prime} {T_2^\prime}
+      \ELam x f_2 \circ x \circ f'_1 :
+      \TFun {T_1} {T_2} \eqt \TFun {T_1^\prime} {T_2^\prime} : 
+      \ELam x f'_2 \circ x \circ f_1
     }
 
     \inferrule[\EqS]{
-      g : S_1 \eqs S_2
+      g : S_1 \eqs S_2 : g'
     }{
-      \ELam {c_1} \EFork{ \ELam {c_2} g \; c_1 \; c_2 } :
-      S_1 \eqt S_2
+      \ELam {c_1} \EFork{ \ELam {c_2} g \; (c_1, c_2) } :
+      S_1 \eqt S_2 :
+      \ELam {c_1} \EFork{ \ELam {c_2} g' \; (c_1, c_2) }
     }
   \end{mathpar}
-  \declrel{Session type equivalence}[$g : S \eqs S$]\medskip\\
-  $g : S_1 \eqs S_2$ gives rise to
+  \declrel{Session type equivalence}[$g : S \eqs S' : g'$]\medskip\\
+  $g : S_1 \eqs S_2 : g'$ gives rise to
   $g : \TFun {\TPair {S_1} {\TDual{S_2}}} \TUnit$
   and
-  $g^{-1} : \TFun {\TPair {S_2} {\TDual{S_1}}} \TUnit$
+  $g' : \TFun {\TPair {S_2} {\TDual{S_1}}} \TUnit$
   \begin{mathpar}
     \inferrule[\EqEnd !]{
     }{
       \ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}} :
-      \TEnd ! \eqs \TEnd !
+      \TEnd ! \eqs \TEnd ! :
+      \ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}}
     }
 
     \inferrule[\EqEnd ?]{
     }{
       \ELam {(c_1, c_2)} \ELetU {\EWait {c_1}} {\ETerm {c_2}} :
-      \TEnd ? \eqs \TEnd ?
+      \TEnd ? \eqs \TEnd ? :
+      \ELam {(c_1, c_2)} \ELetU {\EWait {c_1}} {\ETerm {c_2}}
     }
 
     \inferrule[\EqOut]{
-      f : T_1 \eqt T_2  \\
-      g : S_1 \eqs S_2
+      f : T_1 \eqt T_2 : f'  \\
+      g : S_1 \eqs S_2 : g'
     }{
       \ELam {(c_1, c_2)}
-        \ELetP {t_1} {c_2} {\ERecv{c_2}}
-        \ELet {c_1} {\ESend {(f \; t_1)} {c_1}}
-        g \; (c_1, c_2)
-      : \TOut {T_1} {S_1} \eqs \TOut {T_2} {S_2}
+        \ELetP {t_2} {c_2} {\ERecv{c_2}}
+        \ELet {c_1} {\ESend {(f' \; t_2)} {c_1}}
+        g \; (c_1, c_2) \\\\
+        : \TOut {T_1} {S_1} \eqs \TOut {T_2} {S_2} : \\\\
+        \ELam {(c_2, c_1)}
+        \ELetP {t_1} {c_1} {\ERecv{c_1}}
+        \ELet {c_2} {\ESend {(f \; t_1)} {c_2}}
+        g' \; (c_2, c_1)
     }
 
     \inferrule[\EqIn]{
-      f : T_1 \eqt T_2  \\
-      g : S_1 \eqs S_2
+      f : T_1 \eqt T_2 : f'  \\
+      g : S_1 \eqs S_2 : g'
     }{
       \ELam {(c_1, c_2)}
         \ELetP {t_1} {c_1} {\ERecv{c_1}}
         \ELet {c_2} {\ESend {(f \; t_1)} {c_2}}
-        g \; (c_1, c_2)
-      : \TIn {T_1} {S_1} \eqs \TIn {T_2} {S_2}
+        g \; (c_1, c_2) \\\\
+        : \TIn {T_1} {S_1} \eqs \TIn {T_2} {S_2} : \\\\
+      \ELam {(c_2, c_1)}
+        \ELetP {t_2} {c_2} {\ERecv{c_2}}
+        \ELet {c_1} {\ESend {(f' \; t_2)} {c_1}}
+        g' \; (c_2, c_1)
     }
 
     \inferrule[\EqSelect]{
-      g_i : S_i \eqs S_i^\prime
+      g_i : S_i \eqs S_i^\prime : g_i'
     }{
       \ELam {(c_1, c_2)}
         \ECase {c_2} { l_i \rightarrow \ELam {c_2} g_i \; (\ESelect {l_i} c_1, c_2) }
-      : \TSelect { l_i : S_i } \eqs \TSelect { l_i : S_i^\prime }
+        \\\\: \TSelect { l_i : S_i } \eqs \TSelect { l_i : S_i^\prime }:\\\\
+      \ELam {(c_2, c_1)}
+        \ECase {c_1} { l_i \rightarrow \ELam {c_1} g_i' \; (\ESelect {l_i} c_2, c_1) }
     }
 
     \inferrule[\EqCase]{
-      g_i : S_i \eqs S_i^\prime
+      g_i : S_i \eqs S_i^\prime : g_i'
     }{
       \ELam {(c_1, c_2)}
         \ECase {c_1} { l_i \rightarrow \ELam {c_1} g_i \; (c_1, \ESelect {l_i} c_2) }
-      : \TCase { l_i : S_i } \eqs \TCase { l_i : S_i^\prime }
+        \\\\: \TCase { l_i : S_i } \eqs \TCase { l_i : S_i^\prime } : \\\\
+      \ELam {(c_2, c_1)}
+        \ECase {c_2} { l_i \rightarrow \ELam {c_2} g'_i \; (c_2, \ESelect {l_i} c_1) }
     }
 
     \inferrule[\EqUnrollL]{
-      g : S_1[\TRec S_1 / X] \eqs S_2
+      g : S_1[\TRec S_1 / X] \eqs S_2 : g'
     }{
-      \TRec S_1 \eqs S_2
+      \ELam{(c_1 : \TRec S_1, c_2 : \TDual{S_2})}
+      g (\EUnroll{c_1}, c_2)
+      \\\\: \TRec S_1 \eqs S_2 :\\\\
+      \ELam{(c_2 : S_2, c_1 : \TRec{\TDual{S_1}})}
+      g' (c_2, \EUnroll{c_1})
     }
 
     \inferrule[\EqUnrollR]{
-      g : S_1 \eqs S_2[\TRec S_2 / X]
+      g : S_1 \eqs S_2[\TRec S_2 / X] : g'
     }{
-      S_1 \eqs \TRec S_2
+      \ELam{(c_1 : S_1, c_2 : \TRec{\TDual{S_2}})}
+      g (c_1, \EUnroll{c_2})
+      \\\\:S_1 \eqs \TRec S_2:\\\\
+      \ELam{(c_2 : \TRec S_2, c_1 : {\TDual{S_1}})}
+      g' (\EUnroll{c_2}, c_1)
     }
   \end{mathpar}
 %  \label{fig:equi-equivalence}
 %  \caption{Type equivalence in the equi-recursive system}
 %\end{figure}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

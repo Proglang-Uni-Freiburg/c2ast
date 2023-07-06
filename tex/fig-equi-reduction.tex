@@ -1,6 +1,6 @@
 %\begin{figure}
-  \declrel{Reduction relation in the equi-recursive system}[$\reduceE{p}{p}$]
-  \begin{mathpar}
+\declrel{Expression reduction}[$\reduceE{e}{e}$]
+\begin{mathpar}
     \reduceruleE {
       (\ELam x e) v
     }{
@@ -30,7 +30,9 @@
     }{
       E[e_2]
     }
-
+\end{mathpar}
+  \declrel{Process reduction (equi-recursive system)}[$\reduceE{p}{p}$]
+  \begin{mathpar}
     \reduceruleE{
       \PScope (\PPar* {\ESend v a} {\ERecv b} )
     }{
@@ -59,8 +61,11 @@
     \reduceruleE[\reduceE{p}{p^\prime}] { \PScope p } { \PScope p^\prime }   \and
     \reduceruleE[p \equiv q \\ \reduceE{q}{q^\prime}] { p } { q^\prime }
   \end{mathpar}
-  Dual $\PScope[b,a]$ rules for $\EkwSend$/$\EkwRecv$, $\EkwSelect$/$\EkwCase$,
-  $\EkwTerm$/$\EkwWait$ are omitted.
 %   \label{fig:equi-reduction}
 %   \caption{Reduction relation for the equi-recursive system}
 % \end{figure}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
