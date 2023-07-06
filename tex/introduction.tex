@@ -22,14 +22,14 @@ and
 $f' : \TFun{\TRec{\TOut \TInt {\TOut \TInt X}}}{\TRec{\TOut \TInt X}}$
 that mediate between the two types. For example
 \begin{align*}
-  f &=       \ELam {c_1} \EFork{ \ELam {c_2} \ERec g {
+  f &=       \ELam {c_1} \EFork{ \ELam {c_2} \ERec g %{
       \begin{array}[t]{l}
       \ELam{(c_1, c_2)} \\
       \ELet{(x_2,c_2)}{\ERecv{(\EUnroll{c_2})}} \\
       \ELet{c_1}{\ESend{x_2}{(\EUnroll{c_1})}} \\
       \ELet{(x_2,c_2)}{\ERecv{({c_2})}} \\
       \ELet{c_1}{\ESend{x_2}{(\EUnroll{c_1})}} \\
-        g \; ({c_1}, {c_2}) }
+        g \; ({c_1}, {c_2}) %}
       \end{array}}
 \end{align*}
 

@@ -20,10 +20,11 @@
     X^{\in \mathcal X}
 \end{align*}
 
-\vv{\TUnit\ can be confused with a linear logic proposition (for which we use $\TEnd!$); the old
-  $()$ may be better.}
+\vv{1 can be confused with a linear logic proposition (for which we use $\TEnd!$); the old
+  $()$ may be better.} \js{changed.}
 
 \pt{Relatedly: changed the syntax for unit elimination to $\_;\_$ for readability}
+
 
 \declrel{Dualization of session types}[$\TDual S = S$]
 \begin{align*}
@@ -110,7 +111,7 @@
 
 \declrel{Context exhaustion}[$\CExhausted$]
 \begin{mathpar}
-  \inferrule{}{\CExhausted[\CNil]} \and
+  \inferrule{ }{\CExhausted[\CNil]} \and
   \inferrule{\CExhausted}{\CExhausted[\Ctxt, \CBind* x T]}
 \end{mathpar}
 
@@ -133,11 +134,10 @@ congruence relation that includes the commutative monoidal rules with the
 binary operator being parallel process composition $\PPar \_ \_$ and
 value~$\EUnit$ as the neutral element, and scope extrusion:
 \begin{align*}
-  \PPar{\PScope p}{q} \equiv \PScope (\PPar p q)
-  &
-  \text{if $a,b$ not free in $q$}
+  \PPar{\PScope p}{q} &\equiv \PScope (\PPar p q)
+  \quad\text{if $a,b$ not free in $q$}
   \\
-  \PScope p \equiv \PScope[b,a] p
+  \PScope p &\equiv \PScope[b,a] p
 \end{align*}
 
 \declrel{Evaluation contexts}
