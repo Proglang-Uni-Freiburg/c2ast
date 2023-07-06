@@ -1,8 +1,22 @@
-## latex
+auto
+*.bbl
+*.blg
+*.rel
 *.aux
 *.log
 *.out
+*.pdf
 *.pag
+*.nav
+*.snm
+*.toc
+*.vrb
 *.synctex.gz
-## auxtex
-auto
+### agda
+*.agdai
+### MAC
+.DS_Store
+### Emacs
+.~
+\#*
+

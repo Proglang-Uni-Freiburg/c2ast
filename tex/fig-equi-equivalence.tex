@@ -104,6 +104,16 @@
         \ECase {c_2} { l_i \rightarrow \ELam {c_2} g'_i \; (c_2, \ESelect {l_i} c_1) }
     }
 
+    \inferrule[\EqUnroll]{
+    }{
+      \EkwUnroll : \TRec S \eqs S[\TRec S / X]
+    }
+
+    \inferrule[\EqRoll]{
+    }{
+      \EkwRoll : S[\TRec S / X] \eqs S
+    }
+
     \inferrule[\EqUnrollL]{
       g : S_1[\TRec S_1 / X] \eqs S_2 : g'
     }{
