@@ -1,0 +1,112 @@
+% \begin{figure}
+  \declrel{Typing rules for expressions in the equi-recursive system}[$\typingE{e}{T}$]
+  \begin{mathpar}
+    \inferrule{ }{\typingE{\EUnit}{\TUnit}}
+
+    \inferrule{
+      \CExhausted
+    }{
+      \typingE[\Ctxt, \CBind x T]{x}{T}
+    }
+
+    \inferrule{
+      \CExhausted
+    }{
+      \typingE[\Ctxt, \CBind* x T]{x}{T}
+    }
+
+    \inferrule{
+      \typingE[\Ctxt, \CBind x {T_1}]{e}{T_2}
+    }{
+      \typingE{\ELam x e}{\TFun{T_1}{T_2}}
+    }
+
+    \inferrule{
+      \typingE[\Ctxt, \CBind* x {\TFun {T_1} {T_2}}]{e}{T_2}
+    }{
+      \typingE{\ERec x e}{\TFun{T_1}{T_2}}
+    }
+
+    \inferrule{
+      \typingE[\Ctxt_1]{e_1}{\TFun {T_1}{T_2}}
+      \\
+      \typingE[\Ctxt_2]{e_2}{T_1}
+    }{
+      \typingE[\CSplit]{e_1 e_2}{T_2}
+    }
+
+    \inferrule{
+      \typingE[\Ctxt_1]{e_1}{T_1} \\
+      \typingE[\Ctxt_2]{e_2}{T_2}
+    }{
+      \typingE[\CSplit]{
+        \ELetU{e_1}{e_2}
+      }{ T_2 }
+    }
+
+    \inferrule{
+      \typingE[\Ctxt_1]{e_1}{T_1} \\
+      \typingE[\Ctxt_2]{e_2}{T_2}
+    }{
+      \typingE[\CSplit]{(e_1,e_2)}{\TPair{T_1}{T_2}}
+    }
+
+    \inferrule{
+      \typingE[\Ctxt_1]{e_1}{\TPair{T_1}{T_2}} \\
+      \typingE[\Ctxt_2, \CBind x {T_1}, \CBind y {T_2}]{e_2}{T_3}
+    }{
+      \typingE[\CSplit]{
+        \ELetP xy {e_1} {e_2}
+      }{ T_3 }
+    }
+
+    \inferrule{
+      \typingE{e}{\TEnd ?}
+    }{
+      \typingE{\EWait e}{\TUnit}
+    }
+
+    \inferrule{
+      \typingE{e}{\TEnd !}
+    }{
+      \typingE{\ETerm e}{\TUnit}
+    }
+
+    \inferrule{
+      \typingE[\Ctxt_1]{e_1} T  \\
+      \typingE[\Ctxt_2]{e_2} {\TOut T S}
+    }{
+      \typingE[\CSplit]{\ESend{e_1}{e_2}} S
+    }
+
+    \inferrule{
+      \typingE{e_1} {\TIn T S}
+    }{
+      \typingE{\ERecv{e_1}}{\TPair T S}
+    }
+
+    \inferrule{
+      \typingE{e}{\TSelect{l_i : S_i}} \\
+      j \in I
+    }{
+      \typingE{\ESelect{l_j}{e}}{S_j}
+    }
+
+    \inferrule{
+      \typingE[\Ctxt_1]{e}{\TCase{l_i : S_i}} \\
+      \typingE[\Ctxt_2]{e_i}{\TFun{S_i}{T}}
+    }{
+      \typingE[\CSplit]{
+        \ECase e { l_i \rightarrow e_i }
+      }{T}
+    }
+
+    \inferrule{
+      \typingI{e}{\TFun {\TDual S} \TUnit}
+    }{
+      \typingI{\EFork e}{S}
+    }
+  \end{mathpar}
+%   \label{fig:equi-typing-rules}
+%   \caption{Typing rules for expressions in the equi-recursive system}
+% \end{figure}

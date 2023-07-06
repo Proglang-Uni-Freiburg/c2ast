@@ -1,0 +1,66 @@
+%\begin{figure}
+  \declrel{Reduction relation in the equi-recursive system}[$\reduceE{p}{p}$]
+  \begin{mathpar}
+    \reduceruleE {
+      (\ELam x e) v
+    }{
+      e[ v / a ]
+    }
+
+    \reduceruleE {
+      (\ERec x e) v
+    }{
+      e[ \ERec x e / x ] \; v
+    }
+
+    \reduceruleE {
+      \ELetU \EUnit e
+    }{
+      e
+    }
+
+    \reduceruleE {
+      \ELetP {x_1} {x_2} {(v_1,v_2)} e
+    }{
+      e[v_1 / x_1][v_2 / x_2]
+    }
+
+    \reduceruleE[\reduceE{e_1}{e_2}]{
+      E[e_1]
+    }{
+      E[e_2]
+    }
+
+    \reduceruleE{
+      \PScope (\PPar* {\ESend v a} {\ERecv b} )
+    }{
+      \PScope (\PPar* {a} {(v,b)})
+    }
+
+    \reduceruleE{
+      \PScope (\PPar* {\ESelect {l_j} a} {\ECase b { l_i \rightarrow e_i }})
+    }{
+      \PScope (\PPar* {a} {e_j \; b})
+    }
+
+    \reduceruleE{
+      \PScope (\PPar* {\ETerm a} {\EWait b})
+    }{
+      \PPar* \EUnit \EUnit
+    }
+
+    \reduceruleE{
+      E[\EFork e]
+    }{
+      \PScope (\PPar {E[a]} {e \; b})
+    }
+
+    \reduceruleE[\reduceE{p}{p^\prime}] { \PPar p q } { \PPar {p^\prime} q } \and
+    \reduceruleE[\reduceE{p}{p^\prime}] { \PScope p } { \PScope p^\prime }   \and
+    \reduceruleE[p \equiv q \\ \reduceE{q}{q^\prime}] { p } { q^\prime }
+  \end{mathpar}
+  Dual $\PScope[b,a]$ rules for $\EkwSend$/$\EkwRecv$, $\EkwSelect$/$\EkwCase$,
+  $\EkwTerm$/$\EkwWait$ are omitted.
+%   \label{fig:equi-reduction}
+%   \caption{Reduction relation for the equi-recursive system}
+% \end{figure}
