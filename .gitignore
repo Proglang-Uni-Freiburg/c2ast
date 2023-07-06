@@ -1,0 +1,8 @@
+## latex
+*.aux
+*.log
+*.out
+*.pag
+*.synctex.gz
+## auxtex
+auto
