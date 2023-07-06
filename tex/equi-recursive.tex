@@ -20,6 +20,9 @@
     X
 \end{align*}
 
+\vv{\TUnit\ can be confused with a linear logic proposition (for which we use $\TEnd!$); the old
+  $()$ may be better.}
+
 \declrel{Dualization of session types}[$\TDual S = S$]
 \begin{align*}
   \TDual X &= X                               &
@@ -34,8 +37,27 @@
     \TSelect{ l_i: \TDual{S_i} }
 \end{align*}
 
-\input{fig-equi-equivalence}
+\vv{
+  \begin{itemize}
+  \item The dual function for recursive types is a bit more complicated; pls have
+    a look at ``the final cut''.
+  \item Iso-recursive expressions $e$ must appear before type equivalence.
+  \item IMO, $T,U$ reads better than $T_1, T_2$.
+  \item The expression for session types isomorphism may be curried. Then we
+    seek these results, right? (do they hold?)
 
+    Lemma. If $e : T \eqt U$, then $\typingE{e}{\TFun{T}{U}}$.
+
+    Lemma. If $e : R \eqs S$, then $\typingE{e}{\TFun{R}{\TFun{S}{\TUnit}}}$.
+\item $f^{-1}$ is confusing; why not a simple $g$?
+\item Added an easier to read, IMO, rule for \EqFun{} and (curried) for \EqOut
+\item \EqPair{} uses an abbreviation, right? $\lambda p. \text{let}(x,y) = p
+  \text{ in } \dots$
+\item Added suggestion for roll and unroll; these constants may have function types.
+  \end{itemize}
+}
+
+\input{fig-equi-equivalence}
 
 \subsection{Expressions}
 
@@ -122,3 +144,8 @@ value~$\EUnit$ as the neutral element, and scope extrusion:
 \end{align*}
 
 \input{fig-equi-reduction}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
