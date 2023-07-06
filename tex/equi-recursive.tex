@@ -5,23 +5,25 @@
 \declrel{Type syntax}
 \begin{align*}
   T \grmdef&
-    S               \grmor
+    S^\emptyset               \grmor
     \TUnit          \grmor
     \TPair T T      \grmor
     \TFun  T T      \\
-  S \grmdef&
+  S^{\mathcal X} \grmdef&
     \TEnd !         \grmor
     \TEnd ?         \grmor
-    \TOut T S       \grmor
-    \TIn  T S       \grmor
-    \TSelect{ l_i: S_i } \grmor
-    \TCase{ l_i: S_i }   \grmor
-    \TRec[X] S      \grmor
-    X
+    \TOut T S^{\mathcal X}       \grmor
+    \TIn  T S^{\mathcal X}       \grmor
+    \TSelect{ l_i: S^{\mathcal X}_i } \grmor
+    \TCase{ l_i: S^{\mathcal X}_i }   \grmor
+    \TRec[X] S^{\mathcal X \cup \{X\}}      \grmor
+    X^{\in \mathcal X}
 \end{align*}
 
 \vv{\TUnit\ can be confused with a linear logic proposition (for which we use $\TEnd!$); the old
   $()$ may be better.}
+
+\pt{Relatedly: changed the syntax for unit elimination to $\_;\_$ for readability}
 
 \declrel{Dualization of session types}[$\TDual S = S$]
 \begin{align*}
@@ -41,16 +43,23 @@
   \begin{itemize}
   \item The dual function for recursive types is a bit more complicated; pls have
     a look at ``the final cut''.
+    \pt{restricted payload type to closed types}
   \item Iso-recursive expressions $e$ must appear before type equivalence.
   \item IMO, $T,U$ reads better than $T_1, T_2$.
+    \pt{sorry, messed this up!}
   \item The expression for session types isomorphism may be curried. Then we
     seek these results, right? (do they hold?)
 
+    \pt{Yes, see below in Sec~\ref{sec:properties}}
+
     Lemma. If $e : T \eqt U$, then $\typingE{e}{\TFun{T}{U}}$.
 
-    Lemma. If $e : R \eqs S$, then $\typingE{e}{\TFun{R}{\TFun{S}{\TUnit}}}$.
-\item $f^{-1}$ is confusing; why not a simple $g$?
-\item Added an easier to read, IMO, rule for \EqFun{} and (curried) for \EqOut
+    Lemma. If $e : R \eqs S$, then $\typingE{e}{\TFun{R}{\TFun{\TDual S}{\TUnit}}}$.
+  \item $f^{-1}$ is confusing; why not a simple $g$?
+    \pt{Fixed, differently}
+\item Added an easier to read, IMO, rule for \EqFun{} and (curried)
+  for \EqOut
+  \pt{Messed this up. Sorry again}
 \item \EqPair{} uses an abbreviation, right? $\lambda p. \text{let}(x,y) = p
   \text{ in } \dots$
 \item Added suggestion for roll and unroll; these constants may have function
