@@ -10,8 +10,8 @@
 \newtheorem{definition}{Definition}
 \newtheorem{lemma}{Lemma}
 
-\title{Something, Something, c2ast -- Part I}
-\newcommand\titlerunning{Isorecursive Session}
+\title{A silent semantics for isorecursive session types}
+\newcommand\titlerunning{Isorecursive Sessions}
 \author{Janek Spaderna \and Peter Thiemann \and Vasco Vasconcelos}
 \newcommand\authorrunning{J. Spaderna, P. Thiemann, V. Vasconcelos}
 
@@ -20,6 +20,14 @@
 \begin{document}
 
 \maketitle
+\begin{abstract}
+  Almost all formalizations of recursive session types rely on
+  equirecursion because the explicit isomorphism to roll/unroll the
+  recursive type is said to give rise to additional communication and
+  synchronization. We examine this statement from first principles and
+  find mild conditions under which these communications can be
+  elided.
+\end{abstract}
 
 \input{introduction}
 \input{equi-recursive}
