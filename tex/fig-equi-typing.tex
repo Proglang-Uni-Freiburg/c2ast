@@ -16,15 +16,16 @@
     }
 
     \inferrule{
-      \typingE[\Ctxt, \CBind x {T_1}]{e}{T_2}
+      \CExhausted \\
+      \typingE[\Ctxt, \CBind* x {\TFun {T_1} {T_2}}]{e}{\TFun {T_1} {T_2}}
     }{
-      \typingE{\ELam x e}{\TFun{T_1}{T_2}}
+      \typingE{\ERec x e}{\TFun{T_1}{T_2}}
     }
 
     \inferrule{
-      \typingE[\Ctxt, \CBind* x {\TFun {T_1} {T_2}}]{e}{T_2}
+      \typingE[\Ctxt, \CBind x {T_1}]{e}{T_2}
     }{
-      \typingE{\ERec x e}{\TFun{T_1}{T_2}}
+      \typingE{\ELam x e}{\TFun{T_1}{T_2}}
     }
 
     \inferrule{
@@ -110,3 +111,8 @@
 %   \label{fig:equi-typing-rules}
 %   \caption{Typing rules for expressions in the equi-recursive system}
 % \end{figure}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
