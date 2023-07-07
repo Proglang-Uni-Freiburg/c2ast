@@ -8,13 +8,21 @@ the target type system is more strict.
 Instead, we describe a translation which uses a derivation tree to translate
 from equi-recursive typed expressions to iso-recursive typed expressions. The
 translation preserves well-typedness and the original and the resulting process
-are \highlight{``wire-compatibility''}. \js{what is the correct word?}
+are \highlight{``wire-compatible''}. \js{what is the correct word?}
+\pt{I've used that word, but the actual technical content is more
+  tricky than I imagined.}
 
 A derivation tree in the equi-recursive system with the overall conclusion
 $\typing e T$ can be translated to the iso-recursive system. The function
 $\llbracket \_ \rrbracket$ performs the translation; its argument is a full
 derivation tree. $\derivTree e T$ describes the set of derivation trees with
 the overall conclusion $\typing e T$.
+
+\pt{A (perhaps simpler) alternative would be to use a translation
+  judgment $\Gamma \vdash e \leadsto e' : T$ where (e.g.) $e$ is equi
+  and $e'$ is iso. Only the conversion rule is interesting, as
+  usual. Projecting on $e$ yields the equirecursive typing and
+  projecting on $e'$ yields the isorecursive typing.}
 
 \input{fig-translation}
 
@@ -64,3 +72,8 @@ the overall conclusion $\typing e T$.
 %     f \; \derivTrans e
 %   }
 % \end{mathpar}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

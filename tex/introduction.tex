@@ -3,24 +3,22 @@
 \label{sec:introduction}
 
 Recursion in session types is almost always interpreted as
-equirecursion. That is, the two session types $\TRec{\TOut \TInt X} $
+equirecursion. For example, the two session types $\TRec{\TOut \TInt X} $
 and $\TRec{\TOut \TInt {\TOut \TInt X}} $ are considered equal because
 their unfoldings as infinite trees are equal. That means, servers with
 these types are interchangeable without breaking the protocol and
-functions that expect arguments of one type also expect arguments of
-the other.
+functions that expect arguments of one type also accept arguments of
+the other type.
 
 Using an isorecursive interpretation the two types are not equal
 because unrolling of the recursion is a distinct communication
-step. Hence, channels of these two types are no longer
-interchangeable.
-
-However, for these particular types we can define a pair of conversion
+step. While channels of these two types are no longer
+interchangeable, we can nevertheless define a pair of conversion
 functions
 $f : \TFun{\TRec{\TOut \TInt X}}{\TRec{\TOut \TInt {\TOut \TInt X}}}$
 and
 $f' : \TFun{\TRec{\TOut \TInt {\TOut \TInt X}}}{\TRec{\TOut \TInt X}}$
-that mediate between the two types. For example
+that mediate between the two types. Concretely:
 \begin{align*}
   f &=       \ELam {c_1} \EFork{ \ELam {c_2} \ERec g %{
       \begin{array}[t]{l}
@@ -32,6 +30,37 @@ that mediate between the two types. For example
         g \; ({c_1}, {c_2}) %}
       \end{array}}
 \end{align*}
+As the session types are recursive, so are the conversion
+functions. This conversion function creates one additional
+channels and forks one additional process. Moreover, it leads to
+additional communication as evidenced by the standard rule for
+isorecursive processes (and the analogous rule for $\ERoll a \| \ERoll
+b$) :
+\begin{gather*}
+  \reducerule{
+    \PScope (\PPar* {\EUnroll a} {\EUnroll b})
+  }{
+    \PPar* a b
+  }
+\end{gather*}
+However, if the underlying recursive session type is contractive, then we can
+elide this extra communication, which essentially reinterprets
+isorecursion as equirecursion.
+This move makes a type conversion like $f$ act like an identity
+function, which forwards messages from one channel to another, as the
+$\ERoll\_$ and $\EUnroll\_$ operations are just identities.
+
+
+Clearly, this transformation goes both ways. If we start from an
+equirecursive program, we can transform it into an isorecursive one by
+making the type conversion explicit. We can execute the isorecursive
+program either with its ``natural'' semantics or with the silent
+semantics that treats $\ERoll\_$ and $\EUnroll\_$ as identities.
+The latter interpretation also makes the equirecursive version
+``wire-compatible'' with the isorecursive one.
+
+
+  
 
 %%% Local Variables:
 %%% mode: latex

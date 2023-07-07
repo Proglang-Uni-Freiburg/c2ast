@@ -10,10 +10,10 @@
   } = \ELam x \dtvar e
 
   \dtranslhs{
-    \dtbind[\Ctxt,\CBind* x {\TFun T U}] e {\TFun T U}
+    \dtbind[\Ctxt,\CBind* x {\TFun T U}] v {\TFun T U}
   }{
-    \typing {\ERec x e} {\TFun T U}
-  } = \ERec x \dtrans e
+    \typing {\ERec x v} {\TFun T U}
+  } = \ERec x \dtrans v
 
   \dtranslhs{
     \dtbind[\Ctxt_1] {e_1} {\TFun T U} \\
@@ -97,3 +97,8 @@
     \typing e U
   } = f \; \dtvar e
 \end{mathpar}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

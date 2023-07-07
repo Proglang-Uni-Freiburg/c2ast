@@ -21,9 +21,9 @@
 
     \inferrule{
       \CExhausted \\
-      \typing[\Ctxt, \CBind* x {\TFun T U}]{e}{\TFun T U}
+      \typing[\Ctxt, \CBind* x {\TFun T U}]{v}{\TFun T U}
     }{
-      \typing{\ERec x e}{\TFun{T}{U}}
+      \typing{\ERec x v}{\TFun{T}{U}}
     }
 
     \inferrule{
@@ -133,3 +133,8 @@
 %   \label{fig:iso-typing-rules}
 %   \caption{Typing rules for expressions in the iso-recursive system}
 % \end{figure}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

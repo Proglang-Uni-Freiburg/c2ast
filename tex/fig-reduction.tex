@@ -8,9 +8,9 @@
     }
 
     \reducerule {
-      (\ERec x e) v
+      (\ERec x v) v'
     }{
-      e[ \ERec x e / x ] \; v
+      v[ \ERec x v / x ] \; v'
     }
 
     \reducerule {
@@ -58,15 +58,15 @@
     }
 
     \reducerule{
-      \PScope (\PPar {E[\ERoll a]} {p})
+      \PScope (\PPar* {\ERoll a} {\ERoll b})
     }{
-      \PScope (\PPar {E[a]} {p})
+      \PPar* a b
     }
-  
+
     \reducerule{
-      \PScope (\PPar {E[\EUnroll a]} {p})
+      \PScope (\PPar* {\EUnroll a} {\EUnroll b})
     }{
-      \PScope (\PPar {E[a]} {p})
+      \PPar* a b
     }
 
     \reducerule[\reduce{p}{p^\prime}] { \PPar p q } { \PPar {p^\prime} q } \and
