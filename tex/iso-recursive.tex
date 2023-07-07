@@ -2,60 +2,171 @@
 
 \subsection{Types}
 
-The type syntax for the iso-recursive system is the same as in the
-equi-recursive system, including the notion of session type dualization.
+\declrel{Type syntax}
+\begin{align*}
+  T \grmdef&
+    S^\emptyset               \grmor
+    \TUnit          \grmor
+    \TPair T T      \grmor
+    \TFun  T T      \\
+  S^{\mathcal X} \grmdef&
+    \TEnd !         \grmor
+    \TEnd ?         \grmor
+    \TOut T S^{\mathcal X}       \grmor
+    \TIn  T S^{\mathcal X}       \grmor
+    \TSelect{ l_i: S^{\mathcal X}_i } \grmor
+    \TCase{ l_i: S^{\mathcal X}_i }   \grmor
+    \TRec[X] S^{\mathcal X \cup \{X\}}      \grmor
+    X^{\in \mathcal X}
+\end{align*}
 
-Type equivalence for the iso-recursive system is largely the same as in the
-equi-recursive system except for the rules \textsc{\EqUnrollL} and
-\textsc{\EqUnrollR}, which do not exist.
+\declrel{Dualization of session types}[$\TDual S = S$]
+\begin{align*}
+  \TDual X &= X                               &
+  \TDual{\TEnd !} &= \TEnd ?                  &
+  \TDual{\TOut T S} &= \TIn T \TDual{S}       &
+  \TDual{\TSelect{ l_i: S_i }} &=
+    \TCase{ l_i: \TDual{S_i} }                \\
+  \TDual{\TRec S} &= \TRec{\TDual S}          &
+  \TDual{\TEnd ?} &= \TEnd !                  &
+  \TDual{\TIn T S} &= \TOut T \TDual{S}       &
+  \TDual{\TCase{ l_i: S_i }} &=
+    \TSelect{ l_i: \TDual{S_i} }
+\end{align*}
+
+% The type syntax for the iso-recursive system is the same as in the
+% equi-recursive system, including the notion of session type dualization.
+% 
+% Type equivalence for the iso-recursive system is largely the same as in the
+% equi-recursive system except for the rules \textsc{\EqUnrollL} and
+% \textsc{\EqUnrollR}, which do not exist.
 
 
 \subsection{Expressions}
 
-The term syntax of the iso-recursive system is the same as for the
-equi-recursive system with two additional values.
+\declrel{Syntax for constants, values, expressions and processes}
 \begin{align*}
-  v \grmdef& \dots \grmor \EkwRoll \grmor \EkwUnroll
+  v \grmdef&
+    c                        \grmor
+    (v, v)                   \grmor
+    \ELam x e                \grmor
+    \ERec x e                \grmor
+  \\
+  e \grmdef&
+    v                       \grmor
+    x                       \grmor
+    e \; e                  \grmor
+    \ELetU e e              \grmor
+    (e, e)                  \grmor
+    \ELetP x y e e          \grmor
+  %\\ &
+    \ESelect l e            \grmor
+    \ECase e { l_i \rightarrow e } \grmor
+    \EFork e
+  \\
+  p \grmdef&
+    e                       \grmor
+    \PPar p p               \grmor
+    \PScope p
 \end{align*}
+
+The expression $\ELam {(x,y)} e$ is an abbreviation for $\ELam {x'} \ELetP xy {x'} e$
+for some $x'$ not free in $e$.
+
+% The term syntax of the iso-recursive system is the same as for the
+% equi-recursive system with two additional values.
+% \begin{align*}
+%   v \grmdef& \dots \grmor \EkwRoll \grmor \EkwUnroll
+% \end{align*}
 
 
 \subsubsection{Expression typing}
 
-Typing of expressions in the iso-recursive system is largely the same as for
-expressions in the equi-recursive system. As the only change, two additional
-typing rules are introduced concerned with $\EkwRoll$ and $\EkwUnroll$.
-\begin{mathpar}
-  \inferrule{
-    \typingI{e}{S[\TRec[X] S / X]}
-  }{
-    \typingI{\ERoll e}{\TRec S}
-  }
+\declrel{Typing contexts}
+\begin{align*}
+  \Ctxt \grmdef&
+    \CNil \grmor \Ctxt, \CBind x T \grmor \Ctxt, \CBind* x T
+\end{align*}
 
-  \inferrule{
-    \typingI{e}{\TRec S}
-  }{
-    \typingI{\EUnroll e}{S[\TRec[X] S / X]}
-  }
+\declrel{Context exhaustion}[$\CExhausted$]
+\begin{mathpar}
+  \inferrule{ }{\CExhausted[\CNil]} \and
+  \inferrule{\CExhausted}{\CExhausted[\Ctxt, \CBind* x T]}
 \end{mathpar}
+
+\declrel{Context splitting}[$\Ctxt = \CSplit[\Ctxt][\Ctxt]$]
+\begin{mathpar}
+  \inferrule{}{\cdot = \CSplit[\cdot][\cdot]} \and
+  \inferrule{\Ctxt = \CSplit}{\Ctxt, \CBind  x T = \CSplit[(\Ctxt_1 , \CBind  x T)][ \Ctxt_2               ]} \and
+  \inferrule{\Ctxt = \CSplit}{\Ctxt, \CBind  x T = \CSplit[ \Ctxt_ 1              ][(\Ctxt_2 , \CBind  x T)]} \and
+  \inferrule{\Ctxt = \CSplit}{\Ctxt, \CBind* x T = \CSplit[(\Ctxt_1 , \CBind* x T)][(\Ctxt_2 , \CBind* x T)]}
+\end{mathpar}
+
+\input{fig-iso-typing}
+
+% Typing of expressions in the iso-recursive system is largely the same as for
+% expressions in the equi-recursive system. As the only change, two additional
+% typing rules are introduced concerned with $\EkwRoll$ and $\EkwUnroll$.
+% \begin{mathpar}
+%   \inferrule{
+%     \typingI{e}{S[\TRec[X] S / X]}
+%   }{
+%     \typingI{\ERoll e}{\TRec S}
+%   }
+% 
+%   \inferrule{
+%     \typingI{e}{\TRec S}
+%   }{
+%     \typingI{\EUnroll e}{S[\TRec[X] S / X]}
+%   }
+% \end{mathpar}
 
 
 \subsubsection{Operational semantics}
 
-Evaluation contexts for the iso-recursive system have the same shape as the
-contexts in the equi-recursive system. The reduction relation is extended by
-two rules concerned with $\EkwRoll$ and $\EkwUnroll$.
-\begin{mathpar}
-  \reduceruleI{
-    \PScope (\PPar {E[\ERoll a]} {p})
-  }{
-    \PScope (\PPar {E[a]} {p})
-  }
+\declrel{Structural congruence of processes}[$p \equiv p$]\medskip\\
+The structural congruence relation on processes is defined as the smallest
+congruence relation that includes the commutative monoidal rules with the
+binary operator being parallel process composition $\PPar \_ \_$ and
+value~$\EUnit$ as the neutral element, and scope extrusion:
+\begin{align*}
+  \PPar{\PScope p}{q} &\equiv \PScope (\PPar p q)
+  \quad\text{if $a,b$ not free in $q$}
+  \\
+  \PScope p &\equiv \PScope[b,a] p
+\end{align*}
 
-  \reduceruleI{
-    \PScope (\PPar {E[\EUnroll a]} {p})
-  }{
-    \PScope (\PPar {E[a]} {p})
-  }
-\end{mathpar}
-Dual $\PScope[b,a]$ rules omitted.
+\declrel{Evaluation contexts}
+\begin{align*}
+  E \grmdef&
+    \EHole \grmor
+    E \; e \grmor
+    v \; E \grmor
+    \ELetU E e \grmor
+    (E,e) \grmor
+    (v,E) \grmor
+    \ELetP xy E e \grmor
+  %\\ &
+    \ESelect l E \grmor 
+    \ECase E { l_i \rightarrow e_i }
+\end{align*}
 
+\input{fig-iso-reduction}
+
+% Evaluation contexts for the iso-recursive system have the same shape as the
+% contexts in the equi-recursive system. The reduction relation is extended by
+% two rules concerned with $\EkwRoll$ and $\EkwUnroll$.
+% \begin{mathpar}
+%   \reduceruleI{
+%     \PScope (\PPar {E[\ERoll a]} {p})
+%   }{
+%     \PScope (\PPar {E[a]} {p})
+%   }
+% 
+%   \reduceruleI{
+%     \PScope (\PPar {E[\EUnroll a]} {p})
+%   }{
+%     \PScope (\PPar {E[a]} {p})
+%   }
+% \end{mathpar}
+% Dual $\PScope[b,a]$ rules omitted.

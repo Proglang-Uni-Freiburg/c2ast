@@ -1,5 +1,5 @@
 % \begin{figure}
-  \declrel{Typing rules for expressions in the equi-recursive system}[$\typingE{e}{T}$]
+  \declrel{Typing rules for expressions in the iso-recursive system}[$\typingE{e}{T}$]
   \begin{mathpar}
     \inferrule{ }{\typingE{\EUnit}{\TUnit}}
 
@@ -107,9 +107,27 @@
     }{
       \typingE{\EFork e}{S}
     }
+
+    \inferrule{
+      \typingI{e}{S[\TRec[X] S / X]}
+    }{
+      \typingI{\ERoll e}{\TRec S}
+    }
+  
+    \inferrule{
+      \typingI{e}{\TRec S}
+    }{
+      \typingI{\EUnroll e}{S[\TRec[X] S / X]}
+    }
+%
+%   \inferrule{
+%     \typingE e T \\ f : T \eqt U : f'
+%   }{
+%     \typingE e U
+%   }
   \end{mathpar}
-%   \label{fig:equi-typing-rules}
-%   \caption{Typing rules for expressions in the equi-recursive system}
+%   \label{fig:iso-typing-rules}
+%   \caption{Typing rules for expressions in the iso-recursive system}
 % \end{figure}
 
 %%% Local Variables:

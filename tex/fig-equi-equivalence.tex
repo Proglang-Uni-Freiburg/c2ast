@@ -1,4 +1,4 @@
-%\begin{figure}
+\begin{figure}
   \declrel{Type equivalence}[$f : T \eqt T' : f'$]
   \begin{mathpar}
     \inferrule[\EqUnit]{
@@ -34,12 +34,7 @@
       \ELam {c_1} \EFork{ \ELam {c_2} g' \; (c_1, c_2) }
     }
   \end{mathpar}
-  \declrel{Session type equivalence}[$g : S \eqs S' : g'$]\medskip\\
-  $g : S_1 \eqs S_2 : g'$ gives rise to
-  $g : \TFun {\TPair {S_1} {\TDual{S_2}}} \TUnit$
-  and
-  $g' : \TFun {\TPair {S_2} {\TDual{S_1}}} \TUnit$.
-  $g,g^\prime$ are expression in the iso-recursive system.
+  \declrel{Session type equivalence}[$g : S \eqs S' : g'$]
   \begin{mathpar}
     \inferrule[\EqEnd !]{
     }{
@@ -135,9 +130,9 @@
       g' (\EUnroll{c_2}, c_1)
     }
   \end{mathpar}
-%  \label{fig:equi-equivalence}
-%  \caption{Type equivalence in the equi-recursive system}
-%\end{figure}
+  \caption{Type equivalence in the equi-recursive system}
+  \label{fig:equi-equivalence}
+\end{figure}
 
 %%% Local Variables:
 %%% mode: latex

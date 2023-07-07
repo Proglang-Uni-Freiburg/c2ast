@@ -1,65 +1,77 @@
 %\begin{figure}
-\declrel{Expression reduction}[$\reduceE{e}{e}$]
-\begin{mathpar}
-    \reduceruleE {
+  \declrel{Expression reduction}[$\reduceE{e}{e}$]
+  \begin{mathpar}
+    \reduceruleI {
       (\ELam x e) v
     }{
       e[ v / a ]
     }
 
-    \reduceruleE {
+    \reduceruleI {
       (\ERec x e) v
     }{
       e[ \ERec x e / x ] \; v
     }
 
-    \reduceruleE {
+    \reduceruleI {
       \ELetU \EUnit e
     }{
       e
     }
 
-    \reduceruleE {
+    \reduceruleI {
       \ELetP {x_1} {x_2} {(v_1,v_2)} e
     }{
       e[v_1 / x_1][v_2 / x_2]
     }
 
-    \reduceruleE[\reduceE{e_1}{e_2}]{
+    \reduceruleI[\reduceE{e_1}{e_2}]{
       E[e_1]
     }{
       E[e_2]
     }
-\end{mathpar}
-  \declrel{Process reduction (equi-recursive system)}[$\reduceE{p}{p}$]
+  \end{mathpar}
+  \declrel{Process reduction (iso-recursive system)}[$\reduceE{p}{p}$]
   \begin{mathpar}
-    \reduceruleE{
+    \reduceruleI{
       \PScope (\PPar* {\ESend v a} {\ERecv b} )
     }{
       \PScope (\PPar* {a} {(v,b)})
     }
 
-    \reduceruleE{
+    \reduceruleI{
       \PScope (\PPar* {\ESelect {l_j} a} {\ECase b { l_i \rightarrow e_i }})
     }{
       \PScope (\PPar* {a} {e_j \; b})
     }
 
-    \reduceruleE{
+    \reduceruleI{
       \PScope (\PPar* {\ETerm a} {\EWait b})
     }{
       \PPar* \EUnit \EUnit
     }
 
-    \reduceruleE{
+    \reduceruleI{
       E[\EFork e]
     }{
       \PScope (\PPar {E[a]} {e \; b})
     }
 
-    \reduceruleE[\reduceE{p}{p^\prime}] { \PPar p q } { \PPar {p^\prime} q } \and
-    \reduceruleE[\reduceE{p}{p^\prime}] { \PScope p } { \PScope p^\prime }   \and
-    \reduceruleE[p \equiv q \\ \reduceE{q}{q^\prime}] { p } { q^\prime }
+    \reduceruleI{
+      \PScope (\PPar {E[\ERoll a]} {p})
+    }{
+      \PScope (\PPar {E[a]} {p})
+    }
+  
+    \reduceruleI{
+      \PScope (\PPar {E[\EUnroll a]} {p})
+    }{
+      \PScope (\PPar {E[a]} {p})
+    }
+
+    \reduceruleI[\reduceE{p}{p^\prime}] { \PPar p q } { \PPar {p^\prime} q } \and
+    \reduceruleI[\reduceE{p}{p^\prime}] { \PScope p } { \PScope p^\prime }   \and
+    \reduceruleI[p \equiv q \\ \reduceE{q}{q^\prime}] { p } { q^\prime }
   \end{mathpar}
 %   \label{fig:equi-reduction}
 %   \caption{Reduction relation for the equi-recursive system}

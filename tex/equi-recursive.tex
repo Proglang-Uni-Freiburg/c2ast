@@ -1,44 +1,65 @@
 \section{Equi-recursion}
 
-\subsection{Types}
+The iso-recursive system can---with very few and localized changes---be turned
+into a traditional equi-recursive system. The type syntax and dualization of
+session types require no adjustments.
 
-\declrel{Type syntax}
-\begin{align*}
-  T \grmdef&
-    S^\emptyset               \grmor
-    \TUnit          \grmor
-    \TPair T T      \grmor
-    \TFun  T T      \\
-  S^{\mathcal X} \grmdef&
-    \TEnd !         \grmor
-    \TEnd ?         \grmor
-    \TOut T S^{\mathcal X}       \grmor
-    \TIn  T S^{\mathcal X}       \grmor
-    \TSelect{ l_i: S^{\mathcal X}_i } \grmor
-    \TCase{ l_i: S^{\mathcal X}_i }   \grmor
-    \TRec[X] S^{\mathcal X \cup \{X\}}      \grmor
-    X^{\in \mathcal X}
-\end{align*}
+\input{fig-equi-equivalence}
 
-\vv{1 can be confused with a linear logic proposition (for which we use $\TEnd!$); the old
-  $()$ may be better.} \js{changed.}
+The equi-recursive nature of this adjusted system handles any necessary
+(un)rolling of recursive session types. This behavior is captured in the type
+equivalence relation defined in Figure~\ref{fig:equi-equivalence}. Equivalence
+$f : T \eqt T' : f'$ gives rise to two functions $f : \TFun {T} {T'}$, $f' :
+\TFun {T'} {T}$. Equivalence of session types $g : S \eqs S' : g'$ gives rise
+to two functions $g : \TFun {\TPair {S_1} {\TDual{S_2}}} \TUnit$ and $g' :
+\TFun {\TPair {S_2} {\TDual{S_1}}} \TUnit$. All of these functions are
+expressions in the iso-recursive system.
 
-\pt{Relatedly: changed the syntax for unit elimination to $\_;\_$ for readability}
+At the same time, the equi-recursive nature obviates the need for $\EkwRoll$
+and $\EkwUnroll$ operations. These two values, their two typing rules and
+reductions are removed. Instead, a rule is added which uses the equi-recursive
+type equivalence.
+\begin{mathpar}
+  \inferrule{
+    \typingE e T \\ f : T \eqt U : f'
+  }{
+    \typingE e U
+  }
+\end{mathpar}
 
+%\subsection{Types}
 
-\declrel{Dualization of session types}[$\TDual S = S$]
-\begin{align*}
-  \TDual X &= X                               &
-  \TDual{\TEnd !} &= \TEnd ?                  &
-  \TDual{\TOut T S} &= \TIn T \TDual{S}       &
-  \TDual{\TSelect{ l_i: S_i }} &=
-    \TCase{ l_i: \TDual{S_i} }                \\
-  \TDual{\TRec S} &= \TRec{\TDual S}          &
-  \TDual{\TEnd ?} &= \TEnd !                  &
-  \TDual{\TIn T S} &= \TOut T \TDual{S}       &
-  \TDual{\TCase{ l_i: S_i }} &=
-    \TSelect{ l_i: \TDual{S_i} }
-\end{align*}
+% \declrel{Type syntax}
+% \begin{align*}
+%   T \grmdef&
+%     S^\emptyset               \grmor
+%     \TUnit          \grmor
+%     \TPair T T      \grmor
+%     \TFun  T T      \\
+%   S^{\mathcal X} \grmdef&
+%     \TEnd !         \grmor
+%     \TEnd ?         \grmor
+%     \TOut T S^{\mathcal X}       \grmor
+%     \TIn  T S^{\mathcal X}       \grmor
+%     \TSelect{ l_i: S^{\mathcal X}_i } \grmor
+%     \TCase{ l_i: S^{\mathcal X}_i }   \grmor
+%     \TRec[X] S^{\mathcal X \cup \{X\}}      \grmor
+%     X^{\in \mathcal X}
+% \end{align*}
+% 
+% \declrel{Dualization of session types}[$\TDual S = S$]
+% \begin{align*}
+%   \TDual X &= X                               &
+%   \TDual{\TEnd !} &= \TEnd ?                  &
+%   \TDual{\TOut T S} &= \TIn T \TDual{S}       &
+%   \TDual{\TSelect{ l_i: S_i }} &=
+%     \TCase{ l_i: \TDual{S_i} }                \\
+%   \TDual{\TRec S} &= \TRec{\TDual S}          &
+%   \TDual{\TEnd ?} &= \TEnd !                  &
+%   \TDual{\TIn T S} &= \TOut T \TDual{S}       &
+%   \TDual{\TCase{ l_i: S_i }} &=
+%     \TSelect{ l_i: \TDual{S_i} }
+% \end{align*}
 
 \vv{
   \begin{itemize}
@@ -68,94 +89,98 @@
   \end{itemize}
 }
 
-\input{fig-equi-equivalence}
+%\input{fig-equi-equivalence}
 
-\subsection{Expressions}
+%\subsection{Expressions}
 
-\declrel{Syntax for values, expressions and processes}
-\begin{align*}
-  v \grmdef&
-    \EUnit                   \grmor
-    (v, v)                   \grmor
-    \ELam x e                \grmor
-    \ERec x e                \grmor
-    \EkwSend \grmor \EkwRecv \grmor
-    \EkwTerm \grmor \EkwWait
-  \\
-  e \grmdef&
-    v                       \grmor
-    x                       \grmor
-    e \; e                  \grmor
-    \ELetU e e              \grmor
-    (e, e)                  \grmor
-    \ELetP x y e e          \grmor
-  \\ &
-    \ESelect l e            \grmor
-    \ECase e { l_i \rightarrow e } \grmor
-    \EFork e
-  \\
-  p \grmdef&
-    e                       \grmor
-    \PPar p p               \grmor
-    \PScope p
-\end{align*}
-
-
-\subsubsection{Expression typing}
-
-\declrel{Typing contexts}
-\begin{align*}
-  \Ctxt \grmdef&
-    \CNil \grmor \Ctxt, \CBind x T \grmor \Ctxt, \CBind* x T
-\end{align*}
-
-\declrel{Context exhaustion}[$\CExhausted$]
-\begin{mathpar}
-  \inferrule{ }{\CExhausted[\CNil]} \and
-  \inferrule{\CExhausted}{\CExhausted[\Ctxt, \CBind* x T]}
-\end{mathpar}
-
-\declrel{Context splitting}[$\Ctxt = \CSplit[\Ctxt][\Ctxt]$]
-\begin{mathpar}
-  \inferrule{}{\cdot = \CSplit[\cdot][\cdot]} \and
-  \inferrule{\Ctxt = \CSplit}{\Ctxt, \CBind  x T = \CSplit[(\Ctxt_1 , \CBind  x T)][ \Ctxt_2               ]} \and
-  \inferrule{\Ctxt = \CSplit}{\Ctxt, \CBind  x T = \CSplit[ \Ctxt_ 1              ][(\Ctxt_2 , \CBind  x T)]} \and
-  \inferrule{\Ctxt = \CSplit}{\Ctxt, \CBind* x T = \CSplit[(\Ctxt_1 , \CBind* x T)][(\Ctxt_2 , \CBind* x T)]}
-\end{mathpar}
-
-\input{fig-equi-typing}
+% \declrel{Syntax for values, expressions and processes}
+% \begin{align*}
+%   c \grmdef&
+%     \EkwSend \grmor \EkwRecv \grmor
+%     \EkwTerm \grmor \EkwWait \grmor
+%     \EkwRoll \grmor \EkwUnroll
+%   \\
+%   v \grmdef&
+%     c                        \grmor
+%     \EUnit                   \grmor
+%     (v, v)                   \grmor
+%     \ELam x e                \grmor
+%     \ERec x e                \grmor
+%   \\
+%   e \grmdef&
+%     v                       \grmor
+%     x                       \grmor
+%     e \; e                  \grmor
+%     \ELetU e e              \grmor
+%     (e, e)                  \grmor
+%     \ELetP x y e e          \grmor
+%   %\\ &
+%     \ESelect l e            \grmor
+%     \ECase e { l_i \rightarrow e } \grmor
+%     \EFork e
+%   \\
+%   p \grmdef&
+%     e                       \grmor
+%     \PPar p p               \grmor
+%     \PScope p
+% \end{align*}
 
 
-\subsubsection{Operational semantics}
+%\subsubsection{Expression typing}
 
-\declrel{Structural congruence of processes}[$p \equiv p$]\medskip\\
-The structural congruence relation on processes is defined as the smallest
-congruence relation that includes the commutative monoidal rules with the
-binary operator being parallel process composition $\PPar \_ \_$ and
-value~$\EUnit$ as the neutral element, and scope extrusion:
-\begin{align*}
-  \PPar{\PScope p}{q} &\equiv \PScope (\PPar p q)
-  \quad\text{if $a,b$ not free in $q$}
-  \\
-  \PScope p &\equiv \PScope[b,a] p
-\end{align*}
+% \declrel{Typing contexts}
+% \begin{align*}
+%   \Ctxt \grmdef&
+%     \CNil \grmor \Ctxt, \CBind x T \grmor \Ctxt, \CBind* x T
+% \end{align*}
+% 
+% \declrel{Context exhaustion}[$\CExhausted$]
+% \begin{mathpar}
+%   \inferrule{ }{\CExhausted[\CNil]} \and
+%   \inferrule{\CExhausted}{\CExhausted[\Ctxt, \CBind* x T]}
+% \end{mathpar}
+% 
+% \declrel{Context splitting}[$\Ctxt = \CSplit[\Ctxt][\Ctxt]$]
+% \begin{mathpar}
+%   \inferrule{}{\cdot = \CSplit[\cdot][\cdot]} \and
+%   \inferrule{\Ctxt = \CSplit}{\Ctxt, \CBind  x T = \CSplit[(\Ctxt_1 , \CBind  x T)][ \Ctxt_2               ]} \and
+%   \inferrule{\Ctxt = \CSplit}{\Ctxt, \CBind  x T = \CSplit[ \Ctxt_ 1              ][(\Ctxt_2 , \CBind  x T)]} \and
+%   \inferrule{\Ctxt = \CSplit}{\Ctxt, \CBind* x T = \CSplit[(\Ctxt_1 , \CBind* x T)][(\Ctxt_2 , \CBind* x T)]}
+% \end{mathpar}
 
-\declrel{Evaluation contexts}
-\begin{align*}
-  E \grmdef&
-    \EHole \grmor
-    E \; e \grmor
-    v \; E \grmor
-    \ELetU E e \grmor
-    (E,e) \grmor
-    (v,E) \grmor
-    \ELetP xy E e \grmor
-  \\ &
-    \ESelect l E \grmor 
-    \ECase E { l_i \rightarrow e_i }
-\end{align*}
+%\input{fig-equi-typing}
 
-\input{fig-equi-reduction}
+
+%\subsubsection{Operational semantics}
+
+% \declrel{Structural congruence of processes}[$p \equiv p$]\medskip\\
+% The structural congruence relation on processes is defined as the smallest
+% congruence relation that includes the commutative monoidal rules with the
+% binary operator being parallel process composition $\PPar \_ \_$ and
+% value~$\EUnit$ as the neutral element, and scope extrusion:
+% \begin{align*}
+%   \PPar{\PScope p}{q} &\equiv \PScope (\PPar p q)
+%   \quad\text{if $a,b$ not free in $q$}
+%   \\
+%   \PScope p &\equiv \PScope[b,a] p
+% \end{align*}
+% 
+% \declrel{Evaluation contexts}
+% \begin{align*}
+%   E \grmdef&
+%     \EHole \grmor
+%     E \; e \grmor
+%     v \; E \grmor
+%     \ELetU E e \grmor
+%     (E,e) \grmor
+%     (v,E) \grmor
+%     \ELetP xy E e \grmor
+%   %\\ &
+%     \ESelect l E \grmor 
+%     \ECase E { l_i \rightarrow e_i }
+% \end{align*}
+% 
+% \input{fig-equi-reduction}
 
 %%% Local Variables:
 %%% mode: latex
