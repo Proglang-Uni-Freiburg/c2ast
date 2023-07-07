@@ -29,6 +29,51 @@ TODO (PJT): what do we mean with $\cong$?
 \end{enumerate}
 \end{lemma}
 
+Proving contextual equivalence is daunting. Maybe set up a logical relation? But how to do the session part?
+(I don't think it works like this!)
+
+\begin{align*}
+  V (\TUnit) & = \{ (\EUnit, \EUnit) \}
+  \\
+  V (\TPair TU) & = \{ (v_1, v_2), (w_1, w_2) \mid (v_1, w_1) \in V (T), (v_2, w_2) \in V (U) \}
+  \\
+  V (\TFun TU) &= \{ (\ELam xe_1, \ELam xe_2) \mid \forall v, w. (v, w) \in V (T) \Rightarrow (e_1[v/x], e_2[w/x]) \in E (U)  \}
+  \\
+  V (\TEnd!, \TEnd!) &= ?
+  \\
+  V (\TIn TS) &= \{ (c_1, c_2) \mid \forall v, w. (v,w) \in V(T) \Rightarrow
+                c_1 \stackrel{?v}{\to} e_1[x,c_1],
+                c_2 \stackrel{?w}{\to} e_2[x,c_2],
+                (e_1[v/x], e_2[w/x]) \in E(S) \}
+  \\
+  V (\TOut TS) &= \dots
+  \\
+  V (\TSelect{l_i: S_i}) &=  \{ (c_1, c_2) \mid \forall j. j \in I \Rightarrow
+                c_1 \stackrel{!l_j}{\to} e_1[c_1],
+                c_2 \stackrel{!l_j}{\to} e_2[c_2],
+                           (e_1, e_2) \in E(S_j) \}
+  \\
+  V (\TCase{l_i: S_i}) &=  \{ (c_1, c_2) \mid \forall j. j \in I \Rightarrow
+                c_1 \stackrel{?l_j}{\to} e_1[c_1],
+                c_2 \stackrel{?l_j}{\to} e_2[c_2],
+                         (e_1, e_2) \in E(S_j) \}
+  \\
+  E (T) &= \{ (e_1, e_2) \mid \forall v, w. e_1 \to^* v, e_2 \to^* w \Rightarrow (v, w)\in V (T) \}
+\end{align*}
+
+The session part seems wrong. I think we have to talk about processes stuck on a communication.
+The following is inspired by a paper by Perez, Toninho, Pfenning ($+$ will need step indexing to deal with recursion): 
+
+\begin{align*}
+  L (c : \TEnd!) &= \{ (E[ \ETerm c ], E'[ \ETerm c ]) \mid (E[\EUnit], E'[\EUnit]) \in E (\TUnit)
+                   \}
+  \\
+  L (c : \TOut TS) &= \{ (E[ \ESend v c ], E'[ \ESend w c ]) \mid \forall v, w. (v, w) \in V (T) \Rightarrow (E[c], E'[c]) \in L^* (c : S) \}
+  \\
+  L (c : \TIn TS) &= \{ (E[ \ERecv c ], E'[ \ERecv c ]) \mid \forall v, w. (v, w) \in V (T) \Rightarrow (E[(v,c)], E'[(w,c)]) \in L^* (c : S) \}
+  \\
+  L^* (c : S) &= \{ (e_1, e_2) \mid \forall e_1', e_2'. e_1 \to^* e_1', e_2 \to^* e_2' \Rightarrow (e_1', e_2') \in L (c : S) \}
+\end{align*}
 
 %%% Local Variables:
 %%% mode: latex
