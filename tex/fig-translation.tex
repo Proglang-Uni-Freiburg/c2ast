@@ -1,7 +1,7 @@
 \declrel{Translation from equi-recursive to iso-recursive expressions}[$\dtrans{e}=e$]
 \begin{mathpar}
-  \dtranslhs{ }{ \typing \EUnit \TUnit } = \EUnit \and
-  \dtranslhs{ }{ \typing x T } = x
+  \dtranslhs{ \vdots }{ \typing \EUnit \TUnit } = \EUnit \and
+  \dtranslhs{ \vdots }{ \typing x T } = x
 
   \dtranslhs{
     \dtbind[\Ctxt,\CBind x T] e U
@@ -10,7 +10,7 @@
   } = \ELam x \dtvar e
 
   \dtranslhs{
-    \dtbind[\Ctxt,\CBind x T] e U
+    \dtbind[\Ctxt,\CBind* x {\TFun T U}] e {\TFun T U}
   }{
     \typing {\ERec x e} {\TFun T U}
   } = \ERec x \dtrans e
@@ -19,8 +19,8 @@
     \dtbind[\Ctxt_1] {e_1} {\TFun T U} \\
     \dtbind[\Ctxt_2] {e_2} T
   }{
-    \typing[\CSplit] {e_1 \; e_2} U
-  } = \dtvar{e_1} \; \dtvar{e_2}
+    \typing[\CSplit] {e_1 e_2} U
+  } = \dtvar{e_1} \dtvar{e_2}
 
   \dtranslhs{
     \dtbind[\Ctxt_1] {e_1} \TUnit \\
