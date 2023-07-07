@@ -2,6 +2,7 @@
 \newcommand\js{\note{js}}
 \newcommand\vv{\note{vv}}
 \newcommand\pt{\note{pt}}
+\newcommand\highlight[1]{\colorbox{yellow}{#1}}
 
 % Macros to define type and term grammars
 \newcommand\grmdef{\; \Coloneqq \;\;}
@@ -45,7 +46,7 @@
 \newcommand\ESend[2]{\EkwSend\; #1 \; #2}
 \newcommand\ERecv[1]{\EkwRecv\; #1}
 \newcommand\ESelect[2]{\EkwSelect\; #1 \; #2}
-\newcommand\ECase[2]{\Ekw{case}\; #1 \; \{\, #2 \,\}}
+\newcommand\ECase[2]{\Ekw{case}\; #1 \; \left\{\, #2 \,\right\}}
 \newcommand\ERoll[1]{\EkwRoll\; #1}
 \newcommand\EUnroll[1]{\EkwUnroll\; #1}
 \newcommand\EFork[1]{\EkwFork\; #1}
@@ -140,6 +141,33 @@
     { \PParImpl {E_1[{#2}]} {E_2[{#3}]} }
     { \PParImpl {#2} {#3} } }
 \newcommand\PParImpl[2]{#1 \| #2}
+
+% MACROS FOR DERIVATION TRANSLATION
+%
+% The translation function in its most general form
+\newcommand\dtrans[1]{\left\llbracket #1 \right\rrbracket}
+
+% Set of derivation trees where
+%
+%   #1 |- #2 : #3
+%
+% Context defaults to \Ctxt
+\newcommand\derivTree[3][\Ctxt]{\mathcal{T}\!\!\left(\typingE[#1]{#2}{#3}\right)}
+
+% How we call derivation tree variables.
+\newcommand\dvarName[1]{#1^{\mathcal T}}
+
+% Shortcut for calling \dtrans on a \dtreevar
+\newcommand\dtvar[1]{\dtrans{\dvarName{#1}}}
+
+% Shortcut for binding a \dtreevar
+\newcommand\dtbind[3][\Ctxt]{\dvarName{#2} \in \derivTree[#1]{#2}{#3}}
+
+% Typeset the the LHS of the equi => iso translation
+%
+%   {#1} premise
+%   {#2} conclusion
+\newcommand\dtranslhs[2]{\dtrans{\inferrule{#1}{#2}}}
 
 %%% Local Variables:
 %%% mode: latex

@@ -1,0 +1,99 @@
+\declrel{Translation from equi-recursive to iso-recursive expressions}[$\dtrans{e}=e$]
+\begin{mathpar}
+  \dtranslhs{ }{ \typingE \EUnit \TUnit } = \EUnit \and
+  \dtranslhs{ }{ \typingE x T } = x
+
+  \dtranslhs{
+    \dtbind[\Ctxt,\CBind x T] e U
+  }{
+    \typingE {\ELam x e} {\TFun T U}
+  } = \ELam x \dtvar e
+
+  \dtranslhs{
+    \dtbind[\Ctxt,\CBind x T] e U
+  }{
+    \typingE {\ERec x e} {\TFun T U}
+  } = \ERec x \dtrans e
+
+  \dtranslhs{
+    \dtbind[\Ctxt_1] {e_1} {\TFun T U} \\
+    \dtbind[\Ctxt_2] {e_2} T
+  }{
+    \typingE[\CSplit] {e_1 \; e_2} U
+  } = \dtvar{e_1} \; \dtvar{e_2}
+
+  \dtranslhs{
+    \dtbind[\Ctxt_1] {e_1} \TUnit \\
+    \dtbind[\Ctxt_2] {e_2} T
+  }{
+    \typingE[\CSplit] {\ELetU {e_1} {e_2}} T
+  } = \ELetU {\dtvar{e_1}} {\dtvar{e_2}}
+
+  \dtranslhs{
+    \dtbind[\Ctxt_1] {e_1} T \\
+    \dtbind[\Ctxt_2] {e_2} U
+  }{
+    \typingE[\CSplit] {(e_1,e_2)} {\TPair T U}
+  } = \left( \dtvar{e_1},\dtvar{e_2} \right)
+
+  \dtranslhs{
+    \dtbind[\Ctxt_1] {e_1} {\TPair T_1 T_2} \\
+    \dtbind[\Ctxt_2, \CBind x T, \CBind y U] {e_2} U
+  }{
+    \typingE[\CSplit]{\ELetP xy {e_1} {e_2}} U
+  } = \ELetP xy {\dtvar{e_1}} {\dtvar{e_2}}
+
+  \dtranslhs{
+    \dtbind e {\TEnd ?}
+  }{
+    \typingE {\EWait e} \TUnit
+  } = \EWait {\dtvar e}
+
+  \dtranslhs{
+    \dtbind e {\TEnd !}
+  }{
+    \typingE {\ETerm e} \TUnit
+  } = \ETerm {\dtvar e}
+
+  \dtranslhs{
+    \dtbind {e_1} T \\
+    \dtbind {e_2} {\TOut T S}
+  }{
+    \typingE[\CSplit] {\ESend {e_1} {e_2}} S
+  } = \ESend {\dtvar{e_1}} {\dtvar{e_2}}
+
+  \dtranslhs{
+    \dtbind e {\TIn T S}
+  }{
+    \typingE {\ERecv e} {(T,S)}
+  } = \ERecv {\dtvar e}
+
+  \dtranslhs{
+    \dtbind e {\TSelect{l_i : S_i}} \\
+    j \in I
+  }{
+    \typingE{\ESelect{l_j}{e}}{S_j}
+  } = \ESelect {l_j} {\dtvar e}
+
+  \dtranslhs{
+    \dtbind[\Ctxt_1]{e}{\TCase{l_i : S_i}} \\
+    \dtbind[\Ctxt_2]{e_i}{\TFun{S_i}{T}}
+  }{
+    \typingE[\CSplit]{
+      \ECase e { l_i \rightarrow e_i }
+    }{T}
+  } = \ECase {\dtvar e} { l_i \rightarrow \dtvar{e_i} }
+
+  \dtranslhs{
+    \dtbind e {\TFun {\TDual S} \TUnit}
+  }{
+    \typingE{\EFork e}{S}
+  } = \EFork {\dtvar e}
+
+  \dtranslhs{
+    \dtbind e T \\
+    f : T \eqt U : f'
+  }{
+    \typingE e U
+  } = f \; \dtvar e
+\end{mathpar}
