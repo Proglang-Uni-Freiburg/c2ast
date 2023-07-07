@@ -41,6 +41,37 @@
 % equi-recursive system except for the rules \textsc{\EqUnrollL} and
 % \textsc{\EqUnrollR}, which do not exist.
 
+\vv{
+  \begin{itemize}
+  \item The dual function for recursive types is a bit more complicated; pls have
+    a look at ``the final cut''.
+    \pt{restricted payload type to closed types}
+  \item Iso-recursive expressions $e$ must appear before type equivalence.
+    \js{fixed this by moving sections around}
+  \item IMO, $T,U$ reads better than $T_1, T_2$.
+    \pt{sorry, messed this up!}
+    \js{changed it}
+  \item The expression for session types isomorphism may be curried. Then we
+    seek these results, right? (do they hold?)
+
+    \pt{Yes, see below in Sec~\ref{sec:properties}}
+
+    Lemma. If $e : T \eqt U$, then $\typing{e}{\TFun{T}{U}}$.
+
+    Lemma. If $e : R \eqs S$, then $\typing{e}{\TFun{R}{\TFun{\TDual S}{\TUnit}}}$.
+  \item $f^{-1}$ is confusing; why not a simple $g$?
+    \pt{Fixed, differently}
+\item Added an easier to read, IMO, rule for \EqFun{} and (curried)
+  for \EqOut
+  \pt{Messed this up. Sorry again}
+\item \EqPair{} uses an abbreviation, right? $\lambda p. \text{let}(x,y) = p
+  \text{ in } \dots$
+  \js{added note about this abbreviation next to grammar}
+\item Added suggestion for roll and unroll; these constants may have function
+  types. (types don't work :(
+  \end{itemize}
+}
+
 
 \subsection{Expressions}
 

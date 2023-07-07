@@ -1,7 +1,11 @@
 % \begin{figure}
   \declrel{Typing rules for expressions in the iso-recursive system}[$\typing{e}{T}$]
   \begin{mathpar}
-    \inferrule{ }{\typing{\EUnit}{\TUnit}}
+    \inferrule{ 
+      \CExhausted
+    }{
+      \typing{\EUnit}{\TUnit}
+    }
 
     \inferrule{
       \CExhausted
@@ -17,48 +21,48 @@
 
     \inferrule{
       \CExhausted \\
-      \typing[\Ctxt, \CBind* x {\TFun {T_1} {T_2}}]{e}{\TFun {T_1} {T_2}}
+      \typing[\Ctxt, \CBind* x {\TFun T U}]{e}{\TFun T U}
     }{
-      \typing{\ERec x e}{\TFun{T_1}{T_2}}
+      \typing{\ERec x e}{\TFun{T}{U}}
     }
 
     \inferrule{
-      \typing[\Ctxt, \CBind x {T_1}]{e}{T_2}
+      \typing[\Ctxt, \CBind x T]{e}{U}
     }{
-      \typing{\ELam x e}{\TFun{T_1}{T_2}}
+      \typing{\ELam x e}{\TFun T U}
     }
 
     \inferrule{
-      \typing[\Ctxt_1]{e_1}{\TFun {T_1}{T_2}}
+      \typing[\Ctxt_1]{e_1}{\TFun T U}
       \\
-      \typing[\Ctxt_2]{e_2}{T_1}
+      \typing[\Ctxt_2]{e_2}{T}
     }{
-      \typing[\CSplit]{e_1 e_2}{T_2}
+      \typing[\CSplit]{e_1 e_2}{U}
     }
 
     \inferrule{
-      \typing[\Ctxt_1]{e_1}{T_1} \\
-      \typing[\Ctxt_2]{e_2}{T_2}
+      \typing[\Ctxt_1]{e_1}{\TUnit} \\
+      \typing[\Ctxt_2]{e_2}{T}
     }{
       \typing[\CSplit]{
         \ELetU{e_1}{e_2}
-      }{ T_2 }
+      }{ T }
     }
 
     \inferrule{
-      \typing[\Ctxt_1]{e_1}{T_1} \\
-      \typing[\Ctxt_2]{e_2}{T_2}
+      \typing[\Ctxt_1]{e_1}{T} \\
+      \typing[\Ctxt_2]{e_2}{U}
     }{
-      \typing[\CSplit]{(e_1,e_2)}{\TPair{T_1}{T_2}}
+      \typing[\CSplit]{(e_1,e_2)}{\TPair T U}
     }
 
     \inferrule{
       \typing[\Ctxt_1]{e_1}{\TPair{T_1}{T_2}} \\
-      \typing[\Ctxt_2, \CBind x {T_1}, \CBind y {T_2}]{e_2}{T_3}
+      \typing[\Ctxt_2, \CBind x {T_1}, \CBind y {T_2}]{e_2}{U}
     }{
       \typing[\CSplit]{
         \ELetP xy {e_1} {e_2}
-      }{ T_3 }
+      }{ U }
     }
 
     \inferrule{
