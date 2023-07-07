@@ -1,0 +1,131 @@
+% \begin{figure}
+  \declrel{Typing rules for expressions in the iso-recursive system}[$\typing{e}{T}$]
+  \begin{mathpar}
+    \inferrule{ }{\typing{\EUnit}{\TUnit}}
+
+    \inferrule{
+      \CExhausted
+    }{
+      \typing[\Ctxt, \CBind x T]{x}{T}
+    }
+
+    \inferrule{
+      \CExhausted
+    }{
+      \typing[\Ctxt, \CBind* x T]{x}{T}
+    }
+
+    \inferrule{
+      \CExhausted \\
+      \typing[\Ctxt, \CBind* x {\TFun {T_1} {T_2}}]{e}{\TFun {T_1} {T_2}}
+    }{
+      \typing{\ERec x e}{\TFun{T_1}{T_2}}
+    }
+
+    \inferrule{
+      \typing[\Ctxt, \CBind x {T_1}]{e}{T_2}
+    }{
+      \typing{\ELam x e}{\TFun{T_1}{T_2}}
+    }
+
+    \inferrule{
+      \typing[\Ctxt_1]{e_1}{\TFun {T_1}{T_2}}
+      \\
+      \typing[\Ctxt_2]{e_2}{T_1}
+    }{
+      \typing[\CSplit]{e_1 e_2}{T_2}
+    }
+
+    \inferrule{
+      \typing[\Ctxt_1]{e_1}{T_1} \\
+      \typing[\Ctxt_2]{e_2}{T_2}
+    }{
+      \typing[\CSplit]{
+        \ELetU{e_1}{e_2}
+      }{ T_2 }
+    }
+
+    \inferrule{
+      \typing[\Ctxt_1]{e_1}{T_1} \\
+      \typing[\Ctxt_2]{e_2}{T_2}
+    }{
+      \typing[\CSplit]{(e_1,e_2)}{\TPair{T_1}{T_2}}
+    }
+
+    \inferrule{
+      \typing[\Ctxt_1]{e_1}{\TPair{T_1}{T_2}} \\
+      \typing[\Ctxt_2, \CBind x {T_1}, \CBind y {T_2}]{e_2}{T_3}
+    }{
+      \typing[\CSplit]{
+        \ELetP xy {e_1} {e_2}
+      }{ T_3 }
+    }
+
+    \inferrule{
+      \typing{e}{\TEnd ?}
+    }{
+      \typing{\EWait e}{\TUnit}
+    }
+
+    \inferrule{
+      \typing{e}{\TEnd !}
+    }{
+      \typing{\ETerm e}{\TUnit}
+    }
+
+    \inferrule{
+      \typing[\Ctxt_1]{e_1} T  \\
+      \typing[\Ctxt_2]{e_2} {\TOut T S}
+    }{
+      \typing[\CSplit]{\ESend{e_1}{e_2}} S
+    }
+
+    \inferrule{
+      \typing{e_1} {\TIn T S}
+    }{
+      \typing{\ERecv{e_1}}{\TPair T S}
+    }
+
+    \inferrule{
+      \typing{e}{\TSelect{l_i : S_i}} \\
+      j \in I
+    }{
+      \typing{\ESelect{l_j}{e}}{S_j}
+    }
+
+    \inferrule{
+      \typing[\Ctxt_1]{e}{\TCase{l_i : S_i}} \\
+      \typing[\Ctxt_2]{e_i}{\TFun{S_i}{T}}
+    }{
+      \typing[\CSplit]{
+        \ECase e { l_i \rightarrow e_i }
+      }{T}
+    }
+
+    \inferrule{
+      \typing{e}{\TFun {\TDual S} \TUnit}
+    }{
+      \typing{\EFork e}{S}
+    }
+
+    \inferrule{
+      \typing{e}{S[\TRec[X] S / X]}
+    }{
+      \typing{\ERoll e}{\TRec S}
+    }
+  
+    \inferrule{
+      \typing{e}{\TRec S}
+    }{
+      \typing{\EUnroll e}{S[\TRec[X] S / X]}
+    }
+%
+%   \inferrule{
+%     \typing e T \\ f : T \eqt U : f'
+%   }{
+%     \typing e U
+%   }
+  \end{mathpar}
+%   \label{fig:iso-typing-rules}
+%   \caption{Typing rules for expressions in the iso-recursive system}
+% \end{figure}

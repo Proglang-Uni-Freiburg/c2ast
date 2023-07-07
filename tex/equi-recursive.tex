@@ -21,9 +21,9 @@ reductions are removed. Instead, a rule is added which uses the equi-recursive
 type equivalence.
 \begin{mathpar}
   \inferrule{
-    \typingE e T \\ f : T \eqt U : f'
+    \typing e T \\ f : T \eqt U : f'
   }{
-    \typingE e U
+    \typing e U
   }
 \end{mathpar}
 
@@ -74,9 +74,9 @@ type equivalence.
 
     \pt{Yes, see below in Sec~\ref{sec:properties}}
 
-    Lemma. If $e : T \eqt U$, then $\typingE{e}{\TFun{T}{U}}$.
+    Lemma. If $e : T \eqt U$, then $\typing{e}{\TFun{T}{U}}$.
 
-    Lemma. If $e : R \eqs S$, then $\typingE{e}{\TFun{R}{\TFun{\TDual S}{\TUnit}}}$.
+    Lemma. If $e : R \eqs S$, then $\typing{e}{\TFun{R}{\TFun{\TDual S}{\TUnit}}}$.
   \item $f^{-1}$ is confusing; why not a simple $g$?
     \pt{Fixed, differently}
 \item Added an easier to read, IMO, rule for \EqFun{} and (curried)

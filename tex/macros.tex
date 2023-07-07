@@ -116,23 +116,17 @@
 
 % Macros for typing relations.
 %
-%   E => _e_qui-recursive system
-%   I => _i_so-recursive system
-%
 %   [#1]  typing context, defaults to  \Ctxt
 %   {#2}  expression to type
 %   {#3}  type
-\newcommand\typingE[3][\Ctxt]{#1 \vdash #2 : #3}
-\newcommand\typingI[3][\Ctxt]{#1 \vdash #2 : #3}
+\newcommand\typing[3][\Ctxt]{#1 \vdash #2 : #3}
 
 \newcommand\eqt{\sim^T}
 \newcommand\eqs{\sim^S}
 
 % Macros for reductions
-\newcommand\reduceE[2]{#1 \rightarrow #2}
-\newcommand\reduceruleE[3][]{\inferrule{#1}{\reduceE{#2}{#3}}}
-\newcommand\reduceI[2]{#1 \rightarrow #2}
-\newcommand\reduceruleI[3][]{\inferrule{#1}{\reduceI{#2}{#3}}}
+\newcommand\reduce[2]{#1 \rightarrow #2}
+\newcommand\reducerule[3][]{\inferrule{#1}{\reduce{#2}{#3}}}
 
 \newcommand\PScope[1][a,b]{(\nu #1)}
 \NewDocumentCommand \PPar
@@ -152,7 +146,7 @@
 %   #1 |- #2 : #3
 %
 % Context defaults to \Ctxt
-\newcommand\derivTree[3][\Ctxt]{\mathcal{T}\!\!\left(\typingE[#1]{#2}{#3}\right)}
+\newcommand\derivTree[3][\Ctxt]{\mathcal{T}\!\!\left(\typing[#1]{#2}{#3}\right)}
 
 % How we call derivation tree variables.
 \newcommand\dvarName[1]{#1^{\mathcal T}}

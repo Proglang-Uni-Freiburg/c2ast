@@ -102,22 +102,22 @@ for some $x'$ not free in $e$.
   \inferrule{\Ctxt = \CSplit}{\Ctxt, \CBind* x T = \CSplit[(\Ctxt_1 , \CBind* x T)][(\Ctxt_2 , \CBind* x T)]}
 \end{mathpar}
 
-\input{fig-iso-typing}
+\input{fig-typing}
 
 % Typing of expressions in the iso-recursive system is largely the same as for
 % expressions in the equi-recursive system. As the only change, two additional
 % typing rules are introduced concerned with $\EkwRoll$ and $\EkwUnroll$.
 % \begin{mathpar}
 %   \inferrule{
-%     \typingI{e}{S[\TRec[X] S / X]}
+%     \typing{e}{S[\TRec[X] S / X]}
 %   }{
-%     \typingI{\ERoll e}{\TRec S}
+%     \typing{\ERoll e}{\TRec S}
 %   }
 % 
 %   \inferrule{
-%     \typingI{e}{\TRec S}
+%     \typing{e}{\TRec S}
 %   }{
-%     \typingI{\EUnroll e}{S[\TRec[X] S / X]}
+%     \typing{\EUnroll e}{S[\TRec[X] S / X]}
 %   }
 % \end{mathpar}
 
@@ -151,19 +151,19 @@ value~$\EUnit$ as the neutral element, and scope extrusion:
     \ECase E { l_i \rightarrow e_i }
 \end{align*}
 
-\input{fig-iso-reduction}
+\input{fig-reduction}
 
 % Evaluation contexts for the iso-recursive system have the same shape as the
 % contexts in the equi-recursive system. The reduction relation is extended by
 % two rules concerned with $\EkwRoll$ and $\EkwUnroll$.
 % \begin{mathpar}
-%   \reduceruleI{
+%   \reducerule{
 %     \PScope (\PPar {E[\ERoll a]} {p})
 %   }{
 %     \PScope (\PPar {E[a]} {p})
 %   }
 % 
-%   \reduceruleI{
+%   \reducerule{
 %     \PScope (\PPar {E[\EUnroll a]} {p})
 %   }{
 %     \PScope (\PPar {E[a]} {p})

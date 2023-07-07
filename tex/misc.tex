@@ -10,20 +10,20 @@ TODO (PJT): what do we mean with $\cong$?
 \end{itemize}
 
 \begin{definition}
-  For $\typingE[\CNil]{e_1, e_2} T$ define contextual equivalence $e_1 \cong e_2$
+  For $\typing[\CNil]{e_1, e_2} T$ define contextual equivalence $e_1 \cong e_2$
   iff, for all contexts $C : T \to \TUnit$, $C[e_1] \Downarrow$ iff $C[e_2] \Downarrow$. 
 \end{definition}
 
 \begin{lemma}[Conversions]~\\[-\baselineskip]
   \begin{enumerate}
   \item If $f : T \eqt T' : f'$,
-  then $\typingE[\CNil]{f}{\TFun T{T'}}$
-  and  $\typingE[\CNil]{f'}{\TFun {T'}T}$
+  then $\typing[\CNil]{f}{\TFun T{T'}}$
+  and  $\typing[\CNil]{f'}{\TFun {T'}T}$
   and  $f \circ f' \cong \ELam x x$
   and  $f' \circ f \cong \ELam x x$.
 \item If $g : S \eqs S' : g'$,
-  then $\typingE[\CNil]{g}{\TFun {\TPair {S} {\TDual{S'}}} \TUnit}$
-  and $\typingE[\CNil]{g'}{\TFun {\TPair {S'} {\TDual{S}}} \TUnit}$
+  then $\typing[\CNil]{g}{\TFun {\TPair {S} {\TDual{S'}}} \TUnit}$
+  and $\typing[\CNil]{g'}{\TFun {\TPair {S'} {\TDual{S}}} \TUnit}$
   and,\\
   for all channels $c : S$,  $c \cong \ELet{c'}{\EFork{( \ELam {\bar c'} g \; (c, \bar c')) }}{\EFork{( \ELam {\bar c} g \; (c', \bar c)) }} $. 
 \end{enumerate}
