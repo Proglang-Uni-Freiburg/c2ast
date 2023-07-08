@@ -56,8 +56,8 @@
     }{
       {\begin{array}{r@{}l}
         \ELam {(c_1, c_2)}
-          & \ELetP {t_1} {c_2} {\ERecv{c_2}} \\
-          & \hspace{-2em} \ELet {c_1} {\ESend {(f \; t_2)} {c_1}} \\
+          & \ELetP {u} {c_2} {\ERecv{c_2}} \\
+          & \hspace{-2em} \ELet {c_1} {\ESend {(f \; u)} {c_1}} \\
           & \hspace{-2em} g \; (c_1, c_2)
             \hspace{5.5em} : \TOut {T} {S} \eqs \TOut {U} {S'}
       \end{array}}
@@ -74,8 +74,8 @@
     }{
       {\begin{array}{r@{}l}
         \ELam {(c_1, c_2)}
-          & \ELetP {t_1} {c_1} {\ERecv{c_1}} \\
-          & \hspace{-2em} \ELet {c_2} {\ESend {(f \; t_1)} {c_2}} \\
+          & \ELetP {t} {c_1} {\ERecv{c_1}} \\
+          & \hspace{-2em} \ELet {c_2} {\ESend {(f \; t)} {c_2}} \\
           & \hspace{-2em} g \; (c_1, c_2)
             \hspace{5.5em} : \TIn {T} {S} \eqs \TIn {U} {S'}
       \end{array}}
