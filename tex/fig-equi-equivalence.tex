@@ -9,28 +9,28 @@
     }
 
     \inferrule[\EqPair]{
-      f_1 : T_1 \eqt T_1' : f'_1 \\
-      f_2 : T_2 \eqt T_2' : f'_2
+      f_T : T \eqt T' : f'_T \\
+      f_U : U \eqt U' : f'_U
     }{
-      \ELam {(x_1,x_2)} (f_1 \; x_1, f_2 \; x_2) :
-      \TPair {T_1} {T_2} \eqt \TPair {T_1^\prime} {T_2^\prime} :
-      \ELam {(x_1,x_2)} (f'_1 \; x_1, f'_2 \; x_2)
+      \ELam {(x_1,x_2)} (f_T \; x_1, f_U \; x_2) :
+      \TPair T U \eqt \TPair {T'} {U'} :
+      \ELam {(x_1,x_2)} (f'_T \; x_1, f'_U \; x_2)
     }
 
     \inferrule[\EqFun]{
-      f_1 : T_1 \eqt T_1' : f'_1 \\
-      f_2 : T_2 \eqt T_2' : f'_2
+      f_T : T \eqt T' : f'_T \\
+      f_U : U \eqt U' : f'_U
     }{
-      \ELam x f_2 \circ x \circ f'_1 :
-      \TFun {T_1} {T_2} \eqt \TFun {T_1^\prime} {T_2^\prime} : 
-      \ELam x f'_2 \circ x \circ f_1
+      \ELam x f_U \circ x \circ f'_T :
+      \TFun {T} {U} \eqt \TFun {T'} {U'} :
+      \ELam x f'_U \circ x \circ f_T
     }
 
     \inferrule[\EqS]{
-      g : S_1 \eqs S_2 : g'
+      g : S \eqs S' : g'
     }{
       \ELam {c_1} \EFork{ \ELam {c_2} g \; (c_1, c_2) } :
-      S_1 \eqt S_2 :
+      S \eqt S' :
       \ELam {c_1} \EFork{ \ELam {c_2} g' \; (c_1, c_2) }
     }
   \end{mathpar}
@@ -51,14 +51,14 @@
     }
 
     \inferrule[\EqOut]{
-      f : T_1 \eqt T_2 : f'  \\
-      g : S_1 \eqs S_2 : g'
+      f : T \eqt U : f'  \\
+      g : S \eqs S' : g'
     }{
       \ELam {(c_1, c_2)}
         \ELetP {t_2} {c_2} {\ERecv{c_2}}
         \ELet {c_1} {\ESend {(f' \; t_2)} {c_1}}
         g \; (c_1, c_2) \\\\
-        : \TOut {T_1} {S_1} \eqs \TOut {T_2} {S_2} : \\\\
+        : \TOut {T} {S} \eqs \TOut {U} {S'} : \\\\
         \ELam {(c_2, c_1)}
         \ELetP {t_1} {c_1} {\ERecv{c_1}}
         \ELet {c_2} {\ESend {(f \; t_1)} {c_2}}
@@ -66,14 +66,14 @@
     }
 
     \inferrule[\EqIn]{
-      f : T_1 \eqt T_2 : f'  \\
-      g : S_1 \eqs S_2 : g'
+      f : T \eqt U : f'  \\
+      g : S \eqs S' : g'
     }{
       \ELam {(c_1, c_2)}
         \ELetP {t_1} {c_1} {\ERecv{c_1}}
         \ELet {c_2} {\ESend {(f \; t_1)} {c_2}}
         g \; (c_1, c_2) \\\\
-        : \TIn {T_1} {S_1} \eqs \TIn {T_2} {S_2} : \\\\
+        : \TIn {T} {S} \eqs \TIn {U} {S'} : \\\\
       \ELam {(c_2, c_1)}
         \ELetP {t_2} {c_2} {\ERecv{c_2}}
         \ELet {c_1} {\ESend {(f' \; t_2)} {c_1}}
@@ -111,22 +111,22 @@
     }
 
     \inferrule[\EqUnrollL]{
-      g : S_1[\TRec S_1 / X] \eqs S_2 : g'
+      g : S[\TRec S / X] \eqs S' : g'
     }{
-      \ELam{(c_1 : \TRec S_1, c_2 : \TDual{S_2})}
+      \ELam{(c_1 : \TRec S, c_2 : \TDual{S'})}
       g (\EUnroll{c_1}, c_2)
-      \\\\: \TRec S_1 \eqs S_2 :\\\\
-      \ELam{(c_2 : S_2, c_1 : \TRec{\TDual{S_1}})}
+      \\\\: \TRec S \eqs S' :\\\\
+      \ELam{(c_2 : S', c_1 : \TRec{\TDual{S}})}
       g' (c_2, \EUnroll{c_1})
     }
 
     \inferrule[\EqUnrollR]{
-      g : S_1 \eqs S_2[\TRec S_2 / X] : g'
+      g : S \eqs S'[\TRec S' / X] : g'
     }{
-      \ELam{(c_1 : S_1, c_2 : \TRec{\TDual{S_2}})}
+      \ELam{(c_1 : S, c_2 : \TRec{\TDual{S'}})}
       g (c_1, \EUnroll{c_2})
-      \\\\:S_1 \eqs \TRec S_2:\\\\
-      \ELam{(c_2 : \TRec S_2, c_1 : {\TDual{S_1}})}
+      \\\\: S \eqs \TRec S' :\\\\
+      \ELam{(c_2 : \TRec S', c_1 : {\TDual{S}})}
       g' (\EUnroll{c_2}, c_1)
     }
   \end{mathpar}
