@@ -11,8 +11,8 @@ The equi-recursive nature of this adjusted system handles any necessary
 equivalence relation defined in Figure~\ref{fig:equi-equivalence}. Equivalence
 $f : T \eqt T' : f'$ gives rise to two functions $f : \TFun {T} {T'}$, $f' :
 \TFun {T'} {T}$. Equivalence of session types $g : S \eqs S' : g'$ gives rise
-to two functions $g : \TFun {\TPair {S_1} {\TDual{S_2}}} \TUnit$ and $g' :
-\TFun {\TPair {S_2} {\TDual{S_1}}} \TUnit$. All of these functions are
+to two functions $g : \TFun {\TPair {S} {\TDual{S'}}} \TUnit$ and $g' :
+\TFun {\TPair {S'} {\TDual{S}}} \TUnit$. All of these functions are
 expressions in the iso-recursive system.
 
 At the same time, the equi-recursive nature obviates the need for $\EkwRoll$
@@ -21,7 +21,7 @@ reductions are removed. Instead, a rule is added which uses the equi-recursive
 type equivalence.
 \begin{mathpar}
   \inferrule{
-    \typing e T \\ f : T \eqt U : f'
+    \typing e T \\ f : T \eqt U
   }{
     \typing e U
   }
