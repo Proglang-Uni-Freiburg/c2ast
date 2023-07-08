@@ -16,16 +16,17 @@ TODO (PJT): what do we mean with $\cong$?
 
 \begin{lemma}[Conversions]~\\[-\baselineskip]
   \begin{enumerate}
-  \item If $f : T \eqt T' : f'$,
-  then $\typing[\CNil]{f}{\TFun T{T'}}$
-  and  $\typing[\CNil]{f'}{\TFun {T'}T}$
-  and  $f \circ f' \cong \ELam x x$
-  and  $f' \circ f \cong \ELam x x$.
-\item If $g : S \eqs S' : g'$,
-  then $\typing[\CNil]{g}{\TFun {\TPair {S} {\TDual{S'}}} \TUnit}$
-  and $\typing[\CNil]{g'}{\TFun {\TPair {S'} {\TDual{S}}} \TUnit}$
-  and,\\
-  for all channels $c : S$,  $c \cong \ELet{c'}{\EFork{( \ELam {\bar c'} g \; (c, \bar c')) }}{\EFork{( \ELam {\bar c} g \; (c', \bar c)) }} $. 
+    \item If $f : T \eqt T'$, then $f' : T' \eqt T$
+      such that $\typing[\CNil]{f}{\TFun T{T'}}$
+      and  $\typing[\CNil]{f'}{\TFun {T'}T}$
+      and  $f \circ f' \cong \ELam x x$
+      and  $f' \circ f \cong \ELam x x$.
+    \item If $g : S \eqs S'$, then $g' : S' \eqs S$
+      such that $\typing[\CNil]{g}{\TFun {\TPair {S} {\TDual{S'}}} \TUnit}$
+      and $\typing[\CNil]{g'}{\TFun {\TPair {S'} {\TDual{S}}} \TUnit}$
+      and,\\
+      for all channels $c : S$,  $c \cong \ELet{c'}{\EFork{( \ELam {\bar c'} g \; (c, \bar c')) }}{\EFork{( \ELam {\bar c} g \; (c', \bar c)) }} $.
+      \\ \js{one of the $g$ should probably be $g'$, can't quite decipher which right now}
 \end{enumerate}
 \end{lemma}
 
