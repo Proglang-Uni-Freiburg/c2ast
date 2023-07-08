@@ -1,0 +1,15 @@
+
+\section{Stuff}
+\label{sec:stuff}
+
+A function that returns an isorecursive channel.
+\begin{align*}
+  f &: \TFun\TInt{\TRec{\TIn \TInt X}}
+  \\
+  f &= \ELam x \EFork{(\ERec g \ELam c (g\; (\ESend x {(\EUnroll c)})))}
+\end{align*}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
