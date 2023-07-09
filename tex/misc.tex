@@ -103,6 +103,22 @@ The following is inspired by a paper by Perez, Toninho, Pfenning ($+$ will need 
 
   However, if $e$ is a value, then so is $e'$ (lemma!). 
 
+  Proceed by induction on $f : T \eqt U$?
+
+  Or: prove that if I can observe some $\alpha$ on $e$, then I can
+  observe the same $\alpha$ on $f e'$.
+
+  \begin{itemize}
+  \item $\alpha = \ELetU\EHole{e''}$
+  \item $\alpha = \ELetP xy\EHole{e''}$
+  \item $\alpha = \EHole\; v$
+  \item $\alpha = \EWait\EHole$
+  \item $\alpha = \ETerm\EHole$
+  \item $\alpha = \ESend{v}\EHole$
+  \item $\alpha = \ERecv\EHole$
+  \item $\alpha = \ESelect l \EHole$
+  \item $\alpha = \ECase\EHole{l_i: e_i}$
+  \end{itemize}
   
 \end{proof}
 
