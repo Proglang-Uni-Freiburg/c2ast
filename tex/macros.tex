@@ -125,7 +125,8 @@
 \newcommand\eqs{\sim^S}
 
 % Macros for reductions
-\newcommand\reduce[2]{#1 \rightarrow #2}
+\newcommand\reduce[3][]{#2 \stackrel{#1}\rightarrow #3}
+\newcommand\reducemany[3][]{#2 \stackrel{#1}{\twoheadrightarrow} #3}
 \newcommand\reducerule[3][]{\inferrule{#1}{\reduce{#2}{#3}}}
 
 \newcommand\PScope[1][a,b]{(\nu #1)}

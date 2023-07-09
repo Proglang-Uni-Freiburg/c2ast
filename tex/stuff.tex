@@ -6,7 +6,7 @@ A function that returns an isorecursive channel.
 \begin{align*}
   f &: \TFun\TInt{\TRec{\TIn \TInt X}}
   \\
-  f &= \ELam x \EFork{(\ERec g \ELam c (g\; (\ESend x {(\EUnroll c)})))}
+  f &= \ELam x \EFork{(\ERec g \ELam {(c: \TRec{\TOut \TInt X})} g\; (\ESend x {(\EUnroll c)}))}
 \end{align*}
 
 %%% Local Variables:

@@ -25,8 +25,7 @@ TODO (PJT): what do we mean with $\cong$?
       such that $\typing[\CNil]{g}{\TFun {\TPair {S} {\TDual{S'}}} \TUnit}$
       and $\typing[\CNil]{g'}{\TFun {\TPair {S'} {\TDual{S}}} \TUnit}$
       and,\\
-      for all channels $c : S$,  $c \cong \ELet{c'}{\EFork{( \ELam {\bar c'} g \; (c, \bar c')) }}{\EFork{( \ELam {\bar c} g \; (c', \bar c)) }} $.
-      \\ \js{one of the $g$ should probably be $g'$, can't quite decipher which right now}
+      for all channels $c : S$,  $c \cong \ELet{c'}{\EFork{( \ELam {\bar c'} g \; (c, \bar c')) }}{\EFork{( \ELam {\bar c} g' \; (c', \bar c)) }} $.
 \end{enumerate}
 \end{lemma}
 
@@ -75,6 +74,37 @@ The following is inspired by a paper by Perez, Toninho, Pfenning ($+$ will need 
   \\
   L^* (c : S) &= \{ (e_1, e_2) \mid \forall e_1', e_2'. e_1 \to^* e_1', e_2 \to^* e_2' \Rightarrow (e_1', e_2') \in L (c : S) \}
 \end{align*}
+
+\subsection{Attempt at Vasco's suggestion}
+\label{sec:attempt-at-vascos}
+
+\begin{lemma}
+  Suppose $\Ctxt \vdash e_1 \leadsto e'_1 : T$ where $\Ctxt$ contains
+  only channel bindings.  If
+  $\reduce[\alpha]{e_1}{e_2}$, then $\reducemany[\alpha]{e'_1}{e'_2}$
+  and $\Ctxt \vdash e'_1 \leadsto e'_2 : T$.
+\end{lemma}
+\begin{proof}
+  Suppose the top-level translation rule is
+  \begin{mathpar}
+    \inferrule{
+      \Ctxt \vdash e \leadsto e' : T \\
+      f : T \eqt U
+    }{
+      \Ctxt \vdash e \leadsto f e' : U
+    }
+  \end{mathpar}
+  By induction on the derivation of the translation judgment, we
+  obtain
+  $\reduce[\alpha]{e}{e_2}$ implies $\reducemany[\alpha]{e'}{e'_2}$,
+  for all $\alpha$, and $\Ctxt \vdash e' \leadsto e'_2 : T$.
+
+  As $f$ is a value, we have $\reducemany[\alpha]{f e'}{f e'_2}$.
+
+  However, if $e$ is a value, then so is $e'$ (lemma!). 
+
+  
+\end{proof}
 
 %%% Local Variables:
 %%% mode: latex
