@@ -138,32 +138,12 @@
     { \PParImpl {#2} {#3} } }
 \newcommand\PParImpl[2]{#1 \| #2}
 
-% MACROS FOR DERIVATION TRANSLATION
+% Macros for translation
 %
-% The translation function in its most general form
-\newcommand\dtrans[1]{\left\llbracket #1 \right\rrbracket}
-
-% Set of derivation trees where
+%   [#1] |- #2 ~> #3 : #4
 %
-%   #1 |- #2 : #3
-%
-% Context defaults to \Ctxt
-\newcommand\derivTree[3][\Ctxt]{\mathcal{T}\!\!\left(\typing[#1]{#2}{#3}\right)}
-
-% How we call derivation tree variables.
-\newcommand\dvarName[1]{#1^{\mathcal T}}
-
-% Shortcut for calling \dtrans on a \dtreevar
-\newcommand\dtvar[1]{\dtrans{\dvarName{#1}}}
-
-% Shortcut for binding a \dtreevar
-\newcommand\dtbind[3][\Ctxt]{\dvarName{#2} \in \derivTree[#1]{#2}{#3}}
-
-% Typeset the the LHS of the equi => iso translation
-%
-%   {#1} premise
-%   {#2} conclusion
-\newcommand\dtranslhs[2]{\dtrans{\inferrule{#1}{#2}}}
+% Context defaults to \Ctxt.
+\newcommand\translation[4][\Ctxt]{#1 \vdash #2 \leadsto #3 : #4}
 
 %%% Local Variables:
 %%% mode: latex

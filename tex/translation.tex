@@ -5,26 +5,19 @@ subset of the syntactically valid expressions in the iso-recursive system. A
 simple one-to-one mapping, however, does not preserve well-typedness because
 the target type system is more strict.
 
-Instead, we describe a translation which uses a derivation tree to translate
-from equi-recursive typed expressions to iso-recursive typed expressions. The
-translation preserves well-typedness and the original and the resulting process
-are \highlight{``wire-compatible''}. \js{what is the correct word?}
-\pt{I've used that word, but the actual technical content is more
-  tricky than I imagined.}
-
-A derivation tree in the equi-recursive system with the overall conclusion
-$\typing e T$ can be translated to the iso-recursive system. The function
-$\llbracket \_ \rrbracket$ performs the translation; its argument is a full
-derivation tree. $\derivTree e T$ describes the set of derivation trees with
-the overall conclusion $\typing e T$.
-
-\pt{A (perhaps simpler) alternative would be to use a translation
-  judgment $\Gamma \vdash e \leadsto e' : T$ where (e.g.) $e$ is equi
-  and $e'$ is iso. Only the conversion rule is interesting, as
-  usual. Projecting on $e$ yields the equirecursive typing and
-  projecting on $e'$ yields the isorecursive typing.}
-
 \input{fig-translation}
+
+Instead, the translation judgment $\translation e {e'} T$ in
+Figure~\ref{fig:translation} describes the translation of equi-recursively
+typed expression $e$ to an equivalent expression $e'$ in the iso-recursive
+system. The interesting part of the translation process is where the
+equi-recursive system makes use of type conversions. Here, an appriopriate
+conversion function is inserted on the iso-recursive side.
+
+The translation preserves well-typedness and the original and the
+resulting process are \highlight{``wire-compatible''}. \js{what is the correct
+word?} \pt{I've used that word, but the actual technical content is more tricky
+than I imagined.}
 
 % \begin{align*}
 %   \dtransDef[\TUnit] \EUnit &= \EUnit &
