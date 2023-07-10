@@ -19,53 +19,6 @@ resulting process are \highlight{``wire-compatible''}. \js{what is the correct
 word?} \pt{I've used that word, but the actual technical content is more tricky
 than I imagined.}
 
-% \begin{align*}
-%   \dtransDef[\TUnit] \EUnit &= \EUnit &
-%   \dtransDef x &= x \\
-%   \dtransDef {\ELam x e} &= \ELam x \dtrans e &
-%   \dtransDef {\ERec x e} &= \ERec x \dtrans e \\
-%   \dtransDef {e_1 \; e_2} &= \dtrans{e_1} \; \dtrans{e_2} &
-%   \dtransDef {\ELetU {e_1} {e_2}} &= \ELetU {\dtrans{e_1}} {\dtrans{e_2}} \\
-%   \dtransDef {(e_1,e_2)} &= (\dtrans{e_1},\dtrans{e_2}) &
-%   \dtransDef {\ELetP xy {e_1} {e_2}} &= \ELetP xy {\dtrans{e_1}} \dtrans{e_2} \\
-% \end{align*}
-% 
-% \declrel{Typing derivation translation}
-% \begin{mathpar}
-%   \derivTransRule{ }{\typing \EUnit \TUnit}{\EUnit} \and
-%   \derivTransRule{ }{\typing x T}{x} \and
-%   
-%   \derivTransRule{\DT e}{
-%     \typing{\ELam x e}{U}
-%   }{
-%     \ELam x \derivTrans e
-%   }
-% 
-%   \derivTransRule{\DT e}{
-%     \typing{\ERec x e}{U}
-%   }{
-%     \ERec x \derivTrans e
-%   }
-% 
-%   \derivTransRule{\DT {e_1} \\ \DT {e_2}}{
-%     \typing[\CSplit]{e_1 e_2}{T_2}
-%   }{
-%     \derivTrans{e_1} \derivTrans{e_2}
-%   }
-% 
-%   \derivTransRule{\DT {e_1} \\ \DT {e_2}}{
-%     \typing{ \ELetU{e_1}{e_2} }{ T_2 }
-%   }{
-%     \ELetU {\derivTrans {e_1}} {\derivTrans {e_2}}
-%   }
-% 
-%   \derivTransRule{\DT e \\ f : T \eqt U : f'}{
-%     \typing e U
-%   }{
-%     f \; \derivTrans e
-%   }
-% \end{mathpar}
-
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "main"
