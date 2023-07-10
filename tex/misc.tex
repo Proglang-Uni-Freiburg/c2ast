@@ -123,7 +123,7 @@ The following is inspired by a paper by Perez, Toninho, Pfenning ($+$ will need 
   Suppose $\Ctxt \vdash e_1 \leadsto e'_1 : T$ where $\Ctxt$ contains
   only channel bindings.  If
   $\reduce[\alpha]{e_1}{e_2}$, then $\reducemany[\alpha]{e'_1}{e'_2}$
-  and $\Ctxt \vdash e'_1 \leadsto e'_2 : T$.
+  and $\Ctxt \vdash e'_1 \leadsto e'_2 : T$. \vv{Shouldn't it be $\Ctxt \vdash e_2 \leadsto e'_2 : T$?}
 \end{lemma}
 \begin{proof}
   Suppose the top-level translation rule is
@@ -137,10 +137,16 @@ The following is inspired by a paper by Perez, Toninho, Pfenning ($+$ will need 
   \end{mathpar}
   By induction on the derivation of the translation judgment, we
   obtain
-  $\reduce[\alpha]{e}{e_2}$ implies $\reducemany[\alpha]{e'}{e'_2}$,
-  for all $\alpha$, and $\Ctxt \vdash e' \leadsto e'_2 : T$.
+  $\reduce[\alpha]{e_1}{e_3}$ implies $\reducemany[\alpha]{e_1'}{e'_3}$,
+  for all $\alpha$, and $\Ctxt \vdash e_1' \leadsto e'_3 : T$.
 
-  As $f$ is a value, we have $\reducemany[\alpha]{f e'}{f e'_2}$.
+  As $f$ is a value, we have $\reducemany[\alpha]{f e_1'}{f e'_3}$.
+
+  \vv{If expression reduction is deterministic (is it?), then we take
+    $e_2 = e_3$ and $e'_2 = f e'_3$ and we are done. Otherwise expression
+    reduction is Church-Rosser and we should be able to complete the proof with
+    a little more effort. Does the difficulty lie in \emph{process} (rather than
+    expression) reduction?}
 
   However, if $e$ is a value, then so is $e'$ (lemma!). 
 
