@@ -1,0 +1,22 @@
+\declrel{Type syntax}
+\begin{align*}
+  T \grmdef&
+    S^\emptyset               \grmor
+    \TUnit          \grmor
+    \TPair T T      \grmor
+    \TFun  T T      \\
+  S^{\mathcal X} \grmdef&
+    \TEnd !         \grmor
+    \TEnd ?         \grmor
+    \TOut T S^{\mathcal X}       \grmor
+    \TIn  T S^{\mathcal X}       \grmor
+    \TSelect{ l_i: S^{\mathcal X}_i } \grmor
+    \TCase{ l_i: S^{\mathcal X}_i }   \grmor
+    \TRec[X] S^{\mathcal X \cup \{X\}}      \grmor
+    X^{\in \mathcal X}
+\end{align*}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

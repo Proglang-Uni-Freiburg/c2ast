@@ -1,0 +1,34 @@
+\declrel{Syntax for constants, values, expressions and processes}
+\begin{align*}
+  v \grmdef&
+    c                        \grmor
+    (v, v)                   \grmor
+    \ELam x e                \grmor
+    \ERec x v                \grmor
+  \\
+  e \grmdef&
+    v                       \grmor
+    x                       \grmor
+    e \; e                  \grmor
+    \ELetU e e              \grmor
+    (e, e)                  \grmor
+    \ELetP x y e e          \grmor
+  %\\ &
+    \ESelect l e            \grmor
+    \ECase e { l_i \rightarrow e } \grmor
+    \EFork e
+  \\
+  p \grmdef&
+    e                       \grmor
+    \PPar p p               \grmor
+    \PScope p
+\end{align*}
+
+The expression $\ELam {(x,y)} e$ abbreviates $\ELam z \ELetP xy z e$
+for some variable $z$ not free in $e$.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

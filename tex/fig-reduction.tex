@@ -31,7 +31,7 @@
       E[e_2]
     }
   \end{mathpar}
-  \declrel{Process reduction (iso-recursive system)}[$\reduce{p}{p}$]
+  \declrel{Process reduction}[$\reduce{p}{p}$]
   \begin{mathpar}
     \reducerule{
       \PScope (\PPar* {\ESend v a} {\ERecv b} )
@@ -56,19 +56,7 @@
     }{
       \PScope (\PPar {E[a]} {e \; b})
     }
-
-    \reducerule{
-      \PScope (\PPar* {\ERoll a} {\ERoll b})
-    }{
-      \PPar* a b
-    }
-
-    \reducerule{
-      \PScope (\PPar* {\EUnroll a} {\EUnroll b})
-    }{
-      \PPar* a b
-    }
-
+    \\
     \reducerule[\reduce{p}{p^\prime}] { \PPar p q } { \PPar {p^\prime} q } \and
     \reducerule[\reduce{p}{p^\prime}] { \PScope p } { \PScope p^\prime }   \and
     \reducerule[p \equiv q \\ \reduce{q}{q^\prime}] { p } { q^\prime }

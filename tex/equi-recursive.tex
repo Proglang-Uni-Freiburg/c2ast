@@ -1,32 +1,65 @@
 \section{Equi-recursion}
-
-The iso-recursive system can---with very few and localized changes---be turned
-into a traditional equi-recursive system. The type syntax and dualization of
-session types require no adjustments.
-
+\label{sec:equi-recursion}
 \input{fig-equi-equivalence}
 
-The equi-recursive nature of this adjusted system handles any necessary
-(un)rolling of recursive session types. This behavior is captured in the type
-equivalence relation defined in Figure~\ref{fig:equi-equivalence}. Equivalence
-$f : T \eqt T' : f'$ gives rise to two functions $f : \TFun {T} {T'}$, $f' :
-\TFun {T'} {T}$. Equivalence of session types $g : S \eqs S' : g'$ gives rise
-to two functions $g : \TFun {\TPair {S} {\TDual{S'}}} \TUnit$ and $g' :
-\TFun {\TPair {S'} {\TDual{S}}} \TUnit$. All of these functions are
-expressions in the iso-recursive system.
+In the following we define a standard language for recursive
+functional session types inspired by GV \cite{GV}. To avoid problems
+with duality, the interplay of
+recursion and session types is such that the payload type of a
+communication is always closed \cite{final-cut}.
 
-At the same time, the equi-recursive nature obviates the need for $\EkwRoll$
-and $\EkwUnroll$ operations. These two values, their two typing rules and
-reductions are removed. Instead, a rule is added which uses the equi-recursive
-type equivalence.
+Figure~\ref{fig:equi-equivalence} contains the definition of the type
+language along with equivalence for types $T \eqt T$  and session
+types $S \eqs S$. The latter definition is coinductive and equates
+session types up to unfolding of recursive types. The figure also
+specifies evidence terms for equivalence (in light blue), which we ignore for now.
+
+\input{decl-expressions}
+
+\subsection{Operational semantics}
+
+\declrel{Structural congruence of processes}[$p \equiv p$]\medskip\\
+The structural congruence relation on processes is defined as the smallest
+congruence relation that includes the commutative monoidal rules with the
+binary operator being parallel process composition $\PPar \_ \_$ and
+value~$\EUnit$ as the neutral element, scope extrusion, and swapping
+of binders:
+\begin{align*}
+  \PPar{\PScope p}{q} &\equiv \PScope (\PPar p q)
+  \quad\text{if $a,b$ not free in $q$}
+  \\
+  \PScope p &\equiv \PScope[b,a] p
+\end{align*}
+
+\declrel{Evaluation contexts}
+\begin{align*}
+  E \grmdef&
+    \EHole \grmor
+    E \; e \grmor
+    v \; E \grmor
+    \ELetU E e \grmor
+    (E,e) \grmor
+    (v,E) \grmor
+    \ELetP xy E e \grmor
+  %\\ &
+    \ESelect l E \grmor 
+    \ECase E { l_i \rightarrow e_i }
+\end{align*}
+
+\input{fig-reduction}
+
+The typing rules are standard (see \dots), but we choose to make
+equirecursion explicit by adopting a conversion rule, which is not
+syntax directed.
 \begin{mathpar}
   \inferrule{
-    \typing e T \\ f : T \eqt U
+    \typing e T \\ T \eqt U
   }{
     \typing e U
   }
 \end{mathpar}
 
+We omit the standard metatheoretial results \cite{metatheory}.
 %\subsection{Types}
 
 % \declrel{Type syntax}

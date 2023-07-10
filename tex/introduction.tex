@@ -34,8 +34,7 @@ As the session types are recursive, so are the conversion
 functions. This conversion function creates one additional
 channels and forks one additional process. Moreover, it leads to
 additional communication as evidenced by the standard rule for
-isorecursive processes (and the analogous rule for $\ERoll a \| \ERoll
-b$) :
+isorecursive processes:
 \begin{gather*}
   \reducerule{
     \PScope (\PPar* {\EUnroll a} {\EUnroll b})
@@ -48,7 +47,7 @@ elide this extra communication, which essentially reinterprets
 isorecursion as equirecursion.
 This move makes a type conversion like $f$ act like an identity
 function, which forwards messages from one channel to another, as the
-$\ERoll\_$ and $\EUnroll\_$ operations are just identities.
+$\EUnroll\_$ operations are just identities. 
 
 
 Clearly, this transformation goes both ways. If we start from an

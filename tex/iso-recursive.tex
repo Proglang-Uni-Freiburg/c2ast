@@ -1,24 +1,58 @@
 \section{Iso-recursion}
+\label{sec:iso-recursion}
+
+The traditional equi-recursive system can---with very few and localized changes---be turned
+into an iso-recursive system. The type syntax and dualization of
+session types require no adjustments.
+
+We extend the syntax with an extra expression to unroll a recursive
+type:
+\begin{align*}
+    e \grmdef&
+               \EUnroll e
+\end{align*}
+
+Extra process reduction rules
+\begin{mathpar}
+    % \reducerule{
+    %   \PScope (\PPar* {\ERoll a} {\ERoll b})
+    % }{
+    %   \PPar* a b
+    % }
+    %   
+    \reducerule{
+      \PScope (\PPar* {\EUnroll a} {\EUnroll b})
+    }{
+      \PPar* a b
+    }
+\end{mathpar}
+
+We replace the typing rule for conversion by a rule for explicit
+unrolling.
+\begin{mathpar}
+    \inferrule{
+      \typing{e}{\TRec S}
+    }{
+      \typing{\EUnroll e}{S[\TRec[X] S / X]}
+    }
+\end{mathpar}
+
+The equi-recursive nature of this adjusted system handles any necessary
+(un)rolling of recursive session types. This behavior is captured in the type
+equivalence relation defined in Figure~\ref{fig:equi-equivalence}. Equivalence
+$f : T \eqt T' : f'$ gives rise to two functions $f : \TFun {T} {T'}$, $f' :
+\TFun {T'} {T}$. Equivalence of session types $g : S \eqs S' : g'$ gives rise
+to two functions $g : \TFun {\TPair {S} {\TDual{S'}}} \TUnit$ and $g' :
+\TFun {\TPair {S'} {\TDual{S}}} \TUnit$. All of these functions are
+expressions in the iso-recursive system.
+
+At the same time, the equi-recursive nature obviates the need for $\EkwRoll$
+and $\EkwUnroll$ operations. These two values, their two typing rules and
+reductions are removed. Instead, a rule is added which uses the equi-recursive
+type equivalence.
 
 \subsection{Types}
 
-\declrel{Type syntax}
-\begin{align*}
-  T \grmdef&
-    S^\emptyset               \grmor
-    \TUnit          \grmor
-    \TPair T T      \grmor
-    \TFun  T T      \\
-  S^{\mathcal X} \grmdef&
-    \TEnd !         \grmor
-    \TEnd ?         \grmor
-    \TOut T S^{\mathcal X}       \grmor
-    \TIn  T S^{\mathcal X}       \grmor
-    \TSelect{ l_i: S^{\mathcal X}_i } \grmor
-    \TCase{ l_i: S^{\mathcal X}_i }   \grmor
-    \TRec[X] S^{\mathcal X \cup \{X\}}      \grmor
-    X^{\in \mathcal X}
-\end{align*}
 
 \declrel{Dualization of session types}[$\TDual S = S$]
 \begin{align*}
@@ -75,35 +109,6 @@
 
 \subsection{Expressions}
 
-\declrel{Syntax for constants, values, expressions and processes}
-\begin{align*}
-  v \grmdef&
-    c                        \grmor
-    (v, v)                   \grmor
-    \ELam x e                \grmor
-    \ERec x v                \grmor
-  \\
-  e \grmdef&
-    v                       \grmor
-    x                       \grmor
-    e \; e                  \grmor
-    \ELetU e e              \grmor
-    (e, e)                  \grmor
-    \ELetP x y e e          \grmor
-  %\\ &
-    \ESelect l e            \grmor
-    \ECase e { l_i \rightarrow e } \grmor
-    \EFork e
-  \\
-  p \grmdef&
-    e                       \grmor
-    \PPar p p               \grmor
-    \PScope p
-\end{align*}
-
-The expression $\ELam {(x,y)} e$ is an abbreviation for $\ELam {x'} \ELetP xy {x'} e$
-for some $x'$ not free in $e$.
-
 % The term syntax of the iso-recursive system is the same as for the
 % equi-recursive system with two additional values.
 % \begin{align*}
@@ -151,38 +156,6 @@ for some $x'$ not free in $e$.
 %     \typing{\EUnroll e}{S[\TRec[X] S / X]}
 %   }
 % \end{mathpar}
-
-
-\subsubsection{Operational semantics}
-
-\declrel{Structural congruence of processes}[$p \equiv p$]\medskip\\
-The structural congruence relation on processes is defined as the smallest
-congruence relation that includes the commutative monoidal rules with the
-binary operator being parallel process composition $\PPar \_ \_$ and
-value~$\EUnit$ as the neutral element, and scope extrusion:
-\begin{align*}
-  \PPar{\PScope p}{q} &\equiv \PScope (\PPar p q)
-  \quad\text{if $a,b$ not free in $q$}
-  \\
-  \PScope p &\equiv \PScope[b,a] p
-\end{align*}
-
-\declrel{Evaluation contexts}
-\begin{align*}
-  E \grmdef&
-    \EHole \grmor
-    E \; e \grmor
-    v \; E \grmor
-    \ELetU E e \grmor
-    (E,e) \grmor
-    (v,E) \grmor
-    \ELetP xy E e \grmor
-  %\\ &
-    \ESelect l E \grmor 
-    \ECase E { l_i \rightarrow e_i }
-\end{align*}
-
-\input{fig-reduction}
 
 % Evaluation contexts for the iso-recursive system have the same shape as the
 % contexts in the equi-recursive system. The reduction relation is extended by
