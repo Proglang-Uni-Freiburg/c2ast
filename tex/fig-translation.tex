@@ -1,103 +1,116 @@
-\declrel{Translation from equi-recursive to iso-recursive expressions}[$\dtrans{e}=e$]
-\begin{mathpar}
-  \dtranslhs{ \vdots }{ \typing \EUnit \TUnit } = \EUnit \and
-  \dtranslhs{ \vdots }{ \typing x T } = x
+\begin{figure}
+  \declrel{Translation from equi-recursive to iso-recursive expressions}[$\translation e {e'} T$]
+  \begin{mathpar}
+    \inferrule{ \CExhausted }{ \translation \EUnit \EUnit \TUnit }      \and
+    \inferrule{ \CExhausted }{ \translation[\Ctxt, \CBind  x T] x x T } \and
+    \inferrule{ \CExhausted }{ \translation[\Ctxt, \CBind* x T] x x T }
 
-  \dtranslhs{
-    \dtbind[\Ctxt,\CBind x T] e U
-  }{
-    \typing {\ELam x e} {\TFun T U}
-  } = \ELam x \dtvar e
+    \inferrule{
+      \translation[\Ctxt, \CBind x T] e e' U
+    }{
+      \translation
+        { \ELam x e }
+        { \ELam x {e'} }
+        { \TFun T U }
+    }
 
-  \dtranslhs{
-    \dtbind[\Ctxt,\CBind* x {\TFun T U}] v {\TFun T U}
-  }{
-    \typing {\ERec x v} {\TFun T U}
-  } = \ERec x \dtrans v
+    \inferrule{
+      \CExhausted \\
+      \translation[\Ctxt, \CBind* x {\TFun T U}] v {v'} {\TFun T U}
+    }{
+      \translation
+        { \ERec x v }
+        { \ERec x {v'} }
+        { \TFun T U }
+    }
 
-  \dtranslhs{
-    \dtbind[\Ctxt_1] {e_1} {\TFun T U} \\
-    \dtbind[\Ctxt_2] {e_2} T
-  }{
-    \typing[\CSplit] {e_1 e_2} U
-  } = \dtvar{e_1} \dtvar{e_2}
+    \inferrule{
+      \translation[\Ctxt_1] {e_1} {e_1'} {\TFun T U} \\
+      \translation[\Ctxt_2] {e_2} {e_2'} T
+    }{
+      \translation[\CSplit] {e_1 e_2} {e_1' e_2'} U
+    }
 
-  \dtranslhs{
-    \dtbind[\Ctxt_1] {e_1} \TUnit \\
-    \dtbind[\Ctxt_2] {e_2} T
-  }{
-    \typing[\CSplit] {\ELetU {e_1} {e_2}} T
-  } = \ELetU {\dtvar{e_1}} {\dtvar{e_2}}
+    \inferrule{
+      \translation[\Ctxt_1] {e_1} {e_1'} \TUnit \\
+      \translation[\Ctxt_2] {e_2} {e_2'} T
+    }{
+      \translation[\CSplit] {\ELetU {e_1} {e_2}} {\ELetU {e_1'} {e_2'}} T
+    }
 
-  \dtranslhs{
-    \dtbind[\Ctxt_1] {e_1} T \\
-    \dtbind[\Ctxt_2] {e_2} U
-  }{
-    \typing[\CSplit] {(e_1,e_2)} {\TPair T U}
-  } = \left( \dtvar{e_1},\dtvar{e_2} \right)
+    \inferrule{
+      \translation[\Ctxt_1] {e_1} {e_1'} T \\
+      \translation[\Ctxt_2] {e_2} {e_2'} U
+    }{
+      \translation[\CSplit] {(e_1,e_2)} {(e_1',e_2')} {\TPair T U}
+    }
 
-  \dtranslhs{
-    \dtbind[\Ctxt_1] {e_1} {\TPair T_1 T_2} \\
-    \dtbind[\Ctxt_2, \CBind x T, \CBind y U] {e_2} U
-  }{
-    \typing[\CSplit]{\ELetP xy {e_1} {e_2}} U
-  } = \ELetP xy {\dtvar{e_1}} {\dtvar{e_2}}
+    \inferrule{
+      \translation[\Ctxt_1] {e_1} {e_1'} {\TPair{T_1}{T_2}} \\
+      \translation[\Ctxt_2,\CBind x {T_1},\CBind y {T_2}] {e_2} {e_2'} U
+    }{
+      \translation[\CSplit] {\ELetP xy {e_1} {e_2}} {\ELetP xy {e_1'} {e_2'}} U
+    }
 
-  \dtranslhs{
-    \dtbind e {\TEnd ?}
-  }{
-    \typing {\EWait e} \TUnit
-  } = \EWait {\dtvar e}
+    \inferrule{
+      \translation e {e'} {\TEnd!}
+    }{
+      \translation {\ETerm e} {\ETerm {e'}} \TUnit
+    }
 
-  \dtranslhs{
-    \dtbind e {\TEnd !}
-  }{
-    \typing {\ETerm e} \TUnit
-  } = \ETerm {\dtvar e}
+    \inferrule{
+      \translation e {e'} {\TEnd?}
+    }{
+      \translation {\EWait e} {\EWait {e'}} \TUnit
+    }
 
-  \dtranslhs{
-    \dtbind {e_1} T \\
-    \dtbind {e_2} {\TOut T S}
-  }{
-    \typing[\CSplit] {\ESend {e_1} {e_2}} S
-  } = \ESend {\dtvar{e_1}} {\dtvar{e_2}}
+    \inferrule{
+      \translation[\Ctxt_1] {e_1} {e_1'} T \\
+      \translation[\Ctxt_2] {e_2} {e_2'} {\TOut T S}
+    }{
+      \translation[\CSplit] {\ESend {e_1} {e_2}} {\ESend {e_1'} {e_2'}} S
+    }
 
-  \dtranslhs{
-    \dtbind e {\TIn T S}
-  }{
-    \typing {\ERecv e} {(T,S)}
-  } = \ERecv {\dtvar e}
+    \inferrule{
+      \translation e {e'} {\TIn T S}
+    }{
+      \translation {\ERecv e} {\ERecv {e'}} {\TPair T S}
+    }
 
-  \dtranslhs{
-    \dtbind e {\TSelect{l_i : S_i}} \\
-    j \in I
-  }{
-    \typing{\ESelect{l_j}{e}}{S_j}
-  } = \ESelect {l_j} {\dtvar e}
+    \inferrule{
+      \translation e {e'} {\TSelect{l_i : S_i}} \\
+      j \in I
+    }{
+      \translation {\ESelect{l_j}{e}} {\ESelect{l_j}{e'}} {S_j}
+    }
 
-  \dtranslhs{
-    \dtbind[\Ctxt_1]{e}{\TCase{l_i : S_i}} \\
-    \dtbind[\Ctxt_2]{e_i}{\TFun{S_i}{T}}
-  }{
-    \typing[\CSplit]{
-      \ECase e { l_i \rightarrow e_i }
-    }{T}
-  } = \ECase {\dtvar e} { l_i \rightarrow \dtvar{e_i} }
+    \inferrule{
+      \translation[\Ctxt_1]{e}{e'}{\TCase{l_i : S_i}} \\
+      \translation[\Ctxt_2]{e_i}{e_i'}{\TFun{S_i}{T}}
+    }{
+      \translation[\CSplit]{
+        \ECase e { l_i \rightarrow e_i }
+      }{
+        \ECase {e'} { l_i \rightarrow e'_i }
+      }{T}
+    }
 
-  \dtranslhs{
-    \dtbind e {\TFun {\TDual S} \TUnit}
-  }{
-    \typing{\EFork e}{S}
-  } = \EFork {\dtvar e}
+    \inferrule{
+      \translation e {e'} {\TFun {\TDual S} \TUnit}
+    }{
+      \translation {\EFork e} {\EFork {e'}} {S}
+    }
 
-  \dtranslhs{
-    \dtbind e T \\
-    f : T \eqt U
-  }{
-    \typing e U
-  } = f \; \dtvar e
-\end{mathpar}
-
+    \inferrule{
+      \translation e {e'} T \\
+      f : T \eqt U
+    }{
+      \translation e {f \; e'} U
+    }
+  \end{mathpar}
+  \caption{Translation from equi-recursive to iso-recursive expressions}
+  \label{fig:translation}
+\end{figure}
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "main"
