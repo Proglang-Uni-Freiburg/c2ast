@@ -126,7 +126,9 @@ The following is inspired by a paper by Perez, Toninho, Pfenning ($+$ will need 
   and $\Ctxt \vdash e_2 \leadsto e'_2 : T$.
 \end{lemma}
 \begin{proof}
-  Suppose the top-level translation rule is
+  The proof is by rule induction on the hypothesis.
+  %
+  Case the top-level translation rule is
   \begin{mathpar}
     \inferrule{
       \Ctxt \vdash e \leadsto e' : T \\
@@ -135,12 +137,14 @@ The following is inspired by a paper by Perez, Toninho, Pfenning ($+$ will need 
       \Ctxt \vdash e \leadsto f e' : U
     }
   \end{mathpar}
-  By induction on the derivation of the translation judgment, we
-  obtain
-  $\reduce[\alpha]{e_1}{e_3}$ implies $\reducemany[\alpha]{e_1'}{e'_3}$,
-  for all $\alpha$, and $\Ctxt \vdash e_1' \leadsto e'_3 : T$.
-
-  As $f$ is a value, we have $\reducemany[\alpha]{f e_1'}{f e'_3}$.
+  Induction gives $\reduce[\alpha]{e_1}{e_3}$ and
+  $\reducemany[\alpha]{e_1'}{e'_3}$ and $\Ctxt \vdash e_1' \leadsto e'_3 : T$,
+  for all $\alpha$.
+  % 
+  Since $f$ is a value and $e_1$ is not a value (it reduces), the only
+  possible reduction for $f e_1'$ is $\reduce[\alpha]{f e_1'}{f e'_3}$.
+  %
+  We take $f e'_3$ for $e'_2$ and we are done.
 
   \vv{If expression reduction is deterministic (is it?), then we take
     $e_2 = e_3$ and $e'_2 = f e'_3$ and we are done. Otherwise expression
@@ -151,6 +155,8 @@ The following is inspired by a paper by Perez, Toninho, Pfenning ($+$ will need 
   \pt{Agreed, this part works ok. But what follows troubles me.}
 
   However, if $e_1$ is a value, then so is $e_1'$ (lemma!). 
+
+  \vv{But $e_1$ reduces (in exactly one step); it can't possibly be a value}
 
   Proceed by induction on $f : T \eqt U$?
 

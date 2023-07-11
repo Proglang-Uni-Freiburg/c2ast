@@ -12,7 +12,7 @@ type,
                \EUnroll e
 \end{align*}
 %
-reduction with an extra rule
+reduction with an extra rule:
 %
 \begin{mathpar}
     % \reducerule{
@@ -28,8 +28,7 @@ reduction with an extra rule
     }
 \end{mathpar}
 %
-and we replace the typing rule for conversion by a rule for explicit
-unrolling.
+and we replace the typing rule for conversion by a rule for explicit unrolling:
 \begin{mathpar}
     \inferrule{
       \typing{e}{\TRec S}
@@ -41,10 +40,10 @@ unrolling.
 The equi-recursive nature of this adjusted system handles any necessary
 unrolling of recursive session types. This behavior is captured in the type
 equivalence relation defined in Figure~\ref{fig:equi-equivalence}. Equivalence
-$f : T \eqt T'$ gives rise to a function $f : \TFun {T} {T'}$.
-% , $f' : \TFun {T'} {T}$.
-Equivalence of session types $g : S \eqs S' : g'$ gives rise
-to a function $g : \TFun {\TPair {S} {\TDual{S'}}} \TUnit$.
+$f : T \eqt U$ gives rise to a function $f : \TFun {T} {U}$.
+% , $f' : \TFun {U} {T}$.
+Equivalence of session types $g : R \eqs S$ gives rise
+to a function $g : \TFun {\TPair {R} {\TDual{S}}} \TUnit$.
 % and $g' : \TFun {\TPair {S'} {\TDual{S}}} \TUnit$.
 These two functions are expressions in the iso-recursive system.
 
