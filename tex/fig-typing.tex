@@ -1,29 +1,23 @@
 % \begin{figure}
   \declrel{Typing rules for expressions in the iso-recursive system}[$\typing{e}{T}$]
   \begin{mathpar}
-    \inferrule{ 
-      \CExhausted
-    }{
-      \typing{\EUnit}{\TUnit}
+    \inferrule{}{
+      \typing[\Ctxt^*]{\EUnit}{\TUnit}
+    }
+
+    \inferrule{}{
+      \typing[\Ctxt^*, \CBind x T]{x}{T}
+    }
+
+    \inferrule{}{
+      \typing[\Ctxt^*, \CBind* x T]{x}{T}
     }
 
     \inferrule{
-      \CExhausted
+      % \CExhausted \\
+      \typing[\Ctxt^*, \CBind* x {\TFun T U}]{v}{\TFun T U}
     }{
-      \typing[\Ctxt, \CBind x T]{x}{T}
-    }
-
-    \inferrule{
-      \CExhausted
-    }{
-      \typing[\Ctxt, \CBind* x T]{x}{T}
-    }
-
-    \inferrule{
-      \CExhausted \\
-      \typing[\Ctxt, \CBind* x {\TFun T U}]{v}{\TFun T U}
-    }{
-      \typing{\ERec x v}{\TFun{T}{U}}
+      \typing[\Ctxt^*]{\ERec x v}{\TFun{T}{U}}
     }
 
     \inferrule{

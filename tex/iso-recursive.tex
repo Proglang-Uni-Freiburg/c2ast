@@ -6,13 +6,14 @@ into an iso-recursive system. The type syntax and dualization of
 session types require no adjustments.
 
 We extend the syntax with an extra expression to unroll a recursive
-type:
+type,
 \begin{align*}
     e \grmdef&
                \EUnroll e
 \end{align*}
-
-Extra process reduction rules
+%
+reduction with an extra rule
+%
 \begin{mathpar}
     % \reducerule{
     %   \PScope (\PPar* {\ERoll a} {\ERoll b})
@@ -23,11 +24,11 @@ Extra process reduction rules
     \reducerule{
       \PScope (\PPar* {\EUnroll a} {\EUnroll b})
     }{
-      \PPar* a b
+      \PScope (\PPar* a b)
     }
 \end{mathpar}
-
-We replace the typing rule for conversion by a rule for explicit
+%
+and we replace the typing rule for conversion by a rule for explicit
 unrolling.
 \begin{mathpar}
     \inferrule{
@@ -38,13 +39,14 @@ unrolling.
 \end{mathpar}
 
 The equi-recursive nature of this adjusted system handles any necessary
-(un)rolling of recursive session types. This behavior is captured in the type
+unrolling of recursive session types. This behavior is captured in the type
 equivalence relation defined in Figure~\ref{fig:equi-equivalence}. Equivalence
-$f : T \eqt T' : f'$ gives rise to two functions $f : \TFun {T} {T'}$, $f' :
-\TFun {T'} {T}$. Equivalence of session types $g : S \eqs S' : g'$ gives rise
-to two functions $g : \TFun {\TPair {S} {\TDual{S'}}} \TUnit$ and $g' :
-\TFun {\TPair {S'} {\TDual{S}}} \TUnit$. All of these functions are
-expressions in the iso-recursive system.
+$f : T \eqt T'$ gives rise to a function $f : \TFun {T} {T'}$.
+% , $f' : \TFun {T'} {T}$.
+Equivalence of session types $g : S \eqs S' : g'$ gives rise
+to a function $g : \TFun {\TPair {S} {\TDual{S'}}} \TUnit$.
+% and $g' : \TFun {\TPair {S'} {\TDual{S}}} \TUnit$.
+These two functions are expressions in the iso-recursive system.
 
 At the same time, the equi-recursive nature obviates the need for $\EkwRoll$
 and $\EkwUnroll$ operations. These two values, their two typing rules and
