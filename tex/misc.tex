@@ -140,26 +140,18 @@ The following is inspired by a paper by Perez, Toninho, Pfenning ($+$ will need 
       \Ctxt \vdash e \leadsto f e' : U
     }
   \end{mathpar}
-  Induction gives $\reduce[\alpha]{e_1}{e_3}$ and
-  $\reducemany[\alpha]{e_1'}{e'_3}$ and $\Ctxt \vdash e_1' \leadsto e'_3 : T$,
-  for all $\alpha$.
-  % 
-  Since $f$ is a value and $e_1$ is not a value (it reduces), the only
-  possible reduction for $f e_1'$ is $\reduce[\alpha]{f e_1'}{f e'_3}$.
-  %
-  We take $f e'_3$ for $e'_2$ and we are done.
 
-  \vv{If expression reduction is deterministic (is it?), then we take
-    $e_2 = e_3$ and $e'_2 = f e'_3$ and we are done. Otherwise expression
-    reduction is Church-Rosser and we should be able to complete the proof with
-    a little more effort. Does the difficulty lie in \emph{process} (rather than
-    expression) reduction?}
+  Then, we know (premises) that $\Ctxt \vdash e_1 \leadsto e'_1 : T$ and $f : T
+  \eqt U$.
+  %
+  We need to show that $\reducemany[\alpha]{f e_1'}{e'_2}$ and $\Ctxt \vdash e_2 \leadsto e'_2 : T$.
+  %
+  At this point I suggest proceeding by rule induction on
+  $\reduce[\alpha]{e_1}{e_2}$. Details to be seen.
 
   \pt{Agreed, this part works ok. But what follows troubles me.}
 
   However, if $e_1$ is a value, then so is $e_1'$ (lemma!). 
-
-  \vv{But $e_1$ reduces (in exactly one step); it can't possibly be a value}
 
   Proceed by induction on $f : T \eqt U$?
 
