@@ -260,8 +260,8 @@ TODO: define notion of wire compatibility / bisimulation for regular protocols
 
 
 ----------------------------------------------------------------------
-
-
+-- July 12, 2023
+----------------------------------------------------------------------
 
 
 Suppose
@@ -357,3 +357,64 @@ Argument: (a, a′) ∈ V (End!) which means:
   (νab) (term a ∥ (wait b; term a′))
   ≡
   
+----------------------------------------------------------------------
+
+Attempting the equational correspondence for evaluation context
+
+For evaluation context `case [] { lᵢ : eᵢ }` we do have a reduction correspondence.
+For simplicity and wlog, I'd enforce that eᵢ is a value!
+
+That is, we have a derivation ending in
+
+    [ a : &{ lᵢ : S″ᵢ } ] ⊢ a ↝ a′ : &{ lᵢ : Sᵢ }
+    f : &{ lᵢ : Sᵢ } ↝ &{ lᵢ : S′ᵢ }
+    -----------------------------------
+    [ a : &{ lᵢ : S″ᵢ } ] ⊢ a ↝ f a′ : &{ lᵢ : S′ᵢ }
+
+f = λ c. fork (λ c′⊥ . g (c , c′⊥))
+g = λ (c₁ , c₂). case c₁ { lᵢ : λ c₁ → let c₂ = sel lᵢ c₂ in gᵢ (c₁ , c₂) }
+gᵢ = λ (c₁ , c₂). ⋯
+
+* left side
+
+    case a { lᵢ : eᵢ }
+--a?lⱼ-->
+    eⱼ a
+
+* right side
+
+    case (f a′) { lᵢ : eᵢ′ }
+=
+    case (fork (λ c′⊥ . g (a′ , c′⊥))) { lᵢ : eᵢ′ }
+—→
+    (νab) (case a { lᵢ : eᵢ′ } ∥ g (a′ , b))
+=
+    (νab) (case a { lᵢ : eᵢ′ } ∥ case a′ { lᵢ : λ c₁ → let c₂ = sel lᵢ b in gᵢ (c₁ , c₂) })
+--a′?lⱼ-->
+    (νab) (case a { lᵢ : eᵢ′ } ∥ let c₂ = sel lⱼ b in gⱼ (a′ , c₂))
+-- τ = (a?lⱼ∥b!lⱼ) -->
+    (νab) (eⱼ′ a ∥ gⱼ (a′ , b))
+
+* typing after reduction
+
+    [ a : S″ⱼ ] ⊢ a ↝ a′ : Sⱼ
+    f : Sⱼ ↝ S′ⱼ
+    -----------------------------------
+    [ a : S″ᵢ ] ⊢ a ↝ f a′ : S′ⱼ
+
+where
+
+f = λ c. fork (λ c′⊥ . gⱼ (c , c′⊥))
+
+* left side
+
+    eⱼ a
+
+* right side
+
+    eⱼ′ (fork (λ c′⊥ . gⱼ (a′ , c′⊥)))
+—→
+    (νab) (eⱼ′ a ∥ gⱼ (a′ , b))
+
+----------------------------------------------------------------------
+
