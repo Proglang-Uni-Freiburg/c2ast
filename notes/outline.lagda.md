@@ -257,3 +257,103 @@ TODO: characterize the image of collect and define a backtranslation for such re
 TODO: define notion of wire compatibility / bisimulation for regular protocols
   (so we have a notion of compatibility of algebraic session types different from equality)
   (so we can claim that a traditional session type and its translation to AlgSt are wire compatible)
+
+
+----------------------------------------------------------------------
+
+
+
+
+Suppose
+
+a ↝ a′ : End!
+f : End! ↝ End!
+---------------
+a ↝ f a′ : End!
+
+g : End! ↝ End!
+
+f = λ c. fork (λ c′⊥ . g (c, c′⊥))
+
+g = λ (c₁, c₂). wait c₂; term c₁
+
+   a ↝ (λ c. fork (λ c′⊥ . (λ (c₁, c₂). wait c₂; term c₁) (c, c′⊥))) a′
+
+
+   term a --term--> ()
+
+   term ((λ c. fork (λ c′⊥ . (λ (c₁, c₂). wait c₂; term c₁) (c, c′⊥))) a′)
+   —→
+   term (fork (λ c′⊥ . (λ (c₁, c₂). wait c₂; term c₁) (a′, c′⊥)))
+   —→
+   (νab) (term a ∥ (λ c′⊥ . (λ (c₁, c₂). wait c₂; term c₁) (a′, c′⊥)) b)
+   —→
+   (νab) (term a ∥ (λ (c₁, c₂). wait c₂; term c₁) (a′, b))
+   —→
+   (νab) (term a ∥ (wait b; term a′))
+   —→ (term∥wait)
+   term a′
+   
+----------------------------------------------------------------------
+
+    a ↝ a′ : !().End!
+    f : !().End! ~ !().End!
+    ---------------
+    a ↝ f a′ : !().End!
+    --------------------
+    send v a ↝ send v (f a′) : End!
+
+--a!v-->
+
+    a ↝ a′ : End!
+    f′ : End! ~ End!
+    --------------------
+    a ↝ f′ a′ : End!
+
+0. e₁ →τ e₂ implies ⟦ e₁ ⟧ →* e₂′ and ⟦ e₂ ⟧ = e₂′
+1. e₁ →α e₂ implies ⟦ e₁ ⟧ →*α* e₂′ and  ⟦ e₂ ⟧ ≡ e₂′ (or maybe   ⟦ e₂ ⟧ →* e₂' but seems too strong)
+2. ⟦ e₁ ⟧ →*α e₁′  implies e₁ →α e₂ and ⟦ e₂ ⟧ ≡ e₁′ (equational correspondence)
+
+
+Suppose
+
+a ↝ a′ : !().End!
+f : !().End! ~ !().End!
+---------------
+a ↝ f a′ : !().End!
+
+g : !().End! ↝ !().End!
+
+f = λ c. fork (λ c′⊥ . g₁ (c, c′⊥))
+g₁ = λ (c₁, c₂). let (x, c₂) = recv c₂ in let c₁ = send f_()→() x c₁ in g₂ (c₁, c₂)
+g₂ = λ (c₁, c₂). wait c₂; term c₁
+
+  a ↝ λ c. fork (λ c′⊥ . (λ (c₁, c₂). let (x, c₂) = recv c₂ in let c₁ = send (f_()→() x) c₁ in (λ (c₁, c₂). wait c₂; term c₁) (c₁, c₂)) (c, c′⊥))
+
+  send v a --(a!v)--> a₁
+
+  send v (λ c. fork (λ c′⊥ . (λ (c₁, c₂). let (x, c₂) = recv c₂ in let c₁ = send (f_()→() x) c₁ in (λ (c₁, c₂). wait c₂; term c₁) (c₁, c₂)) (c, c′⊥))) a′
+  —→
+  send v (fork (λ c′⊥ . (λ (c₁, c₂). let (x, c₂) = recv c₂ in let c₁ = send (f_()→() x) c₁ in (λ (c₁, c₂). wait c₂; term c₁) (c₁, c₂)) (a′, c′⊥)))
+  —→
+  (νab) (send v a ∥ (λ (c₁, c₂). let (x, c₂) = recv c₂ in let c₁ = send (f_()→() x) c₁ in (λ (c₁, c₂). wait c₂; term c₁) (c₁, c₂)) (a′, b))
+  —→
+  (νab) (send v a ∥ let (x, b) = recv b in let a′ = send (f_()→() x) a′ in (λ (c₁, c₂). wait c₂; term c₁) (a′, b))
+  —→ (send∥recv)
+  (νab) (a ∥ let (x, b) = (v, b) in let a′ = send (f_()→() x) a′ in (λ (c₁, c₂). wait c₂; term c₁) (a′, b))
+  —→ 
+  (νab) (a ∥ let a′ = send (f_()→() v) a′ in (λ (c₁, c₂). wait c₂; term c₁) (a′, b))
+  —→ 
+  (νab) (a ∥ let a′ = send (f_()→() v) a′ in (λ (c₁, c₂). wait c₂; term c₁) (a′, b))
+  —→* 
+  (νab) (a ∥ let a′ = send v a′ in (λ (c₁, c₂). wait c₂; term c₁) (a′, b))
+  --(a′!v)-->
+  (νab) (a ∥ (λ (c₁, c₂). wait c₂; term c₁) (a′, b))
+  —→
+  (νab) (a ∥ (wait b; term a′))
+
+Argument: (a, a′) ∈ V (End!) which means:
+
+  (νab) (term a ∥ (wait b; term a′))
+  ≡
+  
