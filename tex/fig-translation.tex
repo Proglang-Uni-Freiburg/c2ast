@@ -6,7 +6,7 @@
     \inferrule{ \CExhausted }{ \translation[\Ctxt, \CBind* x T] x x T }
 
     \inferrule{
-      \translation[\Ctxt, \CBind x T] e e' U
+      \translation[\Ctxt, \CBind x T] e {e'} U
     }{
       \translation
         { \ELam x e }
