@@ -119,6 +119,50 @@ The following is inspired by a paper by Perez, Toninho, Pfenning ($+$ will need 
 \subsection{Attempt at Vasco's suggestion}
 \label{sec:attempt-at-vascos}
 
+\begin{lemma}[Equational correspondence for expressions]
+  Suppose $\Ctxt \vdash e_1 \leadsto e'_1 : T$ where $\Ctxt$ contains only
+  channel bindings.
+  \begin{enumerate}
+  \item
+    If $\reduce[\alpha]{e_1}{e_2}$
+    and $\Ctxt \vdash e_2 \leadsto e'_2 : T$, then
+    $\reducemany[\alpha]{e'_1}{e'_3}$ and $e_3' = e_2'$.
+  % \item If $\reduce[\alpha]{e'_1}{e'_3}$, then $\reduce[\alpha]{e_1}{e_2}$ and
+  %   $\reducemany[\alpha]{e'_3}{e'_2}$ and $\Ctxt \vdash e_2 \leadsto e'_2 : T$.
+  \end{enumerate}
+\end{lemma}
+
+Define $e_1 = e_2$: reflexive, transitive, congruence, symmetric
+closure of all expression reductions, and fork. As well as process
+reduction on restricted channels. 
+\begin{mathpar}
+  \reduce[a!v]{\ESend v a}{a}
+
+  \dots
+
+  \inferrule{
+    \reduce[\alpha]{e}{e'}
+  }{
+    \reduce[\alpha]{E[e]}{E[e']}
+  }
+  \\
+  \text{process reductions}
+  \\
+  \inferrule{
+    \reduce[a!v]{p_1}{p_1'} \\
+    \reduce[b?v]{p_2}{p_2'}
+  }{
+    \reduce[a!v, b?v]{\PPar{p_1}{p_1'} }{\PPar{p_2}{p_2'} }
+  }
+
+  \inferrule{
+    \reduce[a!v, b?v]{p }{p' }
+  }{
+    \reduce[\tau]{\PScope p}{\PScope {p'}}
+  }
+\end{mathpar}
+
+\newpage
 \begin{lemma}[Operational correspondence for expressions]
   Suppose $\Ctxt \vdash e_1 \leadsto e'_1 : T$ where $\Ctxt$ contains only
   channel bindings. \begin{enumerate}
