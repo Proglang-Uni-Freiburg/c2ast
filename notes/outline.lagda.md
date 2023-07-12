@@ -418,3 +418,35 @@ f = λ c. fork (λ c′⊥ . gⱼ (c , c′⊥))
 
 ----------------------------------------------------------------------
 
+For evaluation context `[] w`:
+
+That is, we have a derivation ending in
+
+    Γ ⊢ λx.e ↝ v′ : T → U
+    f : T → U ↝ T′ → U′
+    -----------------------------------
+    Γ ⊢ λx.e ↝ f v′ : T′ → U′
+
+where
+    f : T → U ↝ T′ → U′
+    <==
+    f₁ : U ↝ U′
+    f₂ : T′ ↝ T
+and     
+  f = λ h. λ x. f₁ (h (f₂ x))
+
+* left side
+
+    (λx.e) w
+—→
+    e[w/x]
+
+* right side
+
+    f (λx.e′) w
+=
+    (λ h. λ x. f₁ (h (f₂ x))) (λx.e′) w
+—→
+    (λ x. f₁ ((λx.e′) (f₂ x))) w
+—→
+    f₁ ((λx.e′) (f₂ w)))
