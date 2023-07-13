@@ -37,7 +37,7 @@
 \newcommand\EkwTerm{\Econst{term}}
 \newcommand\EkwSend{\Econst{send}}
 \newcommand\EkwRecv{\Econst{recv}}
-\newcommand\EkwSelect{\Econst{sel}}
+\newcommand\EkwSelect[1][]{\Econst{sel}_{#1}}
 \newcommand\EkwRoll{\Econst{roll}}
 \newcommand\EkwUnroll{\Econst{unroll}}
 \newcommand\EkwFork{\Econst{fork}}
@@ -45,7 +45,7 @@
 \newcommand\ETerm[1]{\EkwTerm\; #1}
 \newcommand\ESend[2]{\EkwSend\; (#1,#2)}
 \newcommand\ERecv[1]{\EkwRecv\; #1}
-\newcommand\ESelect[1]{\EkwSelect_{#1} \;}
+\newcommand\ESelect[1]{\EkwSelect[#1] \;}
 \newcommand\ECase[2]{\Ekw{case}\; #1 \; \left\{\, #2 \,\right\}}
 \newcommand\ERoll[1]{\EkwRoll\; #1}
 \newcommand\EUnroll[1]{\EkwUnroll\; #1}
