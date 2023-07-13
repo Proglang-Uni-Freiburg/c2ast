@@ -86,7 +86,7 @@ expressions homomorphically. Formallly, we have this result.
   contractiveness is preserved.
 \end{proof}
 
-\subsection{Wire compatibility}
+\subsection{Wire compatibility by silencing unroll}
 \label{sec:wire-compatibility}
 
 Now that we established a route to go forth and back between
@@ -101,12 +101,37 @@ However, if we impose the restriction that recursive types are
 generally contractive, we can modify the semantics of isorecursive
 session types so as not to communicate $\EUnroll\_$ messages. In fact,
 $\EUnroll\_$ becomes a no-op which just changes the type. In other
-words, we downgrade the process reduction of $\EUnroll\_$ to a simple
-expression reduction:
+words, we downgrade the process reduction of $\EUnroll\_$ to a simple,
+silent expression reduction:
 \begin{gather*}
   \reduce{E[\EUnroll a]}{a}
 \end{gather*}
 
+At this point, we should have that an equirecursive expression
+$\translation e{e'} T$ is wire compatible to its translation
+$e'$. However, that statement is not straightforward to state and
+prove because the translation introduces explicit conversion
+expressions. Intuitively, conversion expressions on session types are
+just forwarders of the respective messages, so we arrive at the
+following statement for an equational correspondence.
+
+\begin{lemma}
+  Suppose that $\translation {e_1}{e_1'} T$.
+  If $\reduce[\alpha]{e_1}{e_2}$
+  and $\translation{e_2}{e_2''}{T}$,
+  then $\reducemany[\alpha]{e_1'}{e_2'}$
+  and $e_2' = e_2''$.
+\end{lemma}
+We may be able to establish $\reducemany{e_2''}{e_2'}$ in  the
+conclusion, as that would result in a reduction correspondence.
+
+With $=$ we mean the reflexive, transitive, and symmetric closure of
+all silent reductions. The latter include fork reductions as well as
+local communication on restricted channels (which are not bound in
+$\Ctxt$).
+\begin{proof}
+  TBC
+\end{proof}
 
 %%% Local Variables:
 %%% mode: latex
