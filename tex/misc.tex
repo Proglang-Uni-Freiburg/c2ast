@@ -50,8 +50,10 @@ TODO (PJT): what do we mean with $\cong$?
 \end{itemize}
 
 \begin{definition}
-  For $\typing[\CNil]{e_1, e_2} T$ define contextual equivalence $e_1 \cong e_2$
-  iff, for all contexts $C : T \to \TUnit$, $C[e_1] \Downarrow$ iff $C[e_2] \Downarrow$. 
+  For $\typing{e_1, e_2} T$ define $e_1 = e_2$
+  as the reflexive, transitive, symmetric, congruence closure of all
+  silent reductions, the equalities of the computational lambda
+  calculus, and extensionality.
 \end{definition}
 
 \begin{lemma}[Conversions]~\\[-\baselineskip]
@@ -59,102 +61,118 @@ TODO (PJT): what do we mean with $\cong$?
     \item If $f : T \eqt T'$, then $f' : T' \eqt T$
       such that $\typing[\CNil]{f}{\TFun T{T'}}$
       and  $\typing[\CNil]{f'}{\TFun {T'}T}$
-      and  $f \circ f' \cong \ELam x x$
-      and  $f' \circ f \cong \ELam x x$.
+      and  $f \circ f' = \ELam x x$
+      and  $f' \circ f = \ELam x x$.
     \item If $g : S \eqs S'$, then $g' : S' \eqs S$
       such that $\typing[\CNil]{g}{\TFun {\TPair {S} {\TDual{S'}}} \TUnit}$
       and $\typing[\CNil]{g'}{\TFun {\TPair {S'} {\TDual{S}}} \TUnit}$
       and,\\
-      for all channels $c : S$,  $c \cong \ELet{c'}{\EFork{( \ELam {\bar c'} g \; (c, \bar c')) }}{\EFork{( \ELam {\bar c} g' \; (c', \bar c)) }} $.
+      for all channels $c : S$,  $c = \ELet{c'}{\EFork{( \ELam {\bar c'} g \; (c, \bar c')) }}{\EFork{( \ELam {\bar c} g' \; (c', \bar c)) }} $.
 \end{enumerate}
 \end{lemma}
+\begin{proof}
+  \begin{enumerate}
+  \item Induction on $T$ (beta equality is not sufficient; need
+    reductions from computational lambda calculus, which are sound for
+    call-by-value with effects)
+    \begin{itemize}
+    \item Case $\TUnit$: $f = \ELam x x$, $f' = \ELam x x$, clearly
+      \begin{align*}
+        (\ELam x (\ELam x x) ((\ELam x x) x)) &= \ELam x x
+      \end{align*}
+    \item Case $\TPair TU$: $f = \ELam {(x_1,x_2)} (f_T \; x_1, f_U \;
+      x_2)$, $f' = \ELam {(x_1,x_2)} (f'_T \; x_1, f'_U \; x_2)$
+      \begin{align*}
+        \ELam x f' (f\; x)
+        &= \ELam x f' (\ELetP{x_1}{x_2} x (f_T \; x_1, f_U \; x_2)) \\
+        &= \ELam x \ELetP{x_1}{x_2}{ (\ELetP{x_1}{x_2} x (f_T \; x_1,
+          f_U \; x_2))}  (f'_T \; x_1, f'_U \; x_2)\\
+        &= \ELam x
+          \ELetP{x_1}{x_2} x \ELetP{x_1}{x_2}{ (f_T \; x_1,
+          f_U \; x_2)}  (f'_T \; x_1, f'_U \; x_2)\\
+        &= \ELam x
+          \ELetP{x_1}{x_2} x  (f'_T \; (f_T\; x_1), f'_U \; (f_U\;
+          x_2))\\
+        & \text{IH for }f_T, f_T', f_U, f_U' \\
+        &= \ELam x
+          \ELetP{x_1}{x_2} x  (x_1,x_2)\\
+        &= \ELam x x
+      \end{align*}
+    \item Case $\TFun TU$: $f = \ELam x f_U \circ x \circ f_{T'}$, $f'
+      = \ELam x f'_U \circ x \circ f_T$
+      \begin{align*}
+        \ELam x f' (f\; x)
+        &= \ELam x f' ((\ELam x f_U \circ x \circ f_{T'})\; x) \\
+        &= \ELam x (\ELam x f'_U \circ x \circ f_T)\; ((\ELam x f_U \circ x \circ f_{T'})\; x) \\
+        &= \ELam x (\ELam x f'_U \circ x \circ f_T)\; (f_U \circ x \circ f_{T'}) \\
+        &= \ELam x (f'_U \circ (f_U \circ x \circ f_{T'})
+          \circ f_T) \\
+        & \text{need to invoke extensionality to apply the IH in the
+          form } f'_U \circ f_U = \ELam z z  \\
+        &= \ELam x x
+      \end{align*}
+    \item Case $S$: $f = \ELam {c_1} \EFork{ \ELam {c_2} g \; (c_1,
+        c_2) }$, 
+      $f' = \ELam {c_1} \EFork{ \ELam {c_2} g' \; (c_1, c_2) }$
+      \begin{align*}
+        \ELam x f' (f\; x)
+        &= \ELam x f' ((\ELam {c_1} \EFork{ \ELam {c_2} g \; (c_1,
+          c_2) })\; x) \\
+        &= \ELam x
+          (\ELam {c_1} \EFork{ \ELam {c_2} g' \; (c_1, c_2)})
+          ((\ELam {c_1} \EFork{ \ELam {c_2} g \; (c_1, c_2) })\; x) \\
+        &= \ELam x
+          (\ELam {c_1} \EFork{ \ELam {c_2} g' \; (c_1, c_2)})
+          (\EFork{ \ELam {c_2} g \; (x, c_2) }) \\
+        &= \ELam x
+          \EFork{ \ELam {c_2} g' \; ((\EFork{ \ELam {c_2} g \; (x,
+          c_2) }), c_2)} \\
+        & \text{by part~2} \\
+        & = \ELam x x
+      \end{align*}
+    \end{itemize}
+  \item Just considering cases on $S$ is technically fishy, but \dots
+    \begin{itemize}
+    \item Case $x : \TEnd!$:
+      $g = \ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}}$,
+      $g' = \ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}}$
+      \begin{align*}
+        & 
+        \EFork{ \ELam {c_2} g' \; ((\EFork{ \ELam {c_2} g \; (x,
+        c_2) }), c_2)} \\
+        &=
+        \EFork{ \ELam {c_2} g' \; ((\EFork{ \ELam {c_2} (\ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}}) \; (x,
+        c_2) }), c_2)} \\
+        &=
+        \EFork{ \ELam {c_2} (\ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}}) \; ((\EFork{ \ELam {c_2} (\ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}}) \; (x,
+        c_2) }), c_2)} \\
+        &=
+          \PScope
+          (\PPar a {(\ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}}) \; ((\EFork{ \ELam {c_2} (\ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}}) \; (x,
+        c_2) }), b)}) \\
+        &=
+          \PScope
+          (\PPar a {(\ELetU {\EWait {b}} {\ETerm {(\EFork{ \ELam {c_2} (\ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}}) \; (x,
+        c_2) })}})}) \\
+        &=
+          \PScope
+          (\PPar a {(\ELetU {\EWait {b}} {\ETerm {(\EFork{ \ELam {c_2} (\ELetU {\EWait {c_2}} {\ETerm {x}}) })}})}) \\
+        &=
+          \PScope
+          (\PPar a {(\PScope[a',b'] \PPar {(\ELetU {\EWait {b}} {\ETerm
+          {a'}}} {{ \ELetU {\EWait {b'}} {\ETerm {x}}) }})}) \\
+        & \text{the typing dictates to consider }\ETerm a = \ETerm x \\
+        & \PScope (\PPar {\ETerm a} {(\PScope[a',b'] \PPar {(\ELetU {\EWait {b}} {\ETerm
+          {a'}}} {{ \ELetU {\EWait {b'}} {\ETerm {x}}) }})}) \\
+        &=\PScope[a',b'] \PPar {({\ETerm
+          {a'}}} {{ \ELetU {\EWait {b'}} {\ETerm {x}}) }} \\
+        &=  \ETerm {x}
+      \end{align*}
+    \end{itemize}
+  \end{enumerate}
+\end{proof}
 
-Proving contextual equivalence is daunting. Maybe set up a logical relation? But how to do the session part?
-(I don't think it works like this!)
 
-\begin{definition}
-  Define $\reduceto e{e'}$ by $\reducemany e{e'}$ and $e'$
-  irreducible.
-\end{definition}
-\begin{align*}
-  V (\TUnit) & = \{ (\EUnit, \EUnit) \}
-  \\
-  V (\TPair TU) & = \{ (v_1, v_2), (w_1, w_2) \mid (v_1, w_1) \in V (T), (v_2, w_2) \in V (U) \}
-  \\
-  V (\TFun TU) &= \{ (\ELam xe_1, \ELam xe_2) \mid \forall v, w. (v, w) \in V (T) \Rightarrow (e_1[v/x], e_2[w/x]) \in E (U)  \}
-  \\
-  V (\TEnd!) &= \{ (c_1, c_2) \mid
-                       \reduce{\ETerm c_1}{\EUnit}, \reduce{\ETerm
-                       c_2}{\EUnit} \}
-  \\
-  V (\TEnd?) &= \{ (c_1, c_2) \mid
-               \reduce{\EWait c_1}{\EUnit}, \reduce{\EWait
-                       c_2}{\EUnit} \}
-  \\
-  V (\TIn TS) &= \{ (c_1, c_2) \mid
-                \reduce{\ERecv c_1}{(v, c_1')}, 
-                \reduce{\ERecv c_2}{(w, c_2')},
-                (v,w) \in V(T),
-                (c_1', c_2') \in V (S) \}
-  % \\
-  %               &\stackrel{?}{=}
-  %                 \{ (c_1, c_2) \mid 
-  %                 (\ERecv c_1,  \ERecv c_2) \in E (\TPair TS) \}
-  \\
-  V (\TOut TS) &= \{ (c_1, c_2) \mid \forall v, w. (v,w) \in V(T)
-                \Rightarrow
-                \reduce{\ESend v c_1}{c_1'}, 
-                 \reduce{\ESend w c_2}{c_2'},
-                 (c_1', c_2') \in V(S) \}
-  % \\
-  %               &\stackrel{?}{=}
-  %                 \{ (c_1, c_2) \mid \mid \forall v, w. (v,w) \in V(T)
-  %               \Rightarrow
-  %                 (\ESend v c_1,  \ESend w c_2) \in E (S) \}
-  \\
-  V (\TSelect{l_i: S_i}) &=  \{ (c_1, c_2) \mid \forall j. j \in I
-                           \Rightarrow
-                           \reduce{\ESelect{l_j} c_1 }{c_1'}, 
-                           \reduce{\ESelect{l_j} c_2 }{c_2'},
-                           (c_1', c_2') \in V(S_j)
-                           \}
-  % \\&\stackrel{?}{=}
-  % \{ (c_1, c_2) \mid \forall j. j \in I
-  % \Rightarrow
-  % (\ESelect{l_j}{c_1}, \ESelect{l_j}{c_1}) \in E (S_j)
-  % \}
-  \\
-  V (\TCase{l_i: S_i})
-             &= \{ (c_1, c_2) \mid \forall j. j \in I \Rightarrow
-                         c_1 \stackrel{?l_j}{\to} e_1[c_1],
-                c_2 \stackrel{?l_j}{\to} e_2[c_2],
-                         (e_1, e_2) \in E(S_j) \}
-  \\&\stackrel{?}{=}
-  \{ (c_1, c_2) \mid
-  \reduce{\ECase{c_1}{l_i \to e_{1i}}}{e_{1j}\; c_1'}, 
-  \reduce{\ECase{c_2}{l_i \to e_{2i}}}{e_{2j}\; c_2'},
-  (c_1', c_2') \in V (S_j)
-  \}
-  % \\&\stackrel{??}{=}
-  % \{ (c_1, c_2) \mid \exists j\in I, (\ECase{c_1}{\dots},
-  % \ECase{c_2}{\dots}) \in E (S_j) \}
-  \\
-  E (T) &= \{ (e_1, e_2) \mid \forall v_1, v_2, E_1, E_2. \reduceto{e_1}{E_1[v_1]}, \reduceto{e_2}{ E_2[v_2]} \Rightarrow (v_1, v_2)\in V (T) \}
-\end{align*}
-
-The session part seems wrong. I think we have to talk about processes stuck on a communication.
-The following is inspired by a paper by Perez, Toninho, Pfenning ($+$ will need step indexing to deal with recursion): 
-
-\begin{align*}
-  L (c : \TEnd!) &= \{ (E[ \ETerm c ], E'[ \ETerm c ]) \mid (E[\EUnit], E'[\EUnit]) \in E (\TUnit)
-                   \}
-  \\
-  L (c : \TOut TS) &= \{ (E[ \ESend v c ], E'[ \ESend w c ]) \mid \forall v, w. (v, w) \in V (T) \Rightarrow (E[c], E'[c]) \in L^* (c : S) \}
-  \\
-  L (c : \TIn TS) &= \{ (E[ \ERecv c ], E'[ \ERecv c ]) \mid \forall v, w. (v, w) \in V (T) \Rightarrow (E[(v,c)], E'[(w,c)]) \in L^* (c : S) \}
-  \\
-  L^* (c : S) &= \{ (e_1, e_2) \mid \forall e_1', e_2'. e_1 \to^* e_1', e_2 \to^* e_2' \Rightarrow (e_1', e_2') \in L (c : S) \}
-\end{align*}
 
 \subsection{Attempt at Vasco's suggestion}
 \label{sec:attempt-at-vascos}

@@ -1,0 +1,89 @@
+\begin{definition}
+  For $\typing[\CNil]{e_1, e_2} T$ define contextual equivalence $e_1 \cong e_2$
+  iff, for all contexts $C : T \to \TUnit$, $C[e_1] \Downarrow$ iff $C[e_2] \Downarrow$. 
+\end{definition}
+
+
+\begin{definition}
+  Define $\reduceto e{e'}$ by $\reducemany e{e'}$ and $e'$
+  irreducible.
+\end{definition}
+\begin{align*}
+  V (\TUnit) & = \{ (\EUnit, \EUnit) \}
+  \\
+  V (\TPair TU) & = \{ (v_1, v_2), (w_1, w_2) \mid (v_1, w_1) \in V (T), (v_2, w_2) \in V (U) \}
+  \\
+  V (\TFun TU) &= \{ (\ELam xe_1, \ELam xe_2) \mid \forall v, w. (v, w) \in V (T) \Rightarrow (e_1[v/x], e_2[w/x]) \in E (U)  \}
+  \\
+  V (\TEnd!) &= \{ (c_1, c_2) \mid
+                       \reduce{\ETerm c_1}{\EUnit}, \reduce{\ETerm
+                       c_2}{\EUnit} \}
+  \\
+  V (\TEnd?) &= \{ (c_1, c_2) \mid
+               \reduce{\EWait c_1}{\EUnit}, \reduce{\EWait
+                       c_2}{\EUnit} \}
+  \\
+  V (\TIn TS) &= \{ (c_1, c_2) \mid
+                \reduce{\ERecv c_1}{(v, c_1')}, 
+                \reduce{\ERecv c_2}{(w, c_2')},
+                (v,w) \in V(T),
+                (c_1', c_2') \in V (S) \}
+  % \\
+  %               &\stackrel{?}{=}
+  %                 \{ (c_1, c_2) \mid 
+  %                 (\ERecv c_1,  \ERecv c_2) \in E (\TPair TS) \}
+  \\
+  V (\TOut TS) &= \{ (c_1, c_2) \mid \forall v, w. (v,w) \in V(T)
+                \Rightarrow
+                \reduce{\ESend v c_1}{c_1'}, 
+                 \reduce{\ESend w c_2}{c_2'},
+                 (c_1', c_2') \in V(S) \}
+  % \\
+  %               &\stackrel{?}{=}
+  %                 \{ (c_1, c_2) \mid \mid \forall v, w. (v,w) \in V(T)
+  %               \Rightarrow
+  %                 (\ESend v c_1,  \ESend w c_2) \in E (S) \}
+  \\
+  V (\TSelect{l_i: S_i}) &=  \{ (c_1, c_2) \mid \forall j. j \in I
+                           \Rightarrow
+                           \reduce{\ESelect{l_j} c_1 }{c_1'}, 
+                           \reduce{\ESelect{l_j} c_2 }{c_2'},
+                           (c_1', c_2') \in V(S_j)
+                           \}
+  % \\&\stackrel{?}{=}
+  % \{ (c_1, c_2) \mid \forall j. j \in I
+  % \Rightarrow
+  % (\ESelect{l_j}{c_1}, \ESelect{l_j}{c_1}) \in E (S_j)
+  % \}
+  \\
+  V (\TCase{l_i: S_i})
+             &= \{ (c_1, c_2) \mid \forall j. j \in I \Rightarrow
+                         c_1 \stackrel{?l_j}{\to} e_1[c_1],
+                c_2 \stackrel{?l_j}{\to} e_2[c_2],
+                         (e_1, e_2) \in E(S_j) \}
+  \\&\stackrel{?}{=}
+  \{ (c_1, c_2) \mid
+  \reduce{\ECase{c_1}{l_i \to e_{1i}}}{e_{1j}\; c_1'}, 
+  \reduce{\ECase{c_2}{l_i \to e_{2i}}}{e_{2j}\; c_2'},
+  (c_1', c_2') \in V (S_j)
+  \}
+  % \\&\stackrel{??}{=}
+  % \{ (c_1, c_2) \mid \exists j\in I, (\ECase{c_1}{\dots},
+  % \ECase{c_2}{\dots}) \in E (S_j) \}
+  \\
+  E (T) &= \{ (e_1, e_2) \mid \forall v_1, v_2, E_1, E_2. \reduceto{e_1}{E_1[v_1]}, \reduceto{e_2}{ E_2[v_2]} \Rightarrow (v_1, v_2)\in V (T) \}
+\end{align*}
+
+The session part seems wrong. I think we have to talk about processes stuck on a communication.
+The following is inspired by a paper by Perez, Toninho, Pfenning ($+$ will need step indexing to deal with recursion): 
+
+\begin{align*}
+  L (c : \TEnd!) &= \{ (E[ \ETerm c ], E'[ \ETerm c ]) \mid (E[\EUnit], E'[\EUnit]) \in E (\TUnit)
+                   \}
+  \\
+  L (c : \TOut TS) &= \{ (E[ \ESend v c ], E'[ \ESend w c ]) \mid \forall v, w. (v, w) \in V (T) \Rightarrow (E[c], E'[c]) \in L^* (c : S) \}
+  \\
+  L (c : \TIn TS) &= \{ (E[ \ERecv c ], E'[ \ERecv c ]) \mid \forall v, w. (v, w) \in V (T) \Rightarrow (E[(v,c)], E'[(w,c)]) \in L^* (c : S) \}
+  \\
+  L^* (c : S) &= \{ (e_1, e_2) \mid \forall e_1', e_2'. e_1 \to^* e_1', e_2 \to^* e_2' \Rightarrow (e_1', e_2') \in L (c : S) \}
+\end{align*}
