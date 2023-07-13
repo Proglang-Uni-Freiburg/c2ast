@@ -1,5 +1,5 @@
 % \begin{figure}
-  \declrel{Typing rules for expressions in the iso-recursive system}[$\typing{e}{T}$]
+  \declrel{Typing rules for expressions}[$\typing{e}{T}$]
   \begin{mathpar}
     \inferrule{}{
       \typing[\Ctxt^*]{\EUnit}{\TUnit}
@@ -58,7 +58,7 @@
         \ELetP xy {e_1} {e_2}
       }{ U }
     }
-
+    \\
     \inferrule{
       \typing{e}{\TEnd ?}
     }{
@@ -71,11 +71,16 @@
       \typing{\ETerm e}{\TUnit}
     }
 
+    % \inferrule{
+    %   \typing[\Ctxt_1]{e_1} T  \\
+    %   \typing[\Ctxt_2]{e_2} {\TOut T S}
+    % }{
+    %   \typing[\CSplit]{\ESend{e_1}{e_2}} S
+    % }
     \inferrule{
-      \typing[\Ctxt_1]{e_1} T  \\
-      \typing[\Ctxt_2]{e_2} {\TOut T S}
+      \typing[\Ctxt]{e}{\TPair T {\TOut T S}}  \\
     }{
-      \typing[\CSplit]{\ESend{e_1}{e_2}} S
+      \typing[\Ctxt]{\EkwSend\;e} S
     }
 
     \inferrule{
@@ -93,19 +98,31 @@
 
     \inferrule{
       \typing[\Ctxt_1]{e}{\TCase{l_i : S_i}} \\
-      \typing[\Ctxt_2]{e_i}{\TFun{S_i}{T}}
+      \typing[\Ctxt_2]{v_i}{\TFun{S_i}{T}}
     }{
       \typing[\CSplit]{
-        \ECase e { l_i \rightarrow e_i }
+        \ECase e { l_i \rightarrow v_i }
       }{T}
     }
 
     \inferrule{
-      \typing{e}{\TFun {\TDual S} \TUnit}
+      \typing{v}{\TFun {\TDual S} \TUnit}
     }{
-      \typing{\EFork e}{S}
+      \typing{\EFork v}{S}
     }
 
+  \inferrule{
+    \typing e T \\ T \eqt U
+  }{
+    \typing e U
+  }
+  \end{mathpar}
+%   \label{fig:iso-typing-rules}
+%   \caption{Typing rules for expressions in the iso-recursive system}
+% \end{figure}
+
+  \declrel{Extra expression typing rules for isorecursion}[$\typing{e}{T}$]
+  \begin{mathpar}
     \inferrule{
       \typing{e}{S[\TRec[X] S / X]}
     }{
@@ -117,16 +134,7 @@
     }{
       \typing{\EUnroll e}{S[\TRec[X] S / X]}
     }
-%
-%   \inferrule{
-%     \typing e T \\ f : T \eqt U : f'
-%   }{
-%     \typing e U
-%   }
   \end{mathpar}
-%   \label{fig:iso-typing-rules}
-%   \caption{Typing rules for expressions in the iso-recursive system}
-% \end{figure}
 
 %%% Local Variables:
 %%% mode: latex

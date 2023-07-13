@@ -16,6 +16,20 @@
     X^{\in \mathcal X}
 \end{align*}
 
+\declrel{Dualization of session types}[$\TDual S = S$]
+\begin{align*}
+  \TDual X &= X                               &
+  \TDual{\TEnd !} &= \TEnd ?                  &
+  \TDual{\TOut T S} &= \TIn T \TDual{S}       &
+  \TDual{\TSelect{ l_i: S_i }} &=
+    \TCase{ l_i: \TDual{S_i} }                \\
+  \TDual{\TRec S} &= \TRec{\TDual S}          &
+  \TDual{\TEnd ?} &= \TEnd !                  &
+  \TDual{\TIn T S} &= \TOut T \TDual{S}       &
+  \TDual{\TCase{ l_i: S_i }} &=
+    \TSelect{ l_i: \TDual{S_i} }
+\end{align*}
+
 %%% Local Variables:
 %%% mode: latex
 %%% TeX-master: "main"
