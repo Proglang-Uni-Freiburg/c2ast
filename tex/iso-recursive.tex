@@ -12,7 +12,7 @@ type,
                \EUnroll e
 \end{align*}
 %
-reduction with an extra rule:
+process reduction with an extra rule:
 %
 \begin{mathpar}
     % \reducerule{
@@ -30,80 +30,21 @@ reduction with an extra rule:
 %
 and we replace the typing rule for conversion by a rule for explicit unrolling:
 \begin{mathpar}
-    \inferrule{
-      \typing{e}{\TRec S}
-    }{
-      \typing{\EUnroll e}{S[\TRec[X] S / X]}
-    }
+  \inferrule{
+    \typing{e}{\TRec S}
+  }{
+    \typing{\EUnroll e}{S[\TRec[X] S / X]}
+  }
 \end{mathpar}
 
-The equi-recursive nature of this adjusted system handles any necessary
-unrolling of recursive session types. This behavior is captured in the type
-equivalence relation defined in Figure~\ref{fig:equi-equivalence}. Equivalence
-$f : T \eqt U$ gives rise to a function $f : \TFun {T} {U}$.
-% , $f' : \TFun {U} {T}$.
-Equivalence of session types $g : R \eqs S$ gives rise
-to a function $g : \TFun {\TPair {R} {\TDual{S}}} \TUnit$.
-% and $g' : \TFun {\TPair {S'} {\TDual{S}}} \TUnit$.
-These two functions are expressions in the iso-recursive system.
-
-At the same time, the equi-recursive nature obviates the need for $\EkwRoll$
-and $\EkwUnroll$ operations. These two values, their two typing rules and
-reductions are removed. Instead, a rule is added which uses the equi-recursive
-type equivalence.
-
-\subsection{Types}
+The resulting system is much more tedious as the example from the
+introduction demonstrates. Nevertheless, we can go forth and back
+between the equirecursive system and the isorecursive system under
+certain mild conditions.
 
 
-% The type syntax for the iso-recursive system is the same as in the
-% equi-recursive system, including the notion of session type dualization.
-% 
-% Type equivalence for the iso-recursive system is largely the same as in the
-% equi-recursive system except for the rules \textsc{\EqUnrollL} and
-% \textsc{\EqUnrollR}, which do not exist.
 
-\vv{
-  \begin{itemize}
-  \item The dual function for recursive types is a bit more complicated; pls have
-    a look at ``the final cut''.
-    \pt{restricted payload type to closed types}
-  \item Iso-recursive expressions $e$ must appear before type equivalence.
-    \js{fixed this by moving sections around}
-  \item IMO, $T,U$ reads better than $T_1, T_2$.
-    \pt{sorry, messed this up!}
-    \js{changed it}
-  \item The expression for session types isomorphism may be curried. Then we
-    seek these results, right? (do they hold?)
-
-    \pt{Yes, see below in Sec~\ref{sec:properties}}
-
-    Lemma. If $e : T \eqt U$, then $\typing{e}{\TFun{T}{U}}$.
-
-    Lemma. If $e : R \eqs S$, then $\typing{e}{\TFun{R}{\TFun{\TDual S}{\TUnit}}}$.
-  \item $f^{-1}$ is confusing; why not a simple $g$?
-    \pt{Fixed, differently}
-\item Added an easier to read, IMO, rule for \EqFun{} and (curried)
-  for \EqOut
-  \pt{Messed this up. Sorry again}
-\item \EqPair{} uses an abbreviation, right? $\lambda p. \text{let}(x,y) = p
-  \text{ in } \dots$
-  \js{added note about this abbreviation next to grammar}
-\item Added suggestion for roll and unroll; these constants may have function
-  types. (types don't work :(
-  \end{itemize}
-}
-
-
-\subsection{Expressions}
-
-% The term syntax of the iso-recursive system is the same as for the
-% equi-recursive system with two additional values.
-% \begin{align*}
-%   v \grmdef& \dots \grmor \EkwRoll \grmor \EkwUnroll
-% \end{align*}
-
-
-\subsubsection{Expression typing}
+\subsection{Expression typing}
 
 \declrel{Typing contexts}
 \begin{align*}

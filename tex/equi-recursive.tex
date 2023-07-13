@@ -13,10 +13,13 @@ Figure~\ref{fig:equi-equivalence} contains the definition of the type
 language and duality along with equivalence for types $T \eqt T$  and session
 types $S \eqs S$. The nonterminal $S$ for session types is indexed with a set
 $\mathcal X$ of variables that may occur free in $S$. The $\mu$-binder
-increases this set for its body.
+increases this set for its body. 
 Type equivalence is inductive, but session type
 equivalence is coinductive and equates 
-session types up to unfolding of recursive types. The figure also
+session types up to unfolding of recursive types. This unfolding is
+only well-defined if types are contractive, i.e., they must
+not contain a type of the form $\TRec[X_1]\dots\TRec[X_n]X_1$.
+The figure also
 specifies evidence terms for equivalence (in light blue), which we ignore for now.
 
 \input{decl-expressions}

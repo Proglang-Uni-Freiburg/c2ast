@@ -8,11 +8,19 @@ the target type system is more strict.
 \input{fig-translation}
 
 Instead, the translation judgment $\translation e {e'} T$ in
-Figure~\ref{fig:translation} describes the translation of equi-recursively
+Figure~\ref{fig:translation} describes the translation of an equi-recursively
 typed expression $e$ to an equivalent expression $e'$ in the iso-recursive
-system. The interesting part of the translation process is where the
+system. The only interesting part of the translation process is where the
 equi-recursive system makes use of type conversions. Here, an appriopriate
 conversion function is inserted on the iso-recursive side.
+\begin{mathpar}
+  \inferrule{
+      \translation e {e'} T \\
+      f : T \eqt U
+    }{
+      \translation e {f \; e'} U
+    }
+\end{mathpar}
 
 The translation preserves well-typedness and the original and the
 resulting process are \highlight{``wire-compatible''}. \js{what is the correct

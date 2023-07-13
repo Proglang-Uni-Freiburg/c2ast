@@ -1,4 +1,4 @@
-\begin{figure}
+\begin{figure}[tp]
   \declrel{Translation from equi-recursive to iso-recursive expressions}[$\translation e {e'} T$]
   \begin{mathpar}
     \inferrule{ \CExhausted }{ \translation \EUnit \EUnit \TUnit }      \and
@@ -65,10 +65,9 @@
     }
 
     \inferrule{
-      \translation[\Ctxt_1] {e_1} {e_1'} T \\
-      \translation[\Ctxt_2] {e_2} {e_2'} {\TOut T S}
+      \translation[\Ctxt] {e} {e'} {\TPair T {\TOut T S}} 
     }{
-      \translation[\CSplit] {\ESend {e_1} {e_2}} {\ESend {e_1'} {e_2'}} S
+      \translation[\CSplit] {\EkwSend\; e} {\EkwSend \;e'} S
     }
 
     \inferrule{
@@ -86,19 +85,19 @@
 
     \inferrule{
       \translation[\Ctxt_1]{e}{e'}{\TCase{l_i : S_i}} \\
-      \translation[\Ctxt_2]{e_i}{e_i'}{\TFun{S_i}{T}}
+      \translation[\Ctxt_2]{v_i}{e_i'}{\TFun{S_i}{T}}
     }{
       \translation[\CSplit]{
-        \ECase e { l_i \rightarrow e_i }
+        \ECase e { l_i \rightarrow v_i }
       }{
-        \ECase {e'} { l_i \rightarrow e'_i }
+        \ECase {e'} { l_i \rightarrow \ELam x {e'_i\;x} }
       }{T}
     }
 
     \inferrule{
-      \translation e {e'} {\TFun {\TDual S} \TUnit}
+      \translation v {e'} {\TFun {\TDual S} \TUnit}
     }{
-      \translation {\EFork e} {\EFork {e'}} {S}
+      \translation {\EFork v} {\EFork {\ELam x {e'\;x}}} {S}
     }
 
     \inferrule{
