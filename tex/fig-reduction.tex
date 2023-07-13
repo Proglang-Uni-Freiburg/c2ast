@@ -22,7 +22,7 @@
     \reducerule {
       \ELetP {x_1} {x_2} {(v_1,v_2)} e
     }{
-      e[v_1 / x_1][v_2 / x_2]
+      e[v_1, v_2 / x_1, x_2]
     }
 
     \reducerule[\reduce{e_1}{e_2}]{
@@ -40,9 +40,11 @@
     }
 
     \reducerule{
-      \PScope (\PPar* {\ESelect {l_j} a} {\ECase b { l_i \rightarrow e_i }})
+      \PScope (\PPar* {\ESelect {l_j} a} {\ECase b { l_i \rightarrow
+          v_i \mid i \in I }})
     }{
-      \PScope (\PPar* {a} {e_j \; b})
+      \PScope (\PPar* {a} {v_j \; b})
+      \qquad \text{ if } j \in I
     }
 
     \reducerule{
@@ -52,9 +54,9 @@
     }
 
     \reducerule{
-      E[\EFork e]
+      E[\EFork v]
     }{
-      \PScope (\PPar {E[a]} {e \; b})
+      \PScope (\PPar {E[a]} {v \; b})
     }
     \\
     \reducerule[\reduce{p}{p^\prime}] { \PPar p q } { \PPar {p^\prime} q } \and

@@ -33,7 +33,7 @@ that mediate between the two types. Concretely:
 As the session types are recursive, so are the conversion
 functions. This conversion function creates one additional
 channels and forks one additional process. Moreover, it leads to
-additional communication as evidenced by the standard rule for
+additional communication as evidenced by the folklore rule for
 isorecursive processes:
 \begin{gather*}
   \reducerule{
@@ -43,7 +43,7 @@ isorecursive processes:
   }
 \end{gather*}
 However, if the underlying recursive session type is contractive, then we can
-elide this extra communication, which essentially reinterprets
+elide this extra communication, a move which essentially reinterprets
 isorecursion as equirecursion.
 This move makes a type conversion like $f$ act like an identity
 function, which forwards messages from one channel to another, as the
@@ -54,7 +54,7 @@ Clearly, this transformation goes both ways. If we start from an
 equirecursive program, we can transform it into an isorecursive one by
 making the type conversion explicit. We can execute the isorecursive
 program either with its ``natural'' semantics or with the silent
-semantics that treats $\ERoll\_$ and $\EUnroll\_$ as identities.
+semantics that treats $\EUnroll\_$ as an identity.
 The latter interpretation also makes the equirecursive version
 ``wire-compatible'' with the isorecursive one.
 

@@ -2,15 +2,20 @@
 \label{sec:equi-recursion}
 \input{fig-equi-equivalence}
 
-In the following we define a standard language for recursive
-functional session types inspired by GV \cite{GV}. To avoid problems
-with duality, the interplay of
-recursion and session types is such that the payload type of a
-communication is always closed \cite{final-cut}.
+In the following we define a core language for equirecursive
+functional session types inspired by GV
+\cite{DBLP:journals/jfp/GayV10}, but much simplified. To ensure that
+duality is well-defined,
+recursion is restricted to session types and the payload type of a
+communication is always closed \cite{DBLP:journals/corr/abs-2004-01322}.
 
 Figure~\ref{fig:equi-equivalence} contains the definition of the type
 language along with equivalence for types $T \eqt T$  and session
-types $S \eqs S$. The latter definition is coinductive and equates
+types $S \eqs S$. The nonterminal $S$ for session types is indexed with a set
+$\mathcal X$ of variables that may occur free in $S$. The $\mu$-binder
+increases this set for its body.
+Type equivalence is inductive, but session type
+equivalence is coinductive and equates 
 session types up to unfolding of recursive types. The figure also
 specifies evidence terms for equivalence (in light blue), which we ignore for now.
 
@@ -42,11 +47,15 @@ of binders:
     (v,E) \grmor
     \ELetP xy E e \grmor
   %\\ &
-    \ESelect l E \grmor 
+    % \ESelect l E \grmor 
     \ECase E { l_i \rightarrow e_i }
 \end{align*}
 
 \input{fig-reduction}
+
+The expression reductions implement a standard call-by-value lambda
+calculus. Process reductions implement a synchronous semantics for
+session types.
 
 The typing rules are standard (see \dots), but we choose to make
 equirecursion explicit by adopting a conversion rule, which is not

@@ -1,23 +1,32 @@
 \declrel{Syntax for constants, values, expressions and processes}
 \begin{align*}
-  v \grmdef&
+  &\text{constants}&
+                     c \grmdef & \EUnit \grmor \EkwWait \grmor \EkwTerm \grmor \EkwSend \grmor \EkwRecv \grmor \ESelect l \grmor \EkwFork \\
+  &\text{values}&
+                   v \grmdef&
     c                        \grmor
+    a                        \grmor
     (v, v)                   \grmor
     \ELam x e                \grmor
     \ERec x v                \grmor
   \\
-  e \grmdef&
+  &\text{expressions}&
+                       e \grmdef&
     v                       \grmor
     x                       \grmor
     e \; e                  \grmor
     \ELetU e e              \grmor
     (e, e)                  \grmor
     \ELetP x y e e          \grmor
-  %\\ &
-    \ESelect l e            \grmor
-    \ECase e { l_i \rightarrow e } \grmor
-    \EFork e
+    % \\ &&&
+    %    \ESend e e \grmor
+    %    \ERecv e \grmor
+    % \ESelect l e            \grmor
+         \ECase e { l_i \rightarrow v }
+    %      \grmor
+    % \EFork v
   \\
+  & \text{processes}&
   p \grmdef&
     e                       \grmor
     \PPar p p               \grmor

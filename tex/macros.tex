@@ -17,7 +17,7 @@
 \newcommand\TInt{\Tkw{Int}}
 \newcommand\TUnit{()}
 \newcommand\TPair[2]{#1 \otimes #2}
-\newcommand\TFun[2]{#1 \rightarrow #2}
+\newcommand\TFun[2]{#1 \multimap #2}
 \newcommand\TEnd[1]{\Tkw{end #1}}
 \newcommand\TIn[2]{{}?#1.#2}
 \newcommand\TOut[2]{{}!#1.#2}
@@ -43,9 +43,9 @@
 \newcommand\EkwFork{\Econst{fork}}
 \newcommand\EWait[1]{\EkwWait\; #1}
 \newcommand\ETerm[1]{\EkwTerm\; #1}
-\newcommand\ESend[2]{\EkwSend\; #1 \; #2}
+\newcommand\ESend[2]{\EkwSend\; (#1,#2)}
 \newcommand\ERecv[1]{\EkwRecv\; #1}
-\newcommand\ESelect[2]{\EkwSelect\; #1 \; #2}
+\newcommand\ESelect[1]{\EkwSelect_{#1} \;}
 \newcommand\ECase[2]{\Ekw{case}\; #1 \; \left\{\, #2 \,\right\}}
 \newcommand\ERoll[1]{\EkwRoll\; #1}
 \newcommand\EUnroll[1]{\EkwUnroll\; #1}
