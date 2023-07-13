@@ -20,7 +20,12 @@ session types up to unfolding of recursive types. This unfolding is
 only well-defined if types are contractive, i.e., they must
 not contain a type of the form $\TRec[X_1]\dots\TRec[X_n]X_1$.
 The figure also
-specifies evidence terms for equivalence (in light blue), which we ignore for now.
+specifies evidence terms for equivalence (in light blue), which we
+ignore for now.
+
+\begin{lemma}\label{lemma:congruence}
+ The relations $\eqt$ and $\eqs$ are congruence relations.
+\end{lemma}
 
 \input{decl-expressions}
 
@@ -65,9 +70,9 @@ equirecursion explicit by adopting a conversion rule, which is not
 syntax directed.
 \begin{mathpar}
   \inferrule{
-    \typing e T \\ T \eqt U
+    \typing {\tyEqui e} T \\ T \eqt U
   }{
-    \typing e U
+    \typing {\tyEqui e} U
   }
 \end{mathpar}
 

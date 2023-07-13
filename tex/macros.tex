@@ -120,6 +120,8 @@
 %   {#2}  expression to type
 %   {#3}  type
 \newcommand\typing[3][\Ctxt]{#1 \vdash #2 : #3}
+\newcommand\tyEqui{\ensuremath{_{\text{equi}}}}
+\newcommand\tyIso{\ensuremath{_{\text{iso}}}}
 
 \newcommand\eqt{\sim_{\mathsf T}}
 \newcommand\eqs{\sim_{\mathsf S}}
@@ -144,6 +146,9 @@
 %
 % Context defaults to \Ctxt.
 \newcommand\translation[4][\Ctxt]{#1 \vdash #2 \leadsto #3 : #4}
+
+\newcommand\IsoToEqui[1]{|#1|}
+
 
 %%% Local Variables:
 %%% mode: latex

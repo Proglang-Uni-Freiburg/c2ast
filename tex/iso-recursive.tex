@@ -31,77 +31,32 @@ process reduction with an extra rule:
 and we replace the typing rule for conversion by a rule for explicit unrolling:
 \begin{mathpar}
   \inferrule{
-    \typing{e}{\TRec S}
+    \typing{\tyIso e}{\TRec S}
   }{
-    \typing{\EUnroll e}{S[\TRec[X] S / X]}
+    \typing{\tyIso \EUnroll e}{S[\TRec[X] S / X]}
   }
 \end{mathpar}
 
-The resulting system is much more tedious as the example from the
-introduction demonstrates. Nevertheless, we can go forth and back
+The example from the introduction demonstrates that the resulting
+system is much more tedious. Nevertheless, we can go forth and back
 between the equirecursive system and the isorecursive system under
 certain mild conditions.
 
+Readers acquainted with isorecursive typing may wonder why we do not
+include a $\ERoll\_$ expression in the language. A $\ERoll\_$
+expression is only needed to \emph{construct} values of recursive
+type. As our language restricts recursion to session types, the only
+recursively constructed objects are channels. However, they are
+introduced \emph{in toto} by $\EFork\_$; it is not possible to
+construct a channel piecewise. All other session operators are
+eliminators that need to expose the next actionable part of the type
+by unrolling.
+
+(If we allowed recursive types outside of session types, a
+$\ERoll\_$ expression would be needed.)
 
 
-\subsection{Expression typing}
 
-\declrel{Typing contexts}
-\begin{align*}
-  \Ctxt \grmdef&
-    \CNil \grmor \Ctxt, \CBind x T \grmor \Ctxt, \CBind* x T
-\end{align*}
-
-\declrel{Context exhaustion}[$\CExhausted$]
-\begin{mathpar}
-  \inferrule{ }{\CExhausted[\CNil]} \and
-  \inferrule{\CExhausted}{\CExhausted[\Ctxt, \CBind* x T]}
-\end{mathpar}
-
-\declrel{Context splitting}[$\Ctxt = \CSplit[\Ctxt][\Ctxt]$]
-\begin{mathpar}
-  \inferrule{}{\cdot = \CSplit[\cdot][\cdot]} \and
-  \inferrule{\Ctxt = \CSplit}{\Ctxt, \CBind  x T = \CSplit[(\Ctxt_1 , \CBind  x T)][ \Ctxt_2               ]} \and
-  \inferrule{\Ctxt = \CSplit}{\Ctxt, \CBind  x T = \CSplit[ \Ctxt_ 1              ][(\Ctxt_2 , \CBind  x T)]} \and
-  \inferrule{\Ctxt = \CSplit}{\Ctxt, \CBind* x T = \CSplit[(\Ctxt_1 , \CBind* x T)][(\Ctxt_2 , \CBind* x T)]}
-\end{mathpar}
-
-\input{fig-typing}
-
-% Typing of expressions in the iso-recursive system is largely the same as for
-% expressions in the equi-recursive system. As the only change, two additional
-% typing rules are introduced concerned with $\EkwRoll$ and $\EkwUnroll$.
-% \begin{mathpar}
-%   \inferrule{
-%     \typing{e}{S[\TRec[X] S / X]}
-%   }{
-%     \typing{\ERoll e}{\TRec S}
-%   }
-% 
-%   \inferrule{
-%     \typing{e}{\TRec S}
-%   }{
-%     \typing{\EUnroll e}{S[\TRec[X] S / X]}
-%   }
-% \end{mathpar}
-
-% Evaluation contexts for the iso-recursive system have the same shape as the
-% contexts in the equi-recursive system. The reduction relation is extended by
-% two rules concerned with $\EkwRoll$ and $\EkwUnroll$.
-% \begin{mathpar}
-%   \reducerule{
-%     \PScope (\PPar {E[\ERoll a]} {p})
-%   }{
-%     \PScope (\PPar {E[a]} {p})
-%   }
-% 
-%   \reducerule{
-%     \PScope (\PPar {E[\EUnroll a]} {p})
-%   }{
-%     \PScope (\PPar {E[a]} {p})
-%   }
-% \end{mathpar}
-% Dual $\PScope[b,a]$ rules omitted.
 
 %%% Local Variables:
 %%% mode: latex
