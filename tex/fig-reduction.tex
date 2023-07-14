@@ -1,71 +1,105 @@
-%\begin{figure}
-  \declrel{Expression reduction}[$\reduce{e}{e}$]
-  \begin{mathpar}
-    \reducerule {
-      (\ELam x e) v
-    }{
-      e[ v / x ]
-    }
+\declrel{Transition labels}
+\begin{align*}
+  \sigma \grmdef&
+    a!v \grmor a?v \grmor a!l \grmor a?l \grmor a! \grmor a?
+  && \text{labels for session operations} \\
+  \lambda \grmdef&
+    \sigma \grmor \beta \grmor \PScope[a,a] \EFork v
+  &&\text{labels for expressions} \\
+  \pi \grmdef&
+    \sigma \grmor \tau \grmor \PScope[a,a] a!a \RPar \pi \pi
+\end{align*}
 
-    \reducerule {
-      (\ERec x v) v'
-    }{
-      v[ \ERec x v / x ] \; v'
-    }
+\declrel{Free variables of process labels}[$\FV{p}$]
+\begin{mathpar}
+  \FV{a!v} = \FV{a?v} = \{a\} \cup \FV{v} \and
+  \FV{a!l} = \FV{a?l} = \FV{a!} = \FV{a?} = \{a\} \and
+  \FV{\tau} = \emptyset \and
+  \FV{\PScope[c,d] a!x} = \{a,x\} \setminus \{c,d\} \and
+  \FV{\RPar {\pi_1} {\pi_2}} = \FV{\pi_1} \cup \FV{\pi_2}
+\end{mathpar}
 
-    \reducerule {
-      \ELetU \EUnit e
-    }{
-      e
-    }
+\declrel{Labeled transition system for expressions}[$\reduce[\lambda] e e$]
+\begin{mathpar}
+  \ltsrule \ActApp { (\ELam x e) v } \beta { e[v / x] }
 
-    \reducerule {
-      \ELetP {x_1} {x_2} {(v_1,v_2)} e
-    }{
-      e[v_1, v_2 / x_1, x_2]
-    }
+  \ltsrule \ActRec { (\ERec x v) v' } \beta { v[\ERec x v / x] v' }
 
-    \reducerule[\reduce{e_1}{e_2}]{
-      E[e_1]
-    }{
-      E[e_2]
-    }
-  \end{mathpar}
-  \declrel{Process reduction}[$\reduce{p}{p}$]
-  \begin{mathpar}
-    \reducerule{
-      \PScope (\PPar* {\ESend v a} {\ERecv b} )
-    }{
-      \PScope (\PPar* {a} {(v,b)})
-    }
+  \ltsrule \ActLet { \ELetP xy {(v_1,v_2)} e } \beta { e[v_1/x, v_2/y] }
 
-    \reducerule{
-      \PScope (\PPar* {\ESelect {l_j} a} {\ECase b { l_i \rightarrow
-          v_i \mid i \in I }})
-    }{
-      \PScope (\PPar* {a} {v_j \; b})
-      \qquad \text{ if } j \in I
-    }
+  \ltsrule \ActUnit { \ELetU \EUnit e } \beta { e }
 
-    \reducerule{
-      \PScope (\PPar* {\ETerm a} {\EWait b})
-    }{
-      \PPar* \EUnit \EUnit
-    }
+  \ltsrule \ActSend { \ESend v a } {a!v} { a }
 
-    \reducerule{
-      E[\EFork v]
-    }{
-      \PScope (\PPar {E[a]} {v \; b})
-    }
-    \\
-    \reducerule[\reduce{p}{p^\prime}] { \PPar p q } { \PPar {p^\prime} q } \and
-    \reducerule[\reduce{p}{p^\prime}] { \PScope p } { \PScope p^\prime }   \and
-    \reducerule[p \equiv q \\ \reduce{q}{q^\prime}] { p } { q^\prime }
-  \end{mathpar}
-%   \label{fig:equi-reduction}
-%   \caption{Reduction relation for the equi-recursive system}
-% \end{figure}
+  \ltsrule \ActRecv { \ERecv a } {a?v} { (v,a) }
+
+  \ltsrule \ActSelect { \ESelect l a } {a!l} { a }
+
+  \ltsrule \ActCase { \ECase a { l_i \rightarrow v_i } } {a?l_j} { v_{\!j} \, a }
+
+  \ltsrule \ActWait { \EWait a } {a?} { \EUnit }
+
+  \ltsrule \ActTerm { \ETerm a } {a!} { \EUnit }
+
+  \ltsrule \ActFork { \EFork v } { \PScope \EFork v } { a }
+\end{mathpar}
+The standard structural call-by-value rules are omitted.
+
+\declrel{Labeled transition system for processes}[$\reduce[\pi] p p$]
+\begin{mathpar}
+  \ltsrule \ActSession [
+    \reduce[\sigma]{ e }{ e' }
+  ]{ \PExp e } \sigma { \PExp {e'} }
+
+  \ltsrule \ActBeta [
+    \reduce[\beta]{ e }{ e' }
+  ]{ \PExp e } \tau { \PExp {e'} }
+
+  \ltsrule \ActForkP [
+    \reduce[ \PScope \EFork v ]{ e }{ e' }
+  ]{ \PExp e } \tau { \PScope (\PPar {\PExp{e'}} {\PExp{v\;b}}) }
+
+  \ltsrule \ActJoin [
+    \reduce[\pi_1]{p}{p'} \\
+    \reduce[\pi_2]{q}{q'} \\
+  ]{ \PPar p q } {\RPar{\pi_1\!}{\pi_2}} { \PPar {p'} {q'} }
+
+  \ltsrule \ActMsg [
+    \reduce[\RPar{a!v}{b?v}]{p}{p'}
+  ]{ \PScope p } \tau { \PScope p' }
+
+  \ltsrule \ActBranch [
+    \reduce[\RPar{a!l}{b?l}]{p}{p'}
+  ]{ \PScope p } \tau { \PScope p' }
+
+  \ltsrule \ActEnd [
+    \reduce[\RPar{a!}{b?}]{p}{p'}
+  ]{ \PScope p } \tau { p' }
+
+  \ltsrule \ActScope [
+    \reduce[\pi]{p}{p'} \\
+    a,b \not\in \FV{\pi}
+  ]{ \PScope p } \pi { \PScope p' }
+
+  \ltsrule \ActPar [
+    \reduce[\pi]{p}{p'}
+  ]{ \PPar p q } \pi { \PPar {p'} q }
+
+ \ltsrule \ActOpen [
+   \reduce[a!c]{p}{p'} \\
+   a \not\in \{c,d\}
+ ]{ \PScope[c,d] p } { \PScope[c,d] a!c } { p' }
+
+ \ltsrule \ActClose [
+   \reduce[\RPar{\PScope[c,d] a!c}{b?c}]{p}{p'}
+ ]{ \PScope[a,b] p } \tau { \PScope[a,b] \PScope[c,d] p' }
+
+  \ltsrule \ActCong [
+    p \equiv q \\
+    \reduce[\pi]{q}{q'}
+  ]{ p } \pi { q' }
+\end{mathpar}
+\js{I'm unclear about why/if \textsc{\ActOpen} and \textsc{\ActClose} are needed.}
 
 %%% Local Variables:
 %%% mode: latex

@@ -28,13 +28,15 @@
   \\
   & \text{processes}&
   p \grmdef&
-    e                       \grmor
+    \PExp e                 \grmor
     \PPar p p               \grmor
     \PScope p
 \end{align*}
 
 The expression $\ELam {(x,y)} e$ abbreviates $\ELam z \ELetP xy z e$
 for some variable $z$ not free in $e$.
+
+The set of free variables $\FV{e}$ for an expression $e$ is standard.
 
 
 %%% Local Variables:

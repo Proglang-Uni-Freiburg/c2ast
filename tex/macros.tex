@@ -50,10 +50,11 @@
 \newcommand\ERoll[1]{\EkwRoll\; #1}
 \newcommand\EUnroll[1]{\EkwUnroll\; #1}
 \newcommand\EFork[1]{\EkwFork\; #1}
-
 \newcommand\EHole{[\;]}
 
-% Type equivalence names
+\newcommand\FV[1]{\mathrm{fv}(#1)}
+
+% Type equivalence names.
 \newcommand\EqUnit{Eq-Unit}
 \newcommand\EqPair{Eq-Pair}
 \newcommand\EqFun{Eq-Fun}
@@ -63,10 +64,35 @@
 \newcommand\EqOut{Eq-Out}
 \newcommand\EqSelect{Eq-Select}
 \newcommand\EqCase{Eq-Case}
-\newcommand\EqUnrollL{Eq-Unroll-L}
-\newcommand\EqUnrollR{Eq-Unroll-R}
+\newcommand\EqUnrollL{Eq-UnrollL}
+\newcommand\EqUnrollR{Eq-UnrollR}
 \newcommand\EqUnroll{Eq-Unroll}
 \newcommand\EqRoll{Eq-Roll}
+
+% Reduction names.
+\newcommand\ActApp{Act-App}
+\newcommand\ActBeta{Act-Beta}
+\newcommand\ActBranch{Act-Branch}
+\newcommand\ActCase{Act-Case}
+\newcommand\ActClose{Act-Close}
+\newcommand\ActCong{Act-Cong}
+\newcommand\ActEnd{Act-End}
+\newcommand\ActForkP{Act-ForkP}
+\newcommand\ActFork{Act-Fork}
+\newcommand\ActJoin{Act-Join}
+\newcommand\ActLet{Act-Let}
+\newcommand\ActMsg{Act-Msg}
+\newcommand\ActOpen{Act-Open}
+\newcommand\ActPar{Act-Par}
+\newcommand\ActRecv{Act-Recv}
+\newcommand\ActRec{Act-Rec}
+\newcommand\ActScope{Act-Lift}
+\newcommand\ActSelect{Act-Select}
+\newcommand\ActSend{Act-Send}
+\newcommand\ActSession{Act-Session}
+\newcommand\ActTerm{Act-Term}
+\newcommand\ActUnit{Act-Unit}
+\newcommand\ActWait{Act-Wait}
 
 % Outputs a header for defining a new relation.
 %   {#1} description/name
@@ -127,11 +153,24 @@
 \newcommand\eqs{\sim_{\mathsf S}}
 
 % Macros for reductions
-\newcommand\reduce[3][]{#2 \stackrel{#1}\rightarrow #3}
+\newcommand\reduce[3][]{#2 \xrightarrow{#1} #3}
 \newcommand\reducemany[3][]{#2 \stackrel{#1}{\twoheadrightarrow} #3}
 \newcommand\reduceto[3][]{#2 \stackrel{#1}\Downarrow #3}
 \newcommand\reducerule[3][]{\inferrule{#1}{\reduce{#2}{#3}}}
+\newcommand\RPar[2]{#1 \| #2}
 
+% \ltsrule {#1} [#2] {#3} {#4} {#3}
+%
+%   #1  rule name
+%   #2  premise (optional)
+%   #3  conclusion LHS
+%   #4  conclusion transition label
+%   #5  conclusion RHS
+\NewDocumentCommand \ltsrule
+  { m O{} m m m }
+  { \inferrule[#1]{#2}{\reduce[{#4}]{#3}{#5}} }
+
+\newcommand\PExp[1]{\langle #1 \rangle}
 \newcommand\PScope[1][a,b]{(\nu #1)}
 \NewDocumentCommand \PPar
   { s m m }
