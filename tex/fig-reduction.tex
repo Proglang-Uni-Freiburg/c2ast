@@ -1,13 +1,15 @@
 \declrel{Transition labels}
 \begin{align*}
   \sigma \grmdef&
-    a!v \grmor a?v \grmor a!l \grmor a?l \grmor a! \grmor a?
-  && \text{labels for session operations} \\
+    !v \grmor ?v \grmor !l \grmor ?l \grmor ! \grmor ?
+  && \text{label suffixes for session operations} \\
   \lambda \grmdef&
-    \sigma \grmor \beta \grmor \PScope[a,a] \EFork v
-  &&\text{labels for expressions} \\
+    a\sigma \grmor \beta \grmor \PScope[a,a] \EFork v
+  &&\text{labels for expression reduction} \\
   \pi \grmdef&
-    \sigma \grmor \tau \grmor \PScope[a,a] a!a \RPar \pi \pi
+               a\sigma \grmor \tau \grmor \PScope[a,a] a!a \RPar \pi
+               \pi
+  &&\text{labels for process reduction}
 \end{align*}
 
 \declrel{Free variables of process labels}[$\FV{p}$]

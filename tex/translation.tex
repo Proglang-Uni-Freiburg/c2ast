@@ -115,23 +115,44 @@ expressions. Intuitively, conversion expressions on session types are
 just forwarders of the respective messages, so we arrive at the
 following statement for an equational correspondence.
 
-\begin{lemma}
+\begin{definition}
+  For $\typing{e_1, e_2} T$ define $e_1 = e_2$
+  as the reflexive, transitive, symmetric, congruence closure of all
+  silent reductions, the equalities of the computational lambda
+  calculus, and extensionality.
+\end{definition}
+
+\begin{conjecture}
   Suppose that $\translation {e_1}{e_1'} T$.
   If $\reduce[\alpha]{e_1}{e_2}$
   and $\translation{e_2}{e_2''}{T}$,
   then $\reducemany[\alpha]{e_1'}{e_2'}$
   and $e_2' = e_2''$.
-\end{lemma}
-We may be able to establish $\reducemany{e_2''}{e_2'}$ in  the
-conclusion, as that would result in a reduction correspondence.
+\end{conjecture}
+If we could establish $\reducemany{e_2''}{e_2'}$ in  the
+conclusion, that would result in a reduction correspondence.
 
-With $=$ we mean the reflexive, transitive, and symmetric closure of
-all silent reductions. The latter include fork reductions as well as
-local communication on restricted channels (which are not bound in
-$\Ctxt$).
-\begin{proof}
-  TBC
-\end{proof}
+The following lemma is a stepping stone for this conjecture. It
+establishes that conversions constructed by $\eqt$ behave like
+isomorphisms and conversion constructed by $\eqs$ like forwarders.
+\begin{conjecture}[Conversions]~\\[-\baselineskip]
+  \label{lemma:conversion}
+  \begin{enumerate}
+    \item If $f : T \eqt T'$, then $f' : T' \eqt T$
+      such that $\typing[\CNil]{f}{\TFun T{T'}}$
+      and  $\typing[\CNil]{f'}{\TFun {T'}T}$
+      and  $f \circ f' = \ELam x x$
+      and  $f' \circ f = \ELam x x$.
+    \item If $g : S \eqs S'$, then $g' : S' \eqs S$
+      such that $\typing[\CNil]{g}{\TFun {\TPair {S} {\TDual{S'}}} \TUnit}$
+      and $\typing[\CNil]{g'}{\TFun {\TPair {S'} {\TDual{S}}} \TUnit}$
+      and,\\
+      for all channels $c : S$,  $c \cong \ELet{c'}{\EFork{( \ELam {\bar c'} g \; (c, \bar c')) }}{\EFork{( \ELam {\bar c} g' \; (c', \bar c)) }} $.
+\end{enumerate}
+\end{conjecture}
+For session type $S$ and $c:S$, $c \cong c'$ means that for all
+sequences of session operations $o$ described by $S$, $o\; c = o\; c'$.
+
 
 %%% Local Variables:
 %%% mode: latex

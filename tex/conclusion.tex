@@ -2,13 +2,30 @@
 \section{Conclusion}
 \label{sec:conclusion}
 
-Future work
-\begin{itemize}
-\item subtyping can also be resolved by generating a conversion term (related to Horne, Padovani) into isorecursion
-\item define mapping isorecursive $\leftrightarrow$ algebraic session types
-\item silent transitions for algebraic session types
-\item composition yields wire compatibility between equirecursive + subtyping and algebraic session types
-\end{itemize}
+This work started from the question how to embed regular equirecursive
+session types into algebraic session types
+\cite{DBLP:journals/corr/abs-2304-03764}. As a first step we
+considered the translation of equirecursive sessions into isorecursive
+ones and noticed that they were neglected by the literature (talking
+bananas being an exception \cite{DBLP:conf/icfp/LindleyM16}). One
+reason for the neglegience is the folklore statement ``The
+equirecursive interpretation of a session type guarantees that no 
+message is required for the unfolding of a recursive type.''
+\cite{DBLP:journals/pacmpl/BalzerP17}. We believe we dispelled this
+myth by showing that isorecursive session types do not need messages
+for unfolding as long as they are contractive.
+
+In future work we will consider composing the results of this work
+with a translation from isorecursive session types to algebraic
+session types. There may also be scope to resolve subtyping by generating a conversion term
+(different to Horne and Padovani's investigation
+\cite{DBLP:journals/corr/abs-2304-06398}, which is based on fixed point logic) to isorecursion. 
+
+% \begin{itemize}
+% \item define mapping isorecursive $\leftrightarrow$ algebraic session types
+% \item silent transitions for algebraic session types
+% \item composition yields wire compatibility between equirecursive + subtyping and algebraic session types
+% \end{itemize}
 
 %%% Local Variables:
 %%% mode: latex

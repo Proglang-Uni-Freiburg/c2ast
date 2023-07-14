@@ -1,0 +1,152 @@
+% The type syntax for the iso-recursive system is the same as in the
+% equi-recursive system, including the notion of session type dualization.
+% 
+% Type equivalence for the iso-recursive system is largely the same as in the
+% equi-recursive system except for the rules \textsc{\EqUnrollL} and
+% \textsc{\EqUnrollR}, which do not exist.
+
+\vv{
+  \begin{itemize}
+  \item The dual function for recursive types is a bit more complicated; pls have
+    a look at ``the final cut''.
+    \pt{restricted payload type to closed types}
+  \item Iso-recursive expressions $e$ must appear before type equivalence.
+    \js{fixed this by moving sections around}
+  \item IMO, $T,U$ reads better than $T_1, T_2$.
+    \pt{sorry, messed this up!}
+    \js{changed it}
+  \item The expression for session types isomorphism may be curried. Then we
+    seek these results, right? (do they hold?)
+
+    \pt{Yes, see below in Sec~\ref{sec:properties}}
+
+    Lemma. If $e : T \eqt U$, then $\typing{e}{\TFun{T}{U}}$.
+
+    Lemma. If $e : R \eqs S$, then $\typing{e}{\TFun{R}{\TFun{\TDual S}{\TUnit}}}$.
+  \item $f^{-1}$ is confusing; why not a simple $g$?
+    \pt{Fixed, differently}
+\item Added an easier to read, IMO, rule for \EqFun{} and (curried)
+  for \EqOut
+  \pt{Messed this up. Sorry again}
+\item \EqPair{} uses an abbreviation, right? $\lambda p. \text{let}(x,y) = p
+  \text{ in } \dots$
+  \js{added note about this abbreviation next to grammar}
+\item Added suggestion for roll and unroll; these constants may have function
+  types. (types don't work :(
+  \end{itemize}
+}
+
+
+
+TODO (PJT): what do we mean with $\cong$?
+\begin{itemize}
+\item for ``normal'' types, it should be contextual equivalence(?)
+\item for channels, it might be bisimilarity(?)
+\item might be simpler with an LTS semantics, see proposed definition:
+\end{itemize}
+
+\subsection{Attempt at Vasco's suggestion}
+\label{sec:attempt-at-vascos}
+
+\begin{lemma}[Equational correspondence for expressions]
+  Suppose $\Ctxt \vdash e_1 \leadsto e'_1 : T$ where $\Ctxt$ contains only
+  channel bindings.
+  \begin{enumerate}
+  \item
+    If $\reduce[\alpha]{e_1}{e_2}$
+    and $\Ctxt \vdash e_2 \leadsto e'_2 : T$, then
+    $\reducemany[\alpha]{e'_1}{e'_3}$ and $e_3' = e_2'$.
+  % \item If $\reduce[\alpha]{e'_1}{e'_3}$, then $\reduce[\alpha]{e_1}{e_2}$ and
+  %   $\reducemany[\alpha]{e'_3}{e'_2}$ and $\Ctxt \vdash e_2 \leadsto e'_2 : T$.
+  \end{enumerate}
+\end{lemma}
+
+Define $e_1 = e_2$: reflexive, transitive, congruence, symmetric
+closure of all expression reductions, and fork. As well as process
+reduction on restricted channels. 
+\begin{mathpar}
+  \reduce[a!v]{\ESend v a}{a}
+
+  \dots
+
+  \inferrule{
+    \reduce[\alpha]{e}{e'}
+  }{
+    \reduce[\alpha]{E[e]}{E[e']}
+  }
+  \\
+  \text{process reductions}
+  \\
+  \inferrule{
+    \reduce[a!v]{p_1}{p_1'} \\
+    \reduce[b?v]{p_2}{p_2'}
+  }{
+    \reduce[a!v, b?v]{\PPar{p_1}{p_1'} }{\PPar{p_2}{p_2'} }
+  }
+
+  \inferrule{
+    \reduce[a!v, b?v]{p }{p' }
+  }{
+    \reduce[\tau]{\PScope p}{\PScope {p'}}
+  }
+\end{mathpar}
+
+\newpage
+\begin{lemma}[Operational correspondence for expressions]
+  Suppose $\Ctxt \vdash e_1 \leadsto e'_1 : T$ where $\Ctxt$ contains only
+  channel bindings. \begin{enumerate}
+  \item If $\reduce[\alpha]{e_1}{e_2}$, then
+    $\reducemany[\alpha]{e'_1}{e'_2}$ and $\Ctxt \vdash e_2 \leadsto e'_2 : T$.
+  \item If $\reduce[\alpha]{e'_1}{e'_3}$, then $\reduce[\alpha]{e_1}{e_2}$ and
+    $\reducemany[\alpha]{e'_3}{e'_2}$ and $\Ctxt \vdash e_2 \leadsto e'_2 : T$.
+  \end{enumerate}
+\end{lemma}
+\begin{proof} Item 1.
+  The proof is by rule induction on $\Ctxt \vdash e_1 \leadsto e'_1 : T$.
+  %
+  Case the top-level translation rule is
+  \begin{mathpar}
+    \inferrule{
+      \Ctxt \vdash e \leadsto e' : T \\
+      f : T \eqt U
+    }{
+      \Ctxt \vdash e \leadsto f e' : U
+    }
+  \end{mathpar}
+
+  Then, we know (premises) that $\Ctxt \vdash e_1 \leadsto e'_1 : T$ and $f : T
+  \eqt U$.
+  %
+  We need to show that $\reducemany[\alpha]{f e_1'}{e'_2}$ and $\Ctxt \vdash e_2 \leadsto e'_2 : T$.
+  %
+  At this point I suggest proceeding by rule induction on
+  $\reduce[\alpha]{e_1}{e_2}$. Details to be seen.
+
+  \pt{Agreed, this part works ok. But what follows troubles me.}
+
+  However, if $e_1$ is a value, then so is $e_1'$ (lemma!). 
+
+  Proceed by induction on $f : T \eqt U$?
+
+  Or: prove that if I can observe some $\alpha$ on $e_1$, then I can
+  observe the same $\alpha$ on $f e_1'$.
+
+  \begin{itemize}
+  \item $\alpha = \ELetU\EHole{e''}$
+  \item $\alpha = \ELetP xy\EHole{e''}$
+  \item $\alpha = \EHole\; v$
+  \item $\alpha = \EWait\EHole$
+  \item $\alpha = \ETerm\EHole$
+  \item $\alpha = \ESend{v}\EHole$
+  \item $\alpha = \ERecv\EHole$
+  \item $\alpha = \ESelect l \EHole$
+  \item $\alpha = \ECase\EHole{l_i: e_i}$
+  \end{itemize}
+  
+\end{proof}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:

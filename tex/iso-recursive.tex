@@ -15,18 +15,25 @@ type,
 process reduction with an extra rule:
 %
 \begin{mathpar}
-    % \reducerule{
-    %   \PScope (\PPar* {\ERoll a} {\ERoll b})
-    % }{
-    %   \PPar* a b
-    % }
-    %   
-    \reducerule{
-      \PScope (\PPar* {\EUnroll a} {\EUnroll b})
-    }{
-      \PScope (\PPar* a b)
-    }
+  \ltsrule {Act-Unroll} {\EUnroll a} {\EUnroll a} a
+
+  \ltsrule {Act-Sync} [
+    \reduce[\RPar{\EUnroll a}{\EUnroll b}]{p}{p'}
+  ]{ \PScope p } \tau { \PScope p' }
 \end{mathpar}
+% \begin{mathpar}
+%     % \reducerule{
+%     %   \PScope (\PPar* {\ERoll a} {\ERoll b})
+%     % }{
+%     %   \PPar* a b
+%     % }
+%     %   
+%     \reducerule{
+%       \PScope (\PPar* {\EUnroll a} {\EUnroll b})
+%     }{
+%       \PScope (\PPar* a b)
+%     }
+% \end{mathpar}
 %
 and we replace the typing rule for conversion by a rule for explicit unrolling:
 \begin{mathpar}
