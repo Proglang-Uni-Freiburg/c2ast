@@ -100,7 +100,134 @@
           {a'}}} {{ \ELetU {\EWait {b'}} {\ETerm {x}}) }})}) \\
         &=\PScope[a',b'] \PPar {({\ETerm
           {a'}}} {{ \ELetU {\EWait {b'}} {\ETerm {x}}) }} \\
-        &=  \ETerm {x}
+        &=  \ETerm {x} \\
+        &\reduce[x!]{} \EUnit
+      \end{align*}
+    \item Case $x : \TOut TS$
+      \begin{align*}
+      \textcolor{blue!50} {f_U} &: U \eqt T : f_T  \\
+        \textcolor{blue!50} {g_S} & : S \eqs S' \\ %: g' \\
+        g &: \TOut {T} {S} \eqs \TOut {U} {S'}
+      \end{align*}
+      \begin{align*}
+        g & = \ELam {(c_1, c_2)}
+          \ELetP {u} {c_2} {\ERecv{c_2}} 
+        \ELet {c_1} {\ESend {(f_U \; u)} {c_1}} 
+        g_S \; (c_1, c_2)
+        \\
+        g' &= 
+        \ELam {(c_2, c_1)}
+        \ELetP {t_1} {c_1} {\ERecv{c_1}}
+        \ELet {c_2} {\ESend {(f_T \; t_1)} {c_2}}
+        g'_S \; (c_2, c_1)
+      \end{align*}
+\begin{align*}
+        & 
+        \EFork{ \ELam {c_2} g' \; ((\EFork{ \ELam {c_2} g \; (x,
+        c_2) }), c_2)} \\
+        &= \PScope ({\PPar a g' \; ((\EFork{ \ELam {c_2} g \; (x,
+        c_2) }), b)})  \\
+        &= \PScope ({\PPar a {\PScope[a',b'] \PPar {g' \; (a', b)} {({ g \; (x,
+        b') })}}})  \\
+      \end{align*}
+      Context $\ESend v \EHole$
+      \begin{align*}
+        &= \PScope ({\PPar {\ESend va} {\PScope[a',b'] \PPar {g' \; a'} {(({ g \; (x,
+        b') }), b)}}})  \\
+        &= \PScope ({\PPar {\ESend va} {\PScope[a',b'] \PPar {(
+          \ELam {(c_2, c_1)}
+          \begin{array}[t]{l}
+        \ELetP {t_1} {c_1} {\ERecv{c_1}} \\
+        \ELet {c_2} {\ESend {(f_T \; t_1)} {c_2}} \\
+          g'_S \; (c_2, c_1)
+          \end{array}
+          ) \; (a', b)} {({ g \; (x,
+        b') })}}})  \\
+        &= \PScope ({\PPar {\ESend va} {\PScope[a',b'] \PPar {(
+          \begin{array}[t]{l}
+        \ELetP {t_1} {b} {\ERecv{b}} \\
+        \ELet {a'} {\ESend {(f_T \; t_1)} {a'}} \\
+          g'_S \; (a', b)
+          \end{array}
+          )} {({ g \; (x,
+        b') })}}})  \\
+        &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {(
+          \begin{array}[t]{l}
+        \ELetP {t_1} {b} {(v,{b})} \\
+        \ELet {a'} {\ESend {(f_T \; t_1)} {a'}} \\
+          g'_S \; (a', b)
+          \end{array}
+          )} {({ g \; (x,
+        b') })}}})  \\
+        &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {(
+          \begin{array}[t]{l}
+        \ELet {a'} {\ESend {(f_T \; v)} {a'}} \\
+          g'_S \; (a', b)
+          \end{array}
+        )} {({ (
+\ELam {(c_1, c_2)}
+        \begin{array}[t]{l}
+          \ELetP {u} {c_2} {\ERecv{c_2}} \\
+        \ELet {c_1} {\ESend {(f_U \; u)} {c_1}}  \\
+        g_S \; (c_1, c_2)
+        \end{array}
+        ) \; (x,
+        b') })}}})  \\
+        &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {(
+          \begin{array}[t]{l}
+        \ELet {a'} {\ESend {(f_T \; v)} {a'}} \\
+          g'_S \; (a', b)
+          \end{array}
+        )} {({ (
+        \begin{array}[t]{l}
+          \ELetP {u} {b'} {\ERecv{b'}} \\
+        \ELet {x} {\ESend {(f_U \; u)} {x}}  \\
+        g_S \; (x, b')
+        \end{array}
+        ) })}}})  \\
+        &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {(
+          \begin{array}[t]{l}
+          g'_S \; (a', b)
+          \end{array}
+        )} {({ (
+        \begin{array}[t]{l}
+          \ELetP {u} {b'} {((f_T \; v), b')} \\
+        \ELet {x} {\ESend {(f_U \; u)} {x}}  \\
+        g_S \; (x, b')
+        \end{array}
+        ) })}}})  \\
+        & \text{why can we delay evaluation of $f_T\;v$? It's not a value!} \\
+        &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {(
+          \begin{array}[t]{l}
+          g'_S \; (a', b)
+          \end{array}
+        )} {({ (
+        \begin{array}[t]{l}
+        \ELet {x} {\ESend {(f_U \; (f_T \; v))} {x}}  \\
+        g_S \; (x, b')
+        \end{array}
+        ) })}}})  \\
+        & \text{IH for $f_U$, $f_T$} \\
+        &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {(
+          \begin{array}[t]{l}
+          g'_S \; (a', b)
+          \end{array}
+        )} {({ (
+        \begin{array}[t]{l}
+        \ELet {x} {\ESend {v} {x}}  \\
+        g_S \; (x, b')
+        \end{array}
+        ) })}}})  \\
+        & \reduce[x!v]{}
+          \PScope ({\PPar {a} {\PScope[a',b'] \PPar {(
+          \begin{array}[t]{l}
+          g'_S \; (a', b)
+          \end{array}
+        )} {({ (
+        \begin{array}[t]{l}
+        g_S \; (x, b')
+        \end{array}
+        ) })}}})  \\
       \end{align*}
     \item the remaining cases are similar.
     \end{itemize}
