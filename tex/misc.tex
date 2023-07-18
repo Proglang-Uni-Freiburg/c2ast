@@ -2,7 +2,6 @@
 \section{Proofs}
 \label{sec:properties}
 
-
 \begin{proof}[Proof of Lemma~\ref{lemma:conversion}]
   \begin{enumerate}
   \item Induction on $T$ (beta equality is not sufficient; need
@@ -143,98 +142,111 @@
           \end{array}
           ) \; (a', b)} {({ g \; (x,
         b') })}}})  \\
-        &= \PScope ({\PPar {\ESend va} {\PScope[a',b'] \PPar {(
-          \begin{array}[t]{l}
+        &= \PScope ({\PPar {\ESend va} {\PScope[a',b'] \PPar {\left(
+          \begin{array}{l}
         \ELetP {t_1} {b} {\ERecv{b}} \\
         \ELet {a'} {\ESend {(f_T \; t_1)} {a'}} \\
           g'_S \; (a', b)
           \end{array}
-          )} {({ g \; (x,
+        \right)} {({ g \; (x,
         b') })}}})  \\
-        &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {(
-          \begin{array}[t]{l}
+        &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {\left(
+          \begin{array}{l}
         \ELetP {t_1} {b} {(v,{b})} \\
         \ELet {a'} {\ESend {(f_T \; t_1)} {a'}} \\
           g'_S \; (a', b)
           \end{array}
-          )} {({ g \; (x,
+        \right)} {({ g \; (x,
         b') })}}})  \\
-        &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {(
-          \begin{array}[t]{l}
+        &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {\left(
+          \begin{array}{l}
         \ELet {a'} {\ESend {(f_T \; v)} {a'}} \\
           g'_S \; (a', b)
           \end{array}
-        )} {({ (
-\ELam {(c_1, c_2)}
-        \begin{array}[t]{l}
+        \right)} {({ \left(
+        \ELam {(c_1, c_2)}
+        \begin{array}{l}
           \ELetP {u} {c_2} {\ERecv{c_2}} \\
         \ELet {c_1} {\ESend {(f_U \; u)} {c_1}}  \\
         g_S \; (c_1, c_2)
         \end{array}
-        ) \; (x,
+        \right) \; (x,
         b') })}}})  \\
-        &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {(
-          \begin{array}[t]{l}
+        &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {\left(
+          \begin{array}{l}
         \ELet {a'} {\ESend {(f_T \; v)} {a'}} \\
           g'_S \; (a', b)
           \end{array}
-        )} {({ (
-        \begin{array}[t]{l}
+        \right)} {{ \left(
+        \begin{array}{l}
           \ELetP {u} {b'} {\ERecv{b'}} \\
         \ELet {x} {\ESend {(f_U \; u)} {x}}  \\
         g_S \; (x, b')
         \end{array}
-        ) })}}})  \\
+        \right) }}}})  \\
         &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {(
           \begin{array}[t]{l}
           g'_S \; (a', b)
           \end{array}
-        )} {({ (
-        \begin{array}[t]{l}
+        )} {{ \left(
+        \begin{array}{l}
           \ELetP {u} {b'} {((f_T \; v), b')} \\
         \ELet {x} {\ESend {(f_U \; u)} {x}}  \\
         g_S \; (x, b')
         \end{array}
-        ) })}}})  \\
+        \right) }}}})  \\
         & \text{why can we delay evaluation of $f_T\;v$? It's not a value!} \\
         &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {(
           \begin{array}[t]{l}
           g'_S \; (a', b)
           \end{array}
-        )} {({ (
-        \begin{array}[t]{l}
+        )} {{ \left(
+        \begin{array}{l}
         \ELet {x} {\ESend {(f_U \; (f_T \; v))} {x}}  \\
         g_S \; (x, b')
         \end{array}
-        ) })}}})  \\
+        \right) }}}})  \\
         & \text{IH for $f_U$, $f_T$} \\
         &= \PScope ({\PPar {a} {\PScope[a',b'] \PPar {(
           \begin{array}[t]{l}
           g'_S \; (a', b)
           \end{array}
-        )} {({ (
-        \begin{array}[t]{l}
+        )} {{ \left(
+        \begin{array}{l}
         \ELet {x} {\ESend {v} {x}}  \\
         g_S \; (x, b')
         \end{array}
-        ) })}}})  \\
+        \right) }}}})  \\
         & \reduce[x!v]{}
           \PScope ({\PPar {a} {\PScope[a',b'] \PPar {(
           \begin{array}[t]{l}
           g'_S \; (a', b)
           \end{array}
-        )} {({ (
+        )} {({
         \begin{array}[t]{l}
         g_S \; (x, b')
         \end{array}
-        ) })}}})  \\
+          })}}})  \\
       \end{align*}
     \item the remaining cases are similar.
     \end{itemize}
   \end{enumerate}
 \end{proof}
 
-
+\pt{
+Here is a proposal for a better notion of equality at session type
+$S$. Suppose that $a, b : S$. Define $a \cong b$ \dots
+\begin{itemize}
+\item If $S = \TEnd!$ and $\ETerm a \cong \ETerm b$
+\item If $S = \TEnd?$ and $\EWait a \cong \EWait b$
+\item If $S = \TIn TS'$ and $\ERecv a \cong \ERecv b$ and \dots?
+\item If $S = \TOut TS'$ and $\ESend{v} a \cong \ESend vb$ and \dots?
+\item If $S = \TSelect{ l_i \to S_i }$ and $\ESelect la \cong \ESelect
+  lb$ and \dots?
+\item If $S = \TCase{ l_i \to S_i }$ and $\ECase a { l_i \to e_i }
+  \cong \ECase b { l_i \to e_i }$ and \dots?
+\end{itemize}
+}
 
 
 %%% Local Variables:
