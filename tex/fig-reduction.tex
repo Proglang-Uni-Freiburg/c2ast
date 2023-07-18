@@ -4,12 +4,22 @@
     !v \grmor ?v \grmor !l \grmor ?l \grmor ! \grmor ?
   && \text{label suffixes for session operations} \\
   \lambda \grmdef&
-    a\sigma \grmor \beta \grmor \PScope[a,a] \EFork v
+    a\sigma \grmor \beta \grmor \PScope \EFork v
   &&\text{labels for expression reduction} \\
   \pi \grmdef&
-               a\sigma \grmor \tau \grmor \PScope[a,a] a!a \RPar \pi
-               \pi
+               a\sigma \grmor \tau \grmor \PScope c!a
+               \grmor \RPar \pi \pi
   &&\text{labels for process reduction}
+\end{align*}
+
+\declrel{Duality for label suffixes}[$\TDual\sigma$]
+\begin{align*}
+  \TDual{!v} &= ?v
+  &\TDual{ ?v} &= !v
+  &\TDual{ !l} &= ?l
+  &\TDual{ ?l} &= !l
+  & \TDual ! &= ?
+  &\TDual ? &= !
 \end{align*}
 
 \declrel{Free variables of process labels}[$\FV{p}$]
