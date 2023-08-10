@@ -48,12 +48,12 @@ of binders:
 \begin{align*}
   E \grmdef&
     \EHole \grmor
-    E \; e \grmor
-    v \; E \grmor
-    \ELetU E e \grmor
-    (E,e) \grmor
-    (v,E) \grmor
-    \ELetP xy E e \grmor
+    % E \; e \grmor
+    % v \; E \grmor
+    \ELet t E e \grmor
+    % (E,e) \grmor
+    % (v,E) \grmor
+    % \ELetP xy E e \grmor
   %\\ &
     % \ESelect l E \grmor 
     \ECase E { l_i \rightarrow e_i }
@@ -62,7 +62,8 @@ of binders:
 \input{fig-reduction}
 
 The expression reductions implement a standard call-by-value lambda
-calculus. Process reductions implement a synchronous semantics for
+calculus with extra reductions from Moggi's computational lambda
+calculus \cite{DBLP:conf/lics/Moggi89}. Process reductions implement a synchronous semantics for
 session types.
 
 The typing rules are standard (see appendix~\ref{sec:expression-typing}), but we choose to make

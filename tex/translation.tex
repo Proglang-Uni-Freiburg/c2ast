@@ -104,25 +104,47 @@ $\EUnroll\_$ becomes a no-op which just changes the type. In other
 words, we downgrade the process reduction of $\EUnroll\_$ to a simple,
 silent expression reduction:
 \begin{gather*}
-  \reduce{E[\EUnroll a]}{a}
+  \reduce{\EUnroll a}{a}
 \end{gather*}
 
 At this point, we should have that an equirecursive expression
 $\translation e{e'} T$ is wire compatible to its translation
-$e'$. However, that statement is not straightforward to state and
+$e'$. However, this statement is not straightforward to state and
 prove because the translation introduces explicit conversion
-expressions. Intuitively, conversion expressions on session types are
-just forwarders of the respective messages, so we arrive at the
-following statement for an equational correspondence.
+expressions. As conversion expressions on session types are
+just forwarders of the respective messages, we realize that we need to
+lift our point of view to the process level.
 
-\begin{definition}
-  For $\typing{e_1, e_2} T$ define $e_1 = e_2$
-  as the reflexive, transitive, symmetric, congruence closure of all
-  silent reductions, the equalities of the computational lambda
-  calculus, and extensionality.
+The translation from equirecursion to isorecursion extends easily to
+the process level written as $\Ptranslation p{p'}$ by applying the
+expression translation to each process.
+
+% \begin{definition}
+%   For processes $p_1$ and $p_2$ such that  $\Ptyping{p_1}$ and
+%   $\Ptyping{ p_2}$ define $p_1 = p_2$ 
+%   as the reflexive, transitive, symmetric, congruence closure of all
+%   silent reductions, and extensionality.
+% \end{definition}
+
+\begin{definition}[Simulation and bisimulation]
+  For processes $p$ and $q$
+  \begin{itemize}
+  \item define $p \leftsim q$ if, for all $\alpha$ and $p$ such that
+    $\reducemany[\alpha] p{p'}$, then there exists some process $q'$
+    such that $\reducemany[\alpha] q{q'}$ and $p' \leftsim q'$;
+  \item define $p \bisim q$ if $p \leftsim q$ and $q \leftsim p$.
+  \end{itemize}
 \end{definition}
-
 \begin{conjecture}
+  Suppose that $\Ptranslation {p_1}{p_1'}$.
+  If $\reduce[\alpha]{p_1}{p_2}$
+  and $\Ptranslation{p_2}{p_2''}$,
+  then $\reducemany[\alpha]{p_1'}{p_2'}$
+  and $p_2' \bisim p_2''$.
+\end{conjecture}
+
+
+\begin{conjecture}[obsolete]
   Suppose that $\translation {e_1}{e_1'} T$.
   If $\reduce[\alpha]{e_1}{e_2}$
   and $\translation{e_2}{e_2''}{T}$,
@@ -138,17 +160,19 @@ isomorphisms and conversion constructed by $\eqs$ like forwarders.
 \begin{conjecture}[Conversions]~\\[-\baselineskip]
   \label{lemma:conversion}
   \begin{enumerate}
-    \item If $f : T \eqt T'$, then $f' : T' \eqt T$
-      such that $\typing[\CNil]{f}{\TFun T{T'}}$
-      and  $\typing[\CNil]{f'}{\TFun {T'}T}$
-      and  $f \circ f' = \ELam x x$
-      and  $f' \circ f = \ELam x x$.
-    \item If $g : S \eqs S'$, then $g' : S' \eqs S$
-      such that $\typing[\CNil]{g}{\TFun {\TPair {S} {\TDual{S'}}} \TUnit}$
-      and $\typing[\CNil]{g'}{\TFun {\TPair {S'} {\TDual{S}}} \TUnit}$
-      and,\\
-      for all channels $c : S$,  $c \cong \ELet{c'}{\EFork{( \ELam {\bar c'} g \; (c, \bar c')) }}{\EFork{( \ELam {\bar c} g' \; (c', \bar c)) }} $.
-\end{enumerate}
+  \item If $f : T \eqt T'$,
+    then $f' : T' \eqt T$
+    and $\typing[\CNil]{f}{\TFun T{T'}}$
+    and  $\typing[\CNil]{f'}{\TFun {T'}T}$
+    and  $f \circ f' = \ELam x x$
+    and  $f' \circ f = \ELam x x$.
+  \item If $g : S \eqs S'$,
+    then $g' : S' \eqs S$
+    and $\typing[\CNil]{g}{\TFun {\TPair {S} {\TDual{S'}}} \TUnit}$
+    and $\typing[\CNil]{g'}{\TFun {\TPair {S'} {\TDual{S}}} \TUnit}$
+    and,\\
+    for all channels $c : S$,  $c \cong \ELet{c'}{\EFork{( \ELam {\bar c'} g \; (c, \bar c')) }}{\EFork{( \ELam {\bar c} g' \; (c', \bar c)) }} $.
+  \end{enumerate}
 \end{conjecture}
 For session type $S$ and $c:S$, $c \cong c'$ means that for all
 sequences of session operations $o$ described by $S$, $o\; c = o\; c'$.

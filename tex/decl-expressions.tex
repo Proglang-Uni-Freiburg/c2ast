@@ -6,18 +6,21 @@
                    v \grmdef&
     c                        \grmor
     a                        \grmor
-    (v, v)                   \grmor
-    \ELam x e                \grmor
-    \ERec x v                \grmor
+    \EPair v v            \grmor
+    \ELam x e           \grmor
+    \ERec x v
+  \\
+  &\text{tuple patterns}&
+                          t \grmdef& \EUnit \grmor x \grmor \EPair x y
   \\
   &\text{expressions}&
                        e \grmdef&
     v                       \grmor
     x                       \grmor
-    e \; e                  \grmor
-    \ELetU e e              \grmor
-    (e, e)                  \grmor
-    \ELetP x y e e          \grmor
+    \EApp e e           \grmor
+    \ELet t e e              \grmor
+    \EPair e e                  \grmor
+    % \ELetP x y e e          \grmor
     % \\ &&&
     %    \ESend e e \grmor
     %    \ERecv e \grmor
@@ -35,6 +38,8 @@
 
 The expression $\ELam {(x,y)} e$ abbreviates $\ELam z \ELetP xy z e$
 for some variable $z$ not free in $e$.
+
+We sometimes write $\ELetU {e_1} e_2$ for $\ELet{()}{e_1} e_2$.
 
 The set of free variables $\FV{e}$ for an expression $e$ is standard.
 

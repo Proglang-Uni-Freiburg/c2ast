@@ -30,7 +30,9 @@
 % Expression syntax macros
 \newcommand\EUnit{()}
 \newcommand\ELam[1]{\lambda #1.\;}
+\newcommand\EApp[1]{#1 \;}
 \newcommand\ERec[1]{\Ekw{rec}\; #1.\;}
+\newcommand\EPair[2]{(#1,#2)}
 \newcommand\ELet[2]{\Ekw{let}\; #1 = #2 \;\Ekw{in}\;}
 \newcommand\ELetU[1]{#1;\;}%{\ELet{\EUnit}{#1}}
 \newcommand\ELetP[3]{\ELet{(#1,#2)}{#3}}
@@ -71,6 +73,13 @@
 \newcommand\EqRoll{Eq-Roll}
 
 % Reduction names.
+\newcommand\ActAppLetL{Act-AppLetL}
+\newcommand\ActAppLetR{Act-AppLetR}
+\newcommand\ActPairLetL{Act-PairLetL}
+\newcommand\ActPairLetR{Act-PairLetR}
+\newcommand\ActLetLet{Act-LetLet}
+\newcommand\ActLetEta{Act-LetEta}
+
 \newcommand\ActApp{Act-App}
 \newcommand\ActBeta{Act-Beta}
 \newcommand\ActBranch{Act-Branch}
@@ -82,6 +91,7 @@
 \newcommand\ActFork{Act-Fork}
 \newcommand\ActJoin{Act-Join}
 \newcommand\ActLet{Act-Let}
+\newcommand\ActLetPair{Act-LetPair}
 \newcommand\ActMsg{Act-Msg}
 \newcommand\ActOpen{Act-Open}
 \newcommand\ActPar{Act-Par}
@@ -94,6 +104,9 @@
 \newcommand\ActTerm{Act-Term}
 \newcommand\ActUnit{Act-Unit}
 \newcommand\ActWait{Act-Wait}
+
+\newcommand\ActRefl{Act-Refl}
+\newcommand\ActOne{Act-One}
 
 % Outputs a header for defining a new relation.
 %   {#1} description/name
@@ -150,8 +163,12 @@
 \newcommand\tyEqui{\ensuremath{_{\text{equi}}}}
 \newcommand\tyIso{\ensuremath{_{\text{iso}}}}
 
+\newcommand\Ptyping[2][\Ctxt]{#1 \vdash #2}
+
 \newcommand\eqt{\sim_{\mathsf T}}
 \newcommand\eqs{\sim_{\mathsf S}}
+\newcommand\leftsim{\lesssim}
+\newcommand\bisim{\approx}
 
 % Macros for reductions
 \newcommand\reduce[3][]{#2 \xrightarrow{#1} #3}
@@ -171,6 +188,13 @@
   { m O{} m m m }
   { \inferrule[#1]{#2}{\reduce[{#4}]{#3}{#5}} }
 
+\NewDocumentCommand \ltsrulemany
+  { m O{} m m m }
+  { \inferrule[#1]{#2}{\reducemany[{#4}]{#3}{#5}} }
+
+% transition label
+\newcommand\LLet{\Ekw{let}}
+
 \newcommand\PExp[1]{\langle #1 \rangle}
 \newcommand\PScope[1][a,b]{(\nu #1)}
 \NewDocumentCommand \PPar
@@ -186,6 +210,7 @@
 %
 % Context defaults to \Ctxt.
 \newcommand\translation[4][\Ctxt]{#1 \vdash #2 \leadsto #3 : #4}
+\newcommand\Ptranslation[3][\Ctxt]{#1 \vdash #2 \leadsto #3}
 
 \newcommand\IsoToEqui[1]{|#1|}
 

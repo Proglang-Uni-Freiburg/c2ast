@@ -4,7 +4,7 @@
     !v \grmor ?v \grmor !l \grmor ?l \grmor ! \grmor ?
   && \text{label suffixes for session operations} \\
   \lambda \grmdef&
-    a\sigma \grmor \beta \grmor \PScope \EFork v
+    a\sigma \grmor \beta \grmor  \LLet \grmor \PScope \EFork v
   &&\text{labels for expression reduction} \\
   \pi \grmdef&
                a\sigma \grmor \tau \grmor \PScope c!a
@@ -31,13 +31,29 @@
   \FV{\RPar {\pi_1} {\pi_2}} = \FV{\pi_1} \cup \FV{\pi_2}
 \end{mathpar}
 
-\declrel{Labeled transition system for expressions}[$\reduce[\lambda] e e$]
+\declrel{Labeled transition system for expressions (where $n$ ranges over
+  non-value expressions)}[$\reduce[\lambda] e e$]
 \begin{mathpar}
+  \ltsrule \ActAppLetL {\EApp n e} \LLet {\ELet x n \EApp x e}
+
+  \ltsrule \ActAppLetR {\EApp v n} \LLet {\ELet x n \EApp v x}
+
+  \ltsrule \ActPairLetL {\EPair n e} \LLet {\ELet x n \EPair x e}
+
+  \ltsrule \ActPairLetR {\EPair v n} \LLet {\ELet x n \EPair v x}
+
+  \ltsrule \ActLetLet {\ELet {t_2} {(\ELet {t_1}{e_1}{e_2} )}{e_3}}
+  \LLet {\ELet{t_1}{e_1}{(\ELet{t_2}{e_2}{e_3})}}
+
+  \ltsrule \ActLetEta {\ELet t e t} \LLet e
+
   \ltsrule \ActApp { (\ELam x e) v } \beta { e[v / x] }
 
   \ltsrule \ActRec { (\ERec x v) v' } \beta { v[\ERec x v / x] v' }
 
-  \ltsrule \ActLet { \ELetP xy {(v_1,v_2)} e } \beta { e[v_1/x, v_2/y] }
+  \ltsrule \ActLet { \ELet x {v} e } \beta { e[v/x] }
+
+  \ltsrule \ActLetPair { \ELetP xy {(v_1,v_2)} e } \beta { e[v_1/x, v_2/y] }
 
   \ltsrule \ActUnit { \ELetU \EUnit e } \beta { e }
 
@@ -112,6 +128,23 @@ The standard structural call-by-value rules are omitted.
   ]{ p } \pi { q' }
 \end{mathpar}
 \js{I'm unclear about why/if \textsc{\ActOpen} and \textsc{\ActClose} are needed.}
+
+We define multistep labeled reductions in the usual way by
+concatenating the labels using $\_\cdot\_$ as the concatenation
+operator. We treat the silent label $\tau$ as a 
+neutral element in the concatenation, i.e., $\tau \cdot \overline\pi = \overline\pi
+\cdot \tau = \overline\pi$, where $\overline\pi$ is a sequence of labels. 
+\begin{mathpar}
+  \ltsrulemany \ActRefl {p} \tau p
+
+  \ltsrulemany \ActOne[
+  \reduce[\pi] p {p'} \\
+  \reducemany[\overline\pi] {p'} {p''}
+  ] p {\pi \cdot \overline\pi } {p''}
+\end{mathpar}
+We write $\reducemany[\alpha] p {p'}$ to indicate that the
+$\alpha$-labeled transition comes from the final $\textsc{\ActOne}$ step in the
+reduction sequence and all preceding transitions are $\tau$ transitions.
 
 %%% Local Variables:
 %%% mode: latex
