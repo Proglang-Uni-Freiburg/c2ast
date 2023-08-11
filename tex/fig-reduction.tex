@@ -113,21 +113,11 @@ The standard structural call-by-value rules are omitted.
     \reduce[\pi]{p}{p'}
   ]{ \PPar p q } \pi { \PPar {p'} q }
 
- \ltsrule \ActOpen [
-   \reduce[a!c]{p}{p'} \\
-   a \not\in \{c,d\}
- ]{ \PScope[c,d] p } { \PScope[c,d] a!c } { p' }
-
- \ltsrule \ActClose [
-   \reduce[\RPar{\PScope[c,d] a!c}{b?c}]{p}{p'}
- ]{ \PScope[a,b] p } \tau { \PScope[a,b] \PScope[c,d] p' }
-
   \ltsrule \ActCong [
     p \equiv q \\
     \reduce[\pi]{q}{q'}
   ]{ p } \pi { q' }
 \end{mathpar}
-\js{I'm unclear about why/if \textsc{\ActOpen} and \textsc{\ActClose} are needed.}
 
 We define multistep labeled reductions in the usual way by
 concatenating the labels using $\_\cdot\_$ as the concatenation
