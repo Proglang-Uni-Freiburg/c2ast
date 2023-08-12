@@ -28,7 +28,7 @@
     }
 
     \inferrule[\EqS]{
-      \eqsrel[\cdot]{g}{S}{S'}
+      \convexpr{g} : S \eqs S'
     }{
       \convexpr{\ELam {c_1} \EFork{ \ELam {c_2} g \; (c_1, c_2) }} :
       S \eqt S'

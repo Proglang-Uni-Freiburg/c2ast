@@ -9,19 +9,25 @@ duality is well-defined,
 recursion is restricted to session types and the payload type of a
 communication is always closed \cite{DBLP:journals/corr/abs-2004-01322}.
 
-Figure~\ref{fig:equi-equivalence} contains the definition of the type
-language and duality along with equivalence for types $T \eqt T$  and session
-types $S \eqs S$. The nonterminal $S$ for session types is indexed with a set
-$\mathcal X$ of variables that may occur free in $S$. The $\mu$-binder
-increases this set for its body. 
-Type equivalence is inductive, but session type
-equivalence is coinductive and equates 
-session types up to unfolding of recursive types. This unfolding is
-only well-defined if types are contractive, i.e., they must
-not contain a type of the form $\TRec[X_1]\dots\TRec[X_n]X_1$.
-The figure also
-specifies evidence terms for equivalence (in light blue), which we
-ignore for now.
+Figure~\ref{fig:equi-equivalence} contains the definition of the type language
+and duality along with equivalence for types and session types. The nonterminal
+$S$ for session types is indexed with a set $\mathcal X$ of variables that may
+occur free in $S$. The $\mu$-binder increases this set for its body. We assume
+that recursive types are contractive, that is they must not contain a type of
+the form $\TRec[X_1]\dots\TRec[X_n]X_1$.
+
+The same figure also contains inductive definitions of type equivalence $T \eqt
+T$ and session type equivalence $\eqsctxt \vdash S \eqs S$. Equality of session
+types works similar to Gay and Hole's algorithmic subtyping rules for session
+types~\cite{DBLP:journals/acta/GayH05}. $\eqsctxt$ contains a sequence of
+assumed equalities, which is used by \EqAssump{} and extended by \EqUnrollL{}
+and \EqUnrollR{}. The judgements are not fully syntax directed. In order to
+guarantee termination \EqAssump{} must be used whenever applicable. To ensure
+deterministic results we arbitrarily stipulate that \EqUnrollL{} is to be
+preferred over \EqUnrollR{} should both be applicable. If
+$\eqsrel[\emptyset]{g}{S}{S'}$ is derivable we write $\eqsrel[]{g}{S}{S'}$ or
+just $\convexpr{g} : S \eqs S'$. The light blue parts specify equivalence
+evidence terms, which we ignore for now.
 
 \begin{lemma}\label{lemma:congruence}
  The relations $\eqt$ and $\eqs$ are congruence relations.
