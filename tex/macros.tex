@@ -24,7 +24,7 @@
 \newcommand\TOut[2]{{}!#1.#2}
 \newcommand\TSelect[2][i \in I]{\oplus\{\, #2 \,\}_{#1}}
 \newcommand\TCase[2][i \in I]{\&\{\, #2 \,\}_{#1}}
-\newcommand\TRec[1][X]{\mu #1.\;}
+\newcommand\TRec[1][X\!]{\mu #1.}
 \newcommand\TDual[1]{\overline{#1}}
 
 % Expression syntax macros
@@ -49,7 +49,7 @@
 \newcommand\ESend[2]{\EkwSend\; (#1,#2)}
 \newcommand\ERecv[1]{\EkwRecv\; #1}
 \newcommand\ESelect[1]{\EkwSelect[#1] \;}
-\newcommand\ECase[2]{\Ekw{case}\; #1 \; \left\{\, #2 \,\right\}}
+\newcommand\ECase[2]{\Ekw{case}\; #1 \left\{\, #2 \,\right\}}
 \newcommand\ERoll[1]{\EkwRoll\; #1}
 \newcommand\EUnroll[1]{\EkwUnroll\; #1}
 \newcommand\EFork[1]{\EkwFork\; #1}
@@ -71,6 +71,7 @@
 \newcommand\EqUnrollR{Eq-UnrollR}
 \newcommand\EqUnroll{Eq-Unroll}
 \newcommand\EqRoll{Eq-Roll}
+\newcommand\EqAssump{Eq-Assump}
 
 % Reduction names.
 \newcommand\ActAppLetL{Act-AppLetL}
@@ -167,6 +168,11 @@
 \newcommand\eqs{\sim_{\mathsf S}}
 \newcommand\leftsim{\lesssim}
 \newcommand\bisim{\approx}
+
+\newcommand\eqsctxt{\Sigma}
+\newcommand\eqsrel[4][\eqsctxt]{#1 \vdash \convexpr{#2} : #3 \eqs #4}
+\newcommand\convcolor{\color{blue!50}}
+\newcommand\convexpr[1]{{\convcolor #1}}
 
 % Macros for reductions
 \newcommand\reduce[3][]{#2 \xrightarrow{#1} #3}

@@ -28,121 +28,111 @@
     }
 
     \inferrule[\EqS]{
-      \textcolor{blue!50} {g} : S \eqs S'
+      \eqsrel[\cdot]{g}{S}{S'}
     }{
       \textcolor{blue!50}{\ELam {c_1} \EFork{ \ELam {c_2} g \; (c_1, c_2) }} :
       S \eqt S'
       %: \ELam {c_1} \EFork{ \ELam {c_2} g' \; (c_1, c_2) }
     }
   \end{mathpar}
-  \declrel{Session type equivalence}[$g : S \eqs S$]
+  \declrel{Session type equivalence}[$\eqsrel{g}{S}{S}$]
   \begin{mathpar}
+    \inferrule[\EqAssump]{
+      \convexpr{x} : S \eqs S' \in \eqsctxt
+    }{
+      \eqsrel{x}{S}{S'}
+    }
+
+    \inferrule[\EqUnrollL]{
+      \eqsrel[\eqsctxt , \convexpr{x} : \TRec S \eqs S']
+        {g}{S[\TRec S / X]}{S'}
+    }{
+      \eqsrel{
+        \ERec x
+        \ELam{(c_1, c_2)}
+        g \; (\EUnroll c_1, c_2)
+      }{\TRec S}{S'}
+    }
+
+    \inferrule[\EqUnrollR]{
+      \eqsrel[\eqsctxt , \convexpr{x} : S \eqs \TRec S']
+        {g}{S}{S'[\TRec S' / X]}
+    }{
+      \eqsrel{
+        \ERec x
+        \ELam{(c_1, c_2)}
+        g \; (c_1, \EUnroll c_2)
+      }{S}{\TRec S'}
+    }
+
     \inferrule[\EqEnd !]{
     }{
-      \textcolor{blue!50}{\ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}}} :
-      \TEnd ! \eqs \TEnd !
-      % : \ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}}
+      \eqsrel{
+        \ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}}
+      }{\TEnd !}{\TEnd !}
     }
 
     \inferrule[\EqEnd ?]{
     }{
-      \textcolor{blue!50}{\ELam {(c_1, c_2)} \ELetU {\EWait {c_1}} {\ETerm {c_2}}} :
-      \TEnd ? \eqs \TEnd ?
-      % : \ELam {(c_1, c_2)} \ELetU {\EWait {c_1}} {\ETerm {c_2}}
+      \eqsrel{
+        \ELam {(c_1, c_2)} \ELetU {\EWait {c_1}} {\ETerm {c_2}}
+      }{\TEnd ?}{\TEnd ?}
     }
 
     \inferrule[\EqOut]{
-      \textcolor{blue!50} {f} : U \eqt T \\ %: f'  \\
-      \textcolor{blue!50} {g} : S \eqs S' %: g'
+      \convexpr{f} : U \eqt T \\
+      \eqsrel{g}{S}{S'}
     }{
+      \colorlet{outer}{.}
       {\begin{array}{r@{}l}
-         \color{blue!50}
-        \ELam {(c_1, c_2)}
-          & \color{blue!50}\ELetP {u} {c_2} {\ERecv{c_2}} \\
-          & \color{blue!50}\hspace{-2em} \ELet {c_1} {\ESend {(f \; u)} {c_1}} \\
-          & \color{blue!50}\hspace{-2em} g \; (c_1, c_2)
-            \hspace{5.5em} \color{black}: \TOut {T} {S} \eqs \TOut {U} {S'}
+        \eqsctxt \vdash
+            \convcolor \ELam {(c_1, c_2)}
+          & \convcolor \ELetP {u} {c_2} {\ERecv{c_2}} \\
+          & \convcolor \hspace{-2em} \ELet {c_1} {\ESend {(f \; u)} {c_1}} \\
+          & \convcolor \hspace{-2em} g \; (c_1, c_2)
+            \color{outer} \hspace{4em}
+              : \TOut {T} {S} \eqs \TOut {U} {S'}
       \end{array}}
-        % : \\\\
-        % \ELam {(c_2, c_1)}
-        % \ELetP {t_1} {c_1} {\ERecv{c_1}}
-        % \ELet {c_2} {\ESend {(f \; t_1)} {c_2}}
-        % g' \; (c_2, c_1)
-    }
-
-    \inferrule[\EqIn]{
-      \textcolor{blue!50} {f} : T \eqt U \\ %: f'  \\
-      \textcolor{blue!50} {g} : S \eqs S' %: g'
-    }{
-      {\begin{array}{r@{}l}
-         \color{blue!50}
-        \ELam {(c_1, c_2)}
-          & \color{blue!50}\ELetP {t} {c_1} {\ERecv{c_1}} \\
-          & \color{blue!50}\hspace{-2em} \ELet {c_2} {\ESend {(f \; t)} {c_2}} \\
-          & \color{blue!50}\hspace{-2em} g \; (c_1, c_2)
-            \hspace{5.5em}\color{black} : \TIn {T} {S} \eqs \TIn {U} {S'}
-      \end{array}}
-      % : \\\\
-      % \ELam {(c_2, c_1)}
-      %   \ELetP {t_2} {c_2} {\ERecv{c_2}}
-      %   \ELet {c_1} {\ESend {(f' \; t_2)} {c_1}}
-      %   g' \; (c_2, c_1)
     }
 
     \inferrule[\EqSelect]{
-      \textcolor{blue!50} {g_i} : S_i \eqs S_i' %: g_i'
+      \eqsrel{g_i}{S_i}{S'_i}
     }{
-      \textcolor{blue!50}{\ELam {(c_1, c_2)}
-        \ECase {c_2} { l_i \rightarrow \ELam {c_2} g_i \; (\ESelect {l_i} c_1, c_2) }}
-        \\\\: \TSelect { l_i : S_i } \eqs \TSelect { l_i : S_i^\prime }
-      % :\\\\
-      % \ELam {(c_2, c_1)}
-      %   \ECase {c_1} { l_i \rightarrow \ELam {c_1} g_i' \; (\ESelect {l_i} c_2, c_1) }
+      \eqsctxt \vdash \convexpr{
+        \ELam {(c_1, c_2)}
+        \ECase {c_2} { l_i \rightarrow \ELam {c_2} g_i \; (\ESelect {l_i} c_1, c_2) } \\ {}
+      } \\\\
+      : \TSelect { l_i : S_i } \eqs \TSelect { l_i : S'_i }
+    }
+
+
+    \inferrule[\EqIn]{
+      \convexpr{f} : T \eqt U \\
+      \eqsrel{g}{S}{S'}
+    }{
+      \colorlet{outer}{.}
+      {\begin{array}{r@{}l}
+        \eqsctxt \vdash
+            \convcolor \ELam {(c_1, c_2)}
+          & \convcolor \ELetP {t} {c_1} {\ERecv{c_1}} \\
+          & \convcolor \hspace{-2em} \ELet {c_2} {\ESend {(f \; t)} {c_2}} \\
+          & \convcolor \hspace{-2em} g \; (c_1, c_2)
+            \color{outer} \hspace{4em}
+              : \TIn {T} {S} \eqs \TIn {U} {S'}
+      \end{array}}
     }
 
     \inferrule[\EqCase]{
-      \textcolor{blue!50} {g_i} : S_i \eqs S_i' %: g_i'
+      \eqsrel{g_i}{S_i}{S'_i}
     }{
-      \textcolor{blue!50}{\ELam {(c_1, c_2)}
-        \ECase {c_1} { l_i \rightarrow \ELam {c_1} g_i \; (c_1, \ESelect {l_i} c_2) }}
-        \\\\: \TCase { l_i : S_i } \eqs \TCase { l_i : S_i^\prime }
-      % : \\\\
-      % \ELam {(c_2, c_1)}
-      %   \ECase {c_2} { l_i \rightarrow \ELam {c_2} g'_i \; (c_2, \ESelect {l_i} c_1) }
-    }
-
-    % \inferrule[\EqUnroll]{
-    % }{
-    %   \EkwUnroll : \TRec S \eqs S[\TRec S / X]
-    % }
-    %   
-    % \inferrule[\EqRoll]{
-    % }{
-    %   \EkwRoll : S[\TRec S / X] \eqs S
-    % }
-    %   
-    \inferrule[\EqUnrollL]{
-      \textcolor{blue!50} {g} : S[\TRec S / X] \eqs S' %: g'
-    }{
-      \textcolor{blue!50}{\ELam{(c_1, c_2)} g \; (\EUnroll{c_1}, c_2)}
-      : \TRec S \eqs S'
-      % :\\\\
-      % \ELam{(c_2 : S', c_1 : \TRec{\TDual{S}})}
-      % g' (c_2, \EUnroll{c_1})
-    }
-
-    \inferrule[\EqUnrollR]{
-      \textcolor{blue!50} {g} : S \eqs S'[\TRec S' / X] %: g'
-    }{
-      \textcolor{blue!50}{\ELam{(c_1, c_2)} g \; (c_1, \EUnroll{c_2})}
-      : S \eqs \TRec S'
-      % :\\\\
-      % \ELam{(c_2 : \TRec S', c_1 : {\TDual{S}})}
-      % g' (\EUnroll{c_2}, c_1)
+      \eqsctxt \vdash \convexpr{
+        \ELam {(c_1, c_2)}
+        \ECase {c_1} { l_i \rightarrow \ELam {c_1} g_i \; (c_1, \ESelect {l_i} c_2) }
+      } \\\\
+      : \TCase { l_i : S_i } \eqs \TCase { l_i : S'_i }
     }
   \end{mathpar}
-  \caption{Equi-recursive system: types, duality, type equivalence (inductive),
-  and session type equivalence (coinductive)}
+  \caption{Equi-recursive system: types, duality, inductive type and session type equivalence}
   \label{fig:equi-equivalence}
 \end{figure}
 
