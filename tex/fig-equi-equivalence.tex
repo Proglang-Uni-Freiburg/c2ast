@@ -1,28 +1,28 @@
 \begin{figure}[tp]
   \input{decl-types}
-  \declrel{Type equivalence}[$f : T \eqt T$]
+  \declrel{Type equivalence}[$\convexpr{f} : T \eqt T$]
   \begin{mathpar}
     \inferrule[\EqUnit]{
     }{
-      \textcolor{blue!50}{\ELam x x} :
+      \convexpr{\ELam x x} :
       \TUnit \eqt \TUnit
       % : \ELam x x
     }
 
     \inferrule[\EqPair]{
-      \textcolor{blue!50} {f_T} : T \eqt T' \\ %: f'_T \\
-      \textcolor{blue!50}{f_U} : U \eqt U' %: f'_U
+      \convexpr{f_T} : T \eqt T' \\ %: f'_T \\
+      \convexpr{f_U} : U \eqt U' %: f'_U
     }{
-      \textcolor{blue!50}{\ELam {(x_1,x_2)} (f_T \; x_1, f_U \; x_2)} :
+      \convexpr{\ELam {(x_1,x_2)} (f_T \; x_1, f_U \; x_2)} :
       \TPair T U \eqt \TPair {T'} {U'}
       % : \ELam {(x_1,x_2)} (f'_T \; x_1, f'_U \; x_2)
     }
 
     \inferrule[\EqFun]{
-      \textcolor{blue!50}{f_{T'}} : T' \eqt T \\ %: f'_T \\
-      \textcolor{blue!50} {f_U} : U \eqt U' %: f'_U
+      \convexpr{f_{T'}} : T' \eqt T \\ %: f'_T \\
+      \convexpr {f_U} : U \eqt U' %: f'_U
     }{
-      \textcolor{blue!50}{\ELam x f_U \circ x \circ f_{T'}} :
+      \convexpr{\ELam x f_U \circ x \circ f_{T'}} :
       \TFun {T} {U} \eqt \TFun {T'} {U'}
       % : \ELam x f'_U \circ x \circ f_T
     }
@@ -30,7 +30,7 @@
     \inferrule[\EqS]{
       \eqsrel[\cdot]{g}{S}{S'}
     }{
-      \textcolor{blue!50}{\ELam {c_1} \EFork{ \ELam {c_2} g \; (c_1, c_2) }} :
+      \convexpr{\ELam {c_1} \EFork{ \ELam {c_2} g \; (c_1, c_2) }} :
       S \eqt S'
       %: \ELam {c_1} \EFork{ \ELam {c_2} g' \; (c_1, c_2) }
     }
