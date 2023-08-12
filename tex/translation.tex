@@ -72,15 +72,15 @@ expressions homomorphically. Formallly, we have this result.
     \inferrule{
       \typing{\tyIso e}{\TRec S}
     }{
-      \typing{\tyIso \EUnroll e}{S[\TRec[X] S / X]}
+      \typing{\tyIso \EUnroll e}{S[\TRec[X\!] S / X]}
     }
   \end{mathpar}
   By induction, we have $\typing{\tyEqui \IsoToEqui{e}}{\TRec S}$.
   From reflexivity of $\eqs$ (Lemma~\ref{lemma:congruence}) and rule
   {\EqUnrollL}, we obtain $\TRec S 
-  \eqs S[\TRec[X] S / X]$ and thus  $\TRec S 
-  \eqt S[\TRec[X] S / X]$, so that the conversion rule yields
-  $\typing{\tyEqui \IsoToEqui{e}}{S[\TRec[X] S / X]}$.
+  \eqs S[\TRec[X\!] S / X]$ and thus  $\TRec S 
+  \eqt S[\TRec[X\!] S / X]$, so that the conversion rule yields
+  $\typing{\tyEqui \IsoToEqui{e}}{S[\TRec[X\!] S / X]}$.
 
   The translation does not change the structure of the types, so that
   contractiveness is preserved.
