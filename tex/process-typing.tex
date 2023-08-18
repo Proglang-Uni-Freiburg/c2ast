@@ -1,0 +1,22 @@
+\section{Process typing}
+\label{sec:process-typing}
+
+
+\declrel{Typing rules for processes}[$\Ptyping p$]
+\begin{mathpar}
+  \inferrule{\typing e \TUnit}{\Ptyping{\PExp e}}
+
+  \inferrule{
+    \Ptyping[\Ctxt_1]{p_1} \\
+    \Ptyping[\Ctxt_2]{p_2}
+  }{\Ptyping[\CSplit]{\PPar{p_1}{p_2}}}
+
+  \inferrule{\Ptyping[\Ctxt, \CBind a S, \CBind b {\TDual S}] p
+  }{\Ptyping{\PScope p}}
+\end{mathpar}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "main"
+%%% End:
