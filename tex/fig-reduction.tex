@@ -7,7 +7,9 @@
     a\sigma \grmor \beta \grmor  \LLet \grmor \PScope \EFork v
   &&\text{labels for expression reduction} \\
   \pi \grmdef&
-               a\sigma \grmor \tau \grmor \PScope c!a
+               a\sigma
+               \grmor \tau
+               % \grmor \PScope c!a
                \grmor \RPar \pi \pi
   &&\text{labels for process reduction}
 \end{align*}
@@ -51,7 +53,7 @@
 
   \ltsrule \ActRec { (\ERec x v) v' } \beta { v[\ERec x v / x] v' }
 
-  \ltsrule \ActLet { \ELet x {v} e } \beta { e[v/x] }
+  \ltsrule \ActLetBeta { \ELet x {v} e } \beta { e[v/x] }
 
   \ltsrule \ActLetPair { \ELetP xy {(v_1,v_2)} e } \beta { e[v_1/x, v_2/y] }
 
@@ -76,11 +78,15 @@ The standard structural call-by-value rules are omitted.
 \declrel{Labeled transition system for processes}[$\reduce[\pi] p p$]
 \begin{mathpar}
   \ltsrule \ActSession [
-    \reduce[\sigma]{ e }{ e' }
-  ]{ \PExp e } \sigma { \PExp {e'} }
+    \reduce[a\sigma]{ e }{ e' }
+  ]{ \PExp e } {a\sigma} { \PExp {e'} }
 
   \ltsrule \ActBeta [
     \reduce[\beta]{ e }{ e' }
+  ]{ \PExp e } \tau { \PExp {e'} }
+
+  \ltsrule \ActLet [
+    \reduce[\LLet]{ e }{ e' }
   ]{ \PExp e } \tau { \PExp {e'} }
 
   \ltsrule \ActForkP [
@@ -92,18 +98,22 @@ The standard structural call-by-value rules are omitted.
     \reduce[\pi_2]{q}{q'} \\
   ]{ \PPar p q } {\RPar{\pi_1\!}{\pi_2}} { \PPar {p'} {q'} }
 
-  \ltsrule \ActMsg [
-    \reduce[\RPar{a!v}{b?v}]{p}{p'}
+  \ltsrule \ActSync [
+    \reduce[\RPar{a\sigma}{b\TDual\sigma}]{p}{p'}
   ]{ \PScope p } \tau { \PScope p' }
 
-  \ltsrule \ActBranch [
-    \reduce[\RPar{a!l}{b?l}]{p}{p'}
-  ]{ \PScope p } \tau { \PScope p' }
-
-  \ltsrule \ActEnd [
-    \reduce[\RPar{a!}{b?}]{p}{p'}
-  ]{ \PScope p } \tau { p' }
-
+  % \ltsrule \ActMsg [
+  %   \reduce[\RPar{a!v}{b?v}]{p}{p'}
+  % ]{ \PScope p } \tau { \PScope p' }
+  % 
+  % \ltsrule \ActBranch [
+  %   \reduce[\RPar{a!l}{b?l}]{p}{p'}
+  % ]{ \PScope p } \tau { \PScope p' }
+  % 
+  % \ltsrule \ActEnd [
+  %   \reduce[\RPar{a!}{b?}]{p}{p'}
+  % ]{ \PScope p } \tau { p' }
+  % 
   \ltsrule \ActScope [
     \reduce[\pi]{p}{p'} \\
     a,b \not\in \FV{\pi}
