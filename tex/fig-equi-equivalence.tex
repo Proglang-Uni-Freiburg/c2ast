@@ -38,14 +38,15 @@
   \declrel{Session type equivalence}[$\eqsrel{g}{S}{S}$]
   \begin{mathpar}
     \inferrule[\EqAssump]{
-      \convexpr{x} : S \eqs S' \in \eqsctxt
+      \convexpr{x} : \TRec S \eqs S' \in \eqsctxt
     }{
-      \eqsrel{x}{S}{S'}
+      \eqsrel{x}{\TRec S}{S'}
     }
 
     \inferrule[\EqUnrollL]{
       \eqsrel[\eqsctxt , \convexpr{x} : \TRec S \eqs S']
-        {g}{S[\TRec S / X]}{S'}
+        {g}{S[\TRec S / X]}{S'} \\
+      \convexpr{x'} : \TRec S \eqs S' \notin \eqsctxt
     }{
       \eqsrel{
         \ERec x
@@ -55,16 +56,39 @@
     }
 
     \inferrule[\EqUnrollR]{
-      \eqsrel[\eqsctxt , \convexpr{x} : S \eqs \TRec S']
-        {g}{S}{S'[\TRec S' / X]}
+      \eqsrel
+      {g}{S}{S'[\TRec S' / X]}
+      \\
+      S \ne \TRec S''
     }{
       \eqsrel{
-        \ERec x
         \ELam{(c_1, c_2)}
         g \; (c_1, \EUnroll c_2)
       }{S}{\TRec S'}
     }
 
+    % \inferrule[\EqUnrollL]{
+    %   \eqsrel[\eqsctxt , \convexpr{x} : \TRec S \eqs S']
+    %     {g}{S[\TRec S / X]}{S'}
+    % }{
+    %   \eqsrel{
+    %     \ERec x
+    %     \ELam{(c_1, c_2)}
+    %     g \; (\EUnroll c_1, c_2)
+    %   }{\TRec S}{S'}
+    % }
+    %   
+    % \inferrule[\EqUnrollR]{
+    %   \eqsrel[\eqsctxt , \convexpr{x} : S \eqs \TRec S']
+    %     {g}{S}{S'[\TRec S' / X]}
+    % }{
+    %   \eqsrel{
+    %     \ERec x
+    %     \ELam{(c_1, c_2)}
+    %     g \; (c_1, \EUnroll c_2)
+    %   }{S}{\TRec S'}
+    % }
+    %   
     \inferrule[\EqEnd !]{
     }{
       \eqsrel{
@@ -88,7 +112,7 @@
         \eqsctxt \vdash
             \convcolor \ELam {(c_1, c_2)}
           & \convcolor \ELetP {u} {c_2} {\ERecv{c_2}} \\
-          & \convcolor \hspace{-2em} \ELet {c_1} {\ESend {(f \; u)} {c_1}} \\
+          & \convcolor \hspace{-2em} \ELet {c_1} {\ESend {f \; u} {c_1}} \\
           & \convcolor \hspace{-2em} g \; (c_1, c_2)
             \color{outer} \hspace{4em}
               : \TOut {T} {S} \eqs \TOut {U} {S'}
@@ -115,7 +139,7 @@
         \eqsctxt \vdash
             \convcolor \ELam {(c_1, c_2)}
           & \convcolor \ELetP {t} {c_1} {\ERecv{c_1}} \\
-          & \convcolor \hspace{-2em} \ELet {c_2} {\ESend {(f \; t)} {c_2}} \\
+          & \convcolor \hspace{-2em} \ELet {c_2} {\ESend {f \; t} {c_2}} \\
           & \convcolor \hspace{-2em} g \; (c_1, c_2)
             \color{outer} \hspace{4em}
               : \TIn {T} {S} \eqs \TIn {U} {S'}
