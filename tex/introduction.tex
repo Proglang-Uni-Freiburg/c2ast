@@ -3,24 +3,26 @@
 \label{sec:introduction}
 
 Recursion in session types is almost always interpreted as
-equirecursion. For example, the two session types $\TRec{\TOut \TInt X} $
-and $\TRec{\TOut \TInt {\TOut \TInt X}} $ are considered equal because
+equirecursion. For example, the two session types $T_1 = \TRec{\TOut \TInt X} $
+and $T_2 = \TRec{\TOut \TInt {\TOut \TInt X}} $ are considered equal because
 their unfoldings as infinite trees are equal. That means, servers with
 these types are interchangeable without breaking the protocol and
 functions that expect arguments of one type also accept arguments of
 the other type.
 
-Using an isorecursive interpretation the two types are not equal
-because unrolling of the recursion is a distinct communication
+If we were to consider an isorecursive interpretation, the two types
+would not be equal; using values of the types would require explicit
+unrolling operations; and unrolling is expected to give rise to a distinct communication
 step. While channels of these two types are no longer
 interchangeable, we can nevertheless define a pair of conversion
 functions
-$f : \TFun{\TRec{\TOut \TInt X}}{\TRec{\TOut \TInt {\TOut \TInt X}}}$
+$f_{12} : \TFun{T_1}{T_2}$
 and
-$f' : \TFun{\TRec{\TOut \TInt {\TOut \TInt X}}}{\TRec{\TOut \TInt X}}$
-that mediate between the two types. Concretely:
+$f_{21} : \TFun{T_2}{T_1}$
+that mediate between the two types. As an example, we show $f_{12}$
+and omit $f_{21}$, which is very similar:
 \begin{align*}
-  f &=       \ELam {c_1} \EFork{ \ELam {c_2} \ERec g %{
+  f_{12} &=       \ELam {c_1} \EFork{ \ELam {c_2} \ERec g %{
       \begin{array}[t]{l}
       \ELam{(c_1, c_2)} \\
       \ELet{(x_2,c_2)}{\ERecv{(\EUnroll{c_2})}} \\
@@ -31,34 +33,35 @@ that mediate between the two types. Concretely:
       \end{array}}
 \end{align*}
 As the session types are recursive, so are the conversion
-functions. This conversion function creates one additional
-channel and forks one additional process. Moreover, it leads to
-additional communication as evidenced by the folklore rule for
+functions. The conversion function $f_{12}$ creates one additional
+channel and forks one additional process. Moreover, it is expected to
+lead to additional communication as evidenced by the folklore rule for
 isorecursive processes:
-\begin{gather*}
+\begin{gather}
+  \label{eq:3}
   \reducerule{
     \PScope (\PPar* {\EUnroll a} {\EUnroll b})
   }{
     \PScope (\PPar* a b)
   }
-\end{gather*}
+\end{gather}
 However, if the underlying recursive session type is contractive, then we can
 elide this extra communication, a move which essentially reinterprets
 isorecursion as equirecursion.
-This move makes a type conversion like $f$ act like an identity
+This move makes a type conversion like $f_{12}$ act like an identity
 function, which forwards messages from one channel to another, as the
 $\EUnroll\_$ operations are just identities. 
 
 
-Clearly, this transformation goes both ways. If we start from an
+Clearly, this consideration goes both ways. If we start from an
 equirecursive program, we can transform it into an isorecursive one by
-making the type conversion explicit. We can execute the isorecursive
-program either with its ``natural'' semantics or with the silent
+making the type conversion (i.e., the unrolling of the recursion)
+explicit. We can execute the isorecursive 
+program either with its ``natural'' semantics using
+reduction~\eqref{eq:3} or with a silent 
 semantics that treats $\EUnroll\_$ as an identity.
-The latter interpretation also makes the equirecursive version
-``wire-compatible'' with the isorecursive one.\footnote{As we have
-  mostly conjectures to offer on the operational side, the reviewers
-  may consider downgrading this submission to a talk proposal.}
+The latter interpretation makes the equirecursive version
+``wire-compatible'' with the isorecursive one.
   
 
 %%% Local Variables:

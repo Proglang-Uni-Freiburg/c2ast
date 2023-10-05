@@ -9,29 +9,43 @@ duality is well-defined,
 recursion is restricted to session types and the payload type of a
 communication is always closed \cite{DBLP:journals/corr/abs-2004-01322}.
 
+\subsection{Types and type equivalence}
+\label{sec:types}
+
+
 Figure~\ref{fig:equi-equivalence} contains the definition of the type language
 and duality along with equivalence for types and session types. The nonterminal
 $S$ for session types is indexed with a set $\mathcal X$ of variables that may
-occur free in $S$. The $\mu$-binder increases this set for its body. We assume
-that recursive types are contractive, that is they must not contain a type of
+occur free in $S$. The $\mu$-binder introduces a new session type
+variables and increases this set for its body. We assume
+that recursive types are contractive, that is, they must not contain a type of
 the form $\TRec[X_1]\dots\TRec[X_n]X_1$.
 
-The same figure also contains inductive definitions of type equivalence $T \eqt
-T$ and session type equivalence $\eqsctxt \vdash S \eqs S$. Equality of session
+The same figure also contains inductive definitions of type equivalence $\convexpr{f} : T \eqt
+T$ and session type equivalence $\eqsctxt \vdash \convexpr{g} : S \eqs S$. The light
+blue parts of the judgments specify evidence terms for equivalence, which we ignore for now.
+Equivalence of session
 types works similar to Gay and Hole's algorithmic subtyping rules for session
-types~\cite{DBLP:journals/acta/GayH05}. $\eqsctxt$ contains a sequence of
+types~\cite{DBLP:journals/acta/GayH05}. We give an inductive
+presentation to avoid technical problems with constructing evidence
+terms. The cache $\eqsctxt$ contains a sequence of
 assumed equalities, which is used by \EqAssump{} and extended by \EqUnrollL{}
-and \EqUnrollR{}. The judgements are not fully syntax directed. In order to
+and \EqUnrollR{}. The judgments are not fully syntax directed. To
 guarantee termination \EqAssump{} must be used whenever applicable. To ensure
-deterministic results we arbitrarily stipulate that \EqUnrollL{} is to be
-preferred over \EqUnrollR{} should both be applicable. If
+deterministic results we arbitrarily stipulate that \EqUnrollL{} is
+preferred over \EqUnrollR{} if both are applicable. If 
 $\eqsrel[\emptyset]{g}{S}{S'}$ is derivable we write $\eqsrel[]{g}{S}{S'}$ or
-just $\convexpr{g} : S \eqs S'$. The light blue parts specify equivalence
-evidence terms, which we ignore for now.
+just $\convexpr{g} : S \eqs S'$. 
 
 \begin{lemma}\label{lemma:congruence}
  The relations $\eqt$ and $\eqs$ are congruence relations.
 \end{lemma}
+
+\subsection{Expressions and processes}
+\label{sec:expr-proc}
+
+Processes in the core language are lambda expressions extended with
+operators for channel-based communication.
 
 \input{decl-expressions}
 
