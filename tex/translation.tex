@@ -4,24 +4,19 @@
 \label{sec:forward}
 
 
-The set of syntactically valid expressions in the equi-recursive system is a
-subset of the syntactically valid expressions in the iso-recursive system. A
-simple one-to-one mapping, however, does not preserve well-typedness because
-the target type system is explicit about unrolling of the recursive type.
-
 \input{fig-translation}
 
-Instead, the translation judgment $\translation e {e'} T$ in
+The translation judgment $\translation e {e'} T$ in
 Figure~\ref{fig:translation} describes the translation of an equi-recursively
-typed expression $e$ to an equivalent expression $e'$ in the iso-recursive
-system. The only interesting part of the translation process is where the
-equi-recursive system makes use of type conversions. Here, an appropriate
+typed expression $e$ to an expression $e'$ with the same type in the iso-recursive
+system. The translation is mostly just copying. The only interesting part is where the
+equi-recursive system makes use of type conversions. At this point, an appropriate
 conversion function is inserted on the iso-recursive side. These
 conversion expressions are specified by the blue parts in figure~\ref{fig:equi-equivalence}.
 \begin{mathpar}
   \inferrule{
       \translation e {e'} T \\
-      f : T \eqt U
+      \convexpr{f} : T \eqt U
     }{
       \translation e {f \; e'} U
     }
@@ -143,7 +138,7 @@ The first conjecture is needed to prove the second one. It essentially
 says that the isomorphisms generated from the equivalence judgments
 for types and session types deserve their name.
 
-\begin{conjecture}[Conversion]
+\begin{conjecture}[Conversion]~
   \begin{enumerate}
   \item
     If $f : T \eqt T'$ and $f' : T' \eqt T$ and $\typing eT$ and
@@ -152,19 +147,19 @@ for types and session types deserve their name.
   \item If $g : S \eqs S'$
     and $g' : S' \eqs S$
     and $\Ptyping[\Ctxt, c : S]p$, then\\
-    $p[c] \bisim
+    $p \bisim
     \PScope[c', \bar c']\PScope[c_1, \bar c]
-    \PPar{\PPar {\PExp{g \; (c, \bar c')}}{\PExp{g' \; (c', \bar c)}}}{p[c_1]}$.
+    \PPar{\PPar {\PExp{g \; (c, \bar c')}}{\PExp{g' \; (c', \bar c)}}}{p[c_1/c]}$.
   \end{enumerate}
 \end{conjecture}
 
 
 \begin{conjecture}
-  Suppose that $\Ptranslation {p_1}{p_1'}$.
-  If $\reduce[\alpha]{p_1}{p_2}$
-  and $\Ptranslation{p_2}{p_2''}$,
-  then $\reducemany[\alpha]{p_1'}{p_2'}$
-  and $p_2' \bisim p_2''$.
+  Suppose that $\Ptranslation {p}{q}$.
+  If $\reduce[\alpha]{p}{p'}$
+  and $\Ptranslation{p'}{q'}$,
+  then $\exists q''$,  $\reducemany[\alpha]{q}{q''}$
+  and $ \reducemany{q'}{ q''}$.
 \end{conjecture}
 
 

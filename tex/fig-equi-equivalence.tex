@@ -1,6 +1,6 @@
 \begin{figure}[tp]
   \input{decl-types}
-  \declrel{Type equivalence}[$\convexpr{f} : T \eqt T$]
+  \declrel{Type equivalence}[$\convexpr{f} : T \eqt U$]
   \begin{mathpar}
     \inferrule[\EqUnit]{
     }{
@@ -28,43 +28,43 @@
     }
 
     \inferrule[\EqS]{
-      \convexpr{g} : S \eqs S'
+      \convexpr{g} : R \eqs S
     }{
       \convexpr{\ELam {c_1} \EFork{ \ELam {c_2} g \; (c_1, c_2) }} :
-      S \eqt S'
+      R \eqt S
       %: \ELam {c_1} \EFork{ \ELam {c_2} g' \; (c_1, c_2) }
     }
   \end{mathpar}
-  \declrel{Session type equivalence}[$\eqsrel{g}{S}{S}$]
+  \declrel{Session type equivalence}[$\eqsrel{g}{R}{S}$]
   \begin{mathpar}
     \inferrule[\EqAssump]{
-      \convexpr{x} : \TRec S \eqs S' \in \eqsctxt
+      \convexpr{x} : \TRec R \eqs S \in \eqsctxt
     }{
-      \eqsrel{x}{\TRec S}{S'}
+      \eqsrel{x}{\TRec R}{S}
     }
 
     \inferrule[\EqUnrollL]{
-      \eqsrel[\eqsctxt , \convexpr{x} : \TRec S \eqs S']
-        {g}{S[\TRec S / X]}{S'} \\
-      \convexpr{x'} : \TRec S \eqs S' \notin \eqsctxt
+      \eqsrel[\eqsctxt , \convexpr{x} : \TRec R \eqs S]
+        {g}{R[\TRec R / X]}{S} \\
+      \convexpr{x'} : \TRec R \eqs S \notin \eqsctxt
     }{
       \eqsrel{
         \ERec x
         \ELam{(c_1, c_2)}
         g \; (\EUnroll c_1, c_2)
-      }{\TRec S}{S'}
+      }{\TRec R}{S}
     }
 
     \inferrule[\EqUnrollR]{
       \eqsrel
-      {g}{S}{S'[\TRec S' / X]}
+      {g}{R}{S[\TRec S / X]}
       \\
-      S \ne \TRec S''
+      R \ne \TRec R'
     }{
       \eqsrel{
         \ELam{(c_1, c_2)}
         g \; (c_1, \EUnroll c_2)
-      }{S}{\TRec S'}
+      }{R}{\TRec S}
     }
 
     % \inferrule[\EqUnrollL]{
@@ -105,7 +105,7 @@
 
     \inferrule[\EqOut]{
       \convexpr{f} : U \eqt T \\
-      \eqsrel{g}{S}{S'}
+      \eqsrel{g}{R}{S}
     }{
       \colorlet{outer}{.}
       {\begin{array}{r@{}l}
@@ -115,24 +115,24 @@
           & \convcolor \hspace{-2em} \ELet {c_1} {\ESend {f \; u} {c_1}} \\
           & \convcolor \hspace{-2em} g \; (c_1, c_2)
             \color{outer} \hspace{4em}
-              : \TOut {T} {S} \eqs \TOut {U} {S'}
+              : \TOut {T} {R} \eqs \TOut {U} {S}
       \end{array}}
     }
 
     \inferrule[\EqSelect]{
-      \eqsrel{g_i}{S_i}{S'_i}
+      \eqsrel{g_i}{R_i}{S_i}
     }{
       \eqsctxt \vdash \convexpr{
         \ELam {(c_1, c_2)}
         \ECase {c_2} { l_i \rightarrow \ELam {c_2} g_i \; (\ESelect {l_i} c_1, c_2) } \\ {}
       } \\\\
-      : \TSelect { l_i : S_i } \eqs \TSelect { l_i : S'_i }
+      : \TSelect { l_i : R_i } \eqs \TSelect { l_i : S_i }
     }
 
 
     \inferrule[\EqIn]{
       \convexpr{f} : T \eqt U \\
-      \eqsrel{g}{S}{S'}
+      \eqsrel{g}{R}{S}
     }{
       \colorlet{outer}{.}
       {\begin{array}{r@{}l}
@@ -142,18 +142,18 @@
           & \convcolor \hspace{-2em} \ELet {c_2} {\ESend {f \; t} {c_2}} \\
           & \convcolor \hspace{-2em} g \; (c_1, c_2)
             \color{outer} \hspace{4em}
-              : \TIn {T} {S} \eqs \TIn {U} {S'}
+              : \TIn {T} {R} \eqs \TIn {U} {S}
       \end{array}}
     }
 
     \inferrule[\EqCase]{
-      \eqsrel{g_i}{S_i}{S'_i}
+      \eqsrel{g_i}{R_i}{S_i}
     }{
       \eqsctxt \vdash \convexpr{
         \ELam {(c_1, c_2)}
         \ECase {c_1} { l_i \rightarrow \ELam {c_1} g_i \; (c_1, \ESelect {l_i} c_2) }
       } \\\\
-      : \TCase { l_i : S_i } \eqs \TCase { l_i : S'_i }
+      : \TCase { l_i : R_i } \eqs \TCase { l_i : S_i }
     }
   \end{mathpar}
   \caption{Equi-recursive system: types, duality, inductive type and session type equivalence}
