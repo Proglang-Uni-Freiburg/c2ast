@@ -176,8 +176,13 @@ for types and session types deserve their name.
     \to^* \ELet y{[f{e'}]}{\EApp y{n'}}
     \to \ELet y{[f{e'}]}{\ELet {y'}{n'}\EApp y{y'}}
   \end{gather*}
-  The reduced term translates to $\ELet x {n'} \EApp {\EApp f{e'}} x
-  \to \ELet x {n'} \ELet{x'}{\EApp f{e'}}\EApp {x'}x$.
+  The reduced term translates to $\ELet x {n'} \EApp {\EApp f{e'}} x$
+  which reduces as follows:
+  \begin{gather*}
+    \ELet x {n'} \EApp {\EApp f{e'}} x
+    \to^* \ELet x {[n']} \EApp {\EApp f{e'}} x
+    \to \ELet x {[n']} \ELet{x'}{\EApp f{e'}}\EApp {x'}x 
+  \end{gather*}
 \end{proof}
 
 \begin{conjecture}
