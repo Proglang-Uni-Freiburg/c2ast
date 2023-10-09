@@ -153,6 +153,32 @@ for types and session types deserve their name.
   \end{enumerate}
 \end{conjecture}
 
+\begin{conjecture}
+  Suppose that $\translation {e}{f}T$.
+  If $\reduce[\alpha]{e}{e'}$
+  and $\translation{e'}{f'}T$,
+  then $\exists f''$,  $\reducemany[\alpha]{f}{f''}$
+  and $ \reducemany{f'}{f''}$.
+\end{conjecture}
+\begin{proof}
+  Case $\RuleActAppLetL$.
+  The translation does not change a non-value into a value, so that
+  $\EApp{n'}{e'}$ reduces with the same rule.
+
+  Case $\RuleActAppLetR$. If the translation maps $v$ to a value $v'$,
+  then $\EApp{v'}{n'}$ reduces with the same rule.
+  However, in general $\translation{v}{\EApp f{e'}}{T}$ if
+  $\translation{v}{e'}T$ (where $f$ is a value), so we are looking at reducing $\EApp{\EApp
+    f{e'}}{n'}$, a non-value, so that \textsc{\ActAppLetL} applies:
+  \begin{gather*}
+    \EApp{\EApp f{e'}}{n'}
+    \to \ELet y{\EApp f{e'}}{\EApp y{n'}}
+    \to^* \ELet y{[f{e'}]}{\EApp y{n'}}
+    \to \ELet y{[f{e'}]}{\ELet {y'}{n'}\EApp y{y'}}
+  \end{gather*}
+  The reduced term translates to $\ELet x {n'} \EApp {\EApp f{e'}} x
+  \to \ELet x {n'} \ELet{x'}{\EApp f{e'}}\EApp {x'}x$.
+\end{proof}
 
 \begin{conjecture}
   Suppose that $\Ptranslation {p}{q}$.

@@ -36,9 +36,9 @@
 \declrel{Labeled transition system for expressions (where $n$ ranges over
   non-value expressions)}[$\reduce[\lambda] e e$]
 \begin{mathpar}
-  \ltsrule \ActAppLetL {\EApp n e} \LLet {\ELet x n \EApp x e}
+  \RuleActAppLetL
 
-  \ltsrule \ActAppLetR {\EApp v n} \LLet {\ELet x n \EApp v x}
+  \RuleActAppLetR
 
   \ltsrule \ActPairLetL {\EPair n e} \LLet {\ELet x n \EPair x e}
 
