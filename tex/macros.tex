@@ -1,4 +1,4 @@
-\newcommand\note[2]{[\textcolor{red}{#1}: #2]}
+\renewcommand\note[2]{[\textcolor{red}{#1}: #2]}
 %\renewcommand\note[2]{}
 \newcommand\js{\note{js}}
 \newcommand\vv{\note{vv}}
@@ -10,13 +10,13 @@
 \newcommand\grmor{\; \mid \;}
 
 % Formatting of type and expression keywords.
-\newcommand\Tkw[1]{\mathtt{#1}}
-\newcommand\Ekw[1]{\mathtt{#1}}
-\newcommand\Econst[1]{\mathtt{#1}}
+\newcommand\Tkw[1]{\ensuremath{\mathtt{#1}}}
+\newcommand\Ekw[1]{\ensuremath{\mathtt{#1}}}
+\newcommand\Econst[1]{\ensuremath{\mathtt{#1}}}
 
 % Type syntax macros
 \newcommand\TInt{\Tkw{Int}}
-\newcommand\TUnit{()}
+\newcommand\TUnit{\ast{}}
 \newcommand\TPair[2]{#1 \otimes #2}
 \newcommand\TFun[2]{#1 \multimap #2}
 \newcommand\TEnd[1]{\Tkw{end #1}}
@@ -164,6 +164,7 @@
 \newcommand\tyEqui{\ensuremath{_{\text{equi}}}}
 \newcommand\tyIso{\ensuremath{_{\text{iso}}}}
 
+\newcommand\typingI[3][\Ctxt]{#1 \vdash\tyIso #2 : #3}
 \newcommand\Ptyping[2][\Ctxt]{#1 \vdash #2}
 
 \newcommand\eqt{\sim_{\mathsf T}}
@@ -173,6 +174,7 @@
 
 \newcommand\eqsctxt{\Sigma}
 \newcommand\eqsrel[4][\eqsctxt]{#1 \vdash \convexpr{#2} : #3 \eqs #4}
+\newcommand\eqscorel[4][\eqsctxt]{\vdash #3 \eqs #4}
 \newcommand\convcolor{\color{blue!50}}
 \newcommand\convexpr[1]{{\convcolor #1}}
 
@@ -182,6 +184,7 @@
 \newcommand\reduceto[3][]{#2 \stackrel{#1}\Downarrow #3}
 \newcommand\reducerule[3][]{\inferrule{#1}{\reduce{#2}{#3}}}
 \newcommand\RPar[2]{#1 \| #2}
+\newcommand\convertmany[3][]{#2 \stackrel{#1}{\Leftrightarrow} #3}
 
 % \ltsrule {#1} [#2] {#3} {#4} {#3}
 %

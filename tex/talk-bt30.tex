@@ -1,0 +1,386 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{mathpartir}
+
+
+\newtheorem{conjecture}{Conjecture}
+
+% \usepackage{preamble}
+\input{macros}
+\input{rulemacros}
+
+\title{A Silent Semantics for Isorecursive Session Types}
+\author{Janek Spaderna, Peter Thiemann, Vasco Vasconcelos}
+\institute[]{University of Freiburg, University of Lisbon}
+\date{October 22, 2023}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+  \titlepage
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+  \frametitle{Session Types with Recursion}
+  \begin{itemize}
+  \item needed for real-world protocols
+  \item repeated communication, finite and infinite
+  \item often an afterthought
+  \item interesting problems
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Example: Duality for Recursive Session Types}
+  \begin{block}<+->{Naive Definition}
+    \input{decl-dual}
+  \end{block}
+  \begin{itemize}
+  \item<+-> Well known to be broken [Bernardi Hennessy 2014/2016],
+    unless we restrict the syntax suitably
+  \end{itemize}
+  \begin{block}<+->{Restricted Type Syntax}
+    \footnotesize
+    \input{decl-types}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Equirecursive or Isorecursive?}
+  \begin{itemize}
+  \item<+-> Two basic approaches to recursive types
+  \item<+-> Equirecursion
+    \begin{itemize}
+    \item Consider a recursive type modulo unfolding: $\TRec S \equiv
+      S[\TRec S/ X]$
+    % \item Consider a recursive type as its infinite unfolding.
+    \item No special expression syntax needed.
+    \end{itemize}
+  \item<+-> Isorecursion
+    \begin{itemize}
+    \item Consider a recursive type isomorphic to its unfolding
+    \item Explicit syntax for introduction and elimination
+      \begin{mathpar}
+        \inferrule{
+          \typingI{e}{S[\TRec[X] S / X]}
+          }{
+            \typingI{\ERoll e}{\TRec S}
+          }
+
+          \inferrule{
+      \typingI{e}{\TRec S}
+    }{
+      \typingI{\EUnroll e}{S[\TRec[X] S / X]}
+    }
+      \end{mathpar}
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile,fragile]
+  \frametitle{Equirecursive Session Types}
+  \begin{exampleblock}<+->{Example}
+    \vspace{-1.5\baselineskip}
+    \begin{align*}
+      S_1 &= \TRec{\TOut \TInt X} &
+      S_2 &= \TRec{\TOut \TInt {\TOut \TInt X}}
+    \end{align*}
+    \begin{itemize}
+    \item $S_1$ and $S_2$ are equivalent  modulo unfolding.
+    \item The common case in session type theories.
+    \item A server assuming $S_1$ can communicate with a client
+      assuming $\TDual{S_2}$.
+    \end{itemize}
+  \end{exampleblock}
+  \begin{columns}<+->
+    \begin{column}{0.48\linewidth}
+\begin{verbatim}
+server n c =
+  let c = send n c in
+  server (n+1) c
+
+\end{verbatim}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+\begin{verbatim}
+client c =
+  let (c, x) = recv c in
+  let (c, y) = recv c in
+  print (x+y); client c
+\end{verbatim}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+  \frametitle{Isorecursive Session Types}
+  \begin{itemize}
+  \item<+->  $S_1 = \TRec{\TOut \TInt X}$ and $S_2 = \TRec{\TOut \TInt
+      {\TOut \TInt X}}$ are \textbf{different}
+  \item<+-> Server assuming $S_1$ \textbf{cannot communicate} with
+    client assuming $\TDual{S_2}$:
+  \end{itemize}
+  \begin{columns}<+->
+    \begin{column}{0.48\linewidth}
+\begin{verbatim}
+server n c =
+  let c = unroll c in
+  let c = send n c in
+  server (n+1) c
+
+\end{verbatim}
+    \end{column}
+    \begin{column}{0.48\linewidth}
+\begin{verbatim}
+client c =
+  let c = unroll c in
+  let (c, x) = recv c in
+  let (c, y) = recv c in
+  print (x+y); client c
+\end{verbatim}
+    \end{column}
+  \end{columns}
+  \begin{itemize}
+  \item<+-> \dots{} because \EkwUnroll{} synchronizes!
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{However\dots}
+  \begin{itemize}
+  \item<+-> we can interpose adapter processes $f_{12} : \TFun{S_1}{S_2}$ and $f_{21} : \TFun{S_2}{S_1}$
+  \item<+-> for example
+    \begin{align*}
+  f_{12} &=       \ELam {c_1} \EFork{ \ELam {c_2} (\ERec g %{
+      \begin{array}[t]{l}
+      \ELam{(c_1, c_2)} \\
+      \ELet{(x_2,c_2)}{\ERecv{(\EUnroll{c_2})}} \\
+      \ELet{c_1}{\ESend{x_2}{(\EUnroll{c_1})}} \\
+      \ELet{(x_2,c_2)}{\ERecv{({c_2})}} \\
+      \ELet{c_1}{\ESend{x_2}{(\EUnroll{c_1})}} \\
+        g \; ({c_1}, {c_2})) (c_1, c_2) %}
+      \end{array}}
+\end{align*}
+\item<+-> How do we obtain this process?
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{The Adapter Witnesses Type Equivalence}
+  \begin{block}<+->{Approach}
+  \begin{itemize}
+  \item Define an inference system for compatibility of isorecursive
+    session types
+  \item (same as equivalence of equirecursive session types)
+  \item coinductive
+  \end{itemize}
+\end{block}
+\begin{block}<+->{Excerpt}
+  \vspace{-2\baselineskip}
+  \begin{mathpar}
+    \inferrule[\EqEnd !]{
+    }{
+      \eqscorel{
+        \ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}}
+      }{\TEnd !}{\TEnd !}
+    }
+
+    \inferrule[\EqIn]{
+      T \eqt U \\
+      \eqscorel{g}{R}{S}
+    }{ \eqscorel{}{\TIn {T} {R}} { \TIn {U} {S}}
+    }
+    \\
+    \inferrule[\EqUnrollL]{
+      \eqscorel[\eqsctxt , \convexpr{x} : \TRec R \eqs S]
+        {g}{R[\TRec R / X]}{S}
+    }{
+      \eqscorel{
+        \ERec x
+        \ELam{(c_1, c_2)}
+        g \; (\EUnroll c_1, c_2)
+      }{\TRec R}{S}
+    }
+      
+    \inferrule[\EqUnrollR]{
+      \eqscorel[\eqsctxt , \convexpr{x} : R \eqs \TRec S]
+        {g}{R}{S[\TRec S / X]}
+    }{
+      \eqscorel{
+        \ERec x
+        \ELam{(c_1, c_2)}
+        g \; (c_1, \EUnroll c_2)
+      }{R}{\TRec S}
+    }
+  \end{mathpar}
+\end{block}
+\end{frame}
+\begin{frame}
+  \frametitle{The Adapter Witnesses Type Equivalence (II)}
+  \begin{itemize}
+  \item<+-> Augment the rules with witness terms
+  \end{itemize}
+  \begin{block}<+->{Excerpt}\small
+  \vspace{-1.5\baselineskip}
+  \begin{mathpar}
+    \inferrule[\EqEnd !]{
+    }{
+      \eqsrel[]{
+        \ELam {(c_1, c_2)} \ELetU {\EWait {c_2}} {\ETerm {c_1}}
+      }{\TEnd !}{\TEnd !}
+    }
+
+    \inferrule[\EqIn]{
+      \convexpr{f} : T \eqt U \\
+      \eqsrel[]{g}{R}{S}
+    }{
+      \colorlet{outer}{.}
+      {\begin{array}{r@{}l}
+        % \eqsctxt \vdash
+            \convcolor \ELam {(c_1, c_2)}
+          & \convcolor \ELetP {t} {c_1} {\ERecv{c_1}} \\
+          & \convcolor \hspace{-2em} \ELet {c_2} {\ESend {f \; t} {c_2}} \\
+          & \convcolor \hspace{-2em} g \; (c_1, c_2)
+            \color{outer} \hspace{4em}
+              : \TIn {T} {R} \eqs \TIn {U} {S}
+      \end{array}}
+    }
+    \\
+    \inferrule[\EqUnrollL]{
+      \eqsrel[]
+        {g}{R[\TRec R / X]}{S}
+    }{
+      \eqsrel[]{
+        \ELam{(c_1, c_2)}
+        g \; (\EUnroll c_1, c_2)
+      }{\TRec R}{S}
+    }
+      
+    \inferrule[\EqUnrollR]{
+      \eqsrel[]
+        {g}{R}{S[\TRec S / X]}
+    }{
+      \eqsrel[]{
+        \ELam{(c_1, c_2)}
+        g \; (c_1, \EUnroll c_2)
+      }{R}{\TRec S}
+    }
+  \end{mathpar}
+  \begin{itemize}
+  \item<+-> Cute, but unsatisfactory
+  \end{itemize}
+  \end{block}
+\end{frame}
+\begin{frame}
+  \frametitle{The Adapter Witnesses Type Equivalence (III)}
+  \begin{itemize}
+  \item<+-> Coinductive definition $\to$ infinite/circular witness terms
+  \item<+-> Fortunately, we're dealing with \textbf{regular
+      coinduction}
+  \item<+-> Standard transformation to an inductively defined
+    judgment\\
+    ~[Gapeyev, Levin, Pierce] or [Dagnino 2021]
+  \item<+-> Witness terms constructed with explicit recursion (see paper)
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{Translation from Equirecursion to Isorecursion}
+  \begin{itemize}
+  \item<+-> Formalize ``modulo unfolding'' by an explicit conversion
+    rule that applies equivalence
+    \begin{mathpar}
+  \inferrule{
+    \typing {\tyEqui e} T \\ T \eqt U
+  }{
+    \typing {\tyEqui e} U
+  }
+\end{mathpar}
+\item<+-> Extend to a translation
+  \begin{mathpar}
+  \inferrule{
+      \translation e {e'} T \\
+      \convexpr{f} : T \eqt U
+    }{
+      \translation e {f \; e'} U
+    }
+\end{mathpar}
+\item<+-> A typing preserving translation!
+
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{Translation from Isorecursion to Equirecursion}
+  \begin{itemize}
+  \item<+-> Assumption: underlying isorecursive types are contractive
+  \item<+-> Translation amounts to erasing $\EkwUnroll$
+  \item<+-> Typing preserving translation
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{WIre Compatibility}
+  \begin{itemize}
+  \item<+-> Q: Can isorecursive and equirecursive programs talk to one
+    another?
+  \item<+-> What if we ask all (iso) recursive types to be
+    contractive?
+  \item<+-> We can silently reduce $\reduce{\EUnroll a}{a}$.
+  \item<+-> Can we?
+  \end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{WIre Compatibility, Formally}
+\begin{conjecture}[V1: Simulation]
+  Suppose that $\translation {e}{f}T$. \\
+  If $\reduce[\alpha]{e}{e'}$ \\
+  and $\translation{e'}{f'}T$, \\
+  then  $\reducemany[\alpha]{f}{f'}$.
+\end{conjecture}
+\begin{itemize}
+\item<2-> WRONG
+\end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{WIre Compatibility, Formally (II)}
+\begin{conjecture}[V2: Simulation $+$ administrative reduction]
+  Suppose that $\translation {e}{f}T$. \\
+  If $\reduce[\alpha]{e}{e'}$ \\
+  and $\translation{e'}{f'}T$, \\
+  \color{magenta}
+  then $\exists f''$,  $\reducemany[\alpha]{f}{f''}$
+  and $ \reducemany{f'}{f''}$.
+\end{conjecture}
+\begin{itemize}
+\item<2-> WRONG
+\end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{WIre Compatibility, Formally (III)}
+\begin{conjecture}[V3: Simulation up to equational theory]
+  Suppose that $\translation {e}{f}T$. \\
+  If $\reduce[\alpha]{e}{e'}$ \\
+  and $\translation{e'}{f'}T$, \\
+  \color{magenta}
+  then  $f \Leftrightarrow \xrightarrow{\alpha} \Leftrightarrow f'$.
+\end{conjecture}
+\begin{itemize}
+\item<2-> Still wrong: extra equations needed beyond reductions.
+\end{itemize}
+\end{frame}
+\begin{frame}
+  \frametitle{Questions}
+  \begin{itemize}
+  \item Result seems so obvious \dots
+  \item Is there an equational theory for functional session types?
+  \item Can bisimulation help?
+  \end{itemize}
+\end{frame}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
